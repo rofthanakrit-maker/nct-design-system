@@ -27,7 +27,7 @@
     "fonts": "python ../scripts/build_webfonts.py",
     "build": "npm run tokens && tsup",
     "demo": "esbuild demo/demo.tsx --bundle --format=esm --jsx=automatic --outfile=demo/demo.js --loader:.tsx=tsx",
-    "demo:watch": "esbuild demo/demo.tsx --bundle --format=esm --jsx=automatic --outfile=demo/demo.js --loader:.tsx=tsx --watch",
+    "demo:watch": "esbuild demo/demo.tsx --bundle --format=esm --jsx=automatic --outfile=demo/demo.js --loader:.tsx=tsx --watch=forever",
     "dev": "tsup --watch"
   },
   "peerDependencies": {

@@ -4,7 +4,7 @@
     {
       "name": "nct-slides-demo",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "5173", "--directory", "web"],
+      "runtimeArgs": ["scripts/serve.py", "5173"],
       "port": 5173
     }
   ]

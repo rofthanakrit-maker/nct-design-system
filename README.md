@@ -52,7 +52,7 @@ npm run assets               # โลโก้เป็น data URI
 
 ```bash
 npm run demo                 # bundle demo.tsx -> demo.js (demo:watch = แก้แล้ว build เอง)
-python -m http.server 5173 --directory web    # เปิด /demo/index.html
+npm run serve                # เปิด /demo/index.html
 ```
 
 ## Import เข้า Claude Design

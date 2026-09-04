@@ -30,6 +30,11 @@ Repo-specific gotchas. Read before re-syncing.
 - The PowerPoint side (`scripts/build.py` → `.potx`) shares `scripts/tokens.py` with
   the web package but nothing else. A token change must be rebuilt on both sides.
 - **The visual loop is `web/demo/`.** `npm run demo` bundles `demo.tsx` to the
-  gitignored `demo/demo.js` (`demo:watch` rebuilds on save); serve `web/` and open
+  gitignored `demo/demo.js` (`demo:watch` needs esbuild's `--watch=forever`,
+  which the script already passes); `npm run serve` serves `web/` - open
   `/demo/index.html`. A token edit shows up after `npm run tokens` + refresh —
   `index.html` links `../src/styles.css` directly, so no package build is needed.
+- **Serve the demo with `npm run serve`, not `python -m http.server`.** The stdlib
+  server sends only `Last-Modified`, and browsers reuse a cached `@import` through
+  a hard reload - a regenerated `tokens.css` keeps rendering the old palette and
+  the edit loop lies to you. `scripts/serve.py` sends `no-store`.
