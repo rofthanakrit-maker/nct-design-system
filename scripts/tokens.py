@@ -23,11 +23,14 @@ TEAL_B  = "1A8D92"   # true gradient END (logo end-stop) - GRADIENT STOP ONLY,
                       # never a fill/line/text color (3.4:1 on white, fails AA)
 
 # ---- v2: status tokens (tables / process flows only - never chrome/headings) ----
-RISK    = "B3261E";  RISK_T = "FBEAE8"   # high risk, blocker
-WARN    = "965900";  WARN_T = "FBF1E3"   # unconfirmed, TBC, needs decision.
-                                          # 5.0:1 on its own tint - B26B00 was 3.8:1,
-                                          # the only status colour that failed AA.
-OK      = "1F7A54";  OK_T   = "E6F4EE"   # ready, quick win, passed
+# The tints have to survive the zebra: dense-table even rows are PAPER2, and the
+# old OK_T (E6F4EE) was 1.02:1 against it - the same mint, so the fill vanished
+# and only the text carried the signal. Every tint now clears the zebra step
+# itself (PAPER2 on PAPER is 1.11:1) at ~1.25:1, and every text still clears AA
+# at 10pt on its own tint. Darken these two together or not at all.
+RISK    = "B3261E";  RISK_T = "F6D0CC"   # high risk, blocker      | 4.6:1 on tint
+WARN    = "7F4B00";  WARN_T = "F2D9AC"   # unconfirmed, needs call | 5.3:1 on tint
+OK      = "1A6647";  OK_T   = "BFE3CA"   # ready, quick win, passed| 5.0:1 on tint
 
 # ---- v2: category coding - reuses existing accents, adds no new hues ----
 CAT_1, CAT_2, CAT_3, CAT_4 = NAVY, TEAL, TEAL_L, DEEP

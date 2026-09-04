@@ -604,7 +604,26 @@
   line-height: 1.1;
   color: var(--nct-ink);
 }
-.nct-dia-link { flex: 0 0 62.4px; display: flex; align-items: center; color: var(--nct-teal); }
+.nct-dia-link {
+  position: relative;
+  flex: 0 0 62.4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--nct-teal);
+}
+.nct-dia-link__label {
+  position: absolute;
+  bottom: calc(50% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 2.4px;
+  background: var(--nct-paper);
+  font-size: var(--nct-fs-densecell);
+  line-height: 1;
+  color: var(--nct-ink-2);
+  white-space: nowrap;
+}
 .nct-dia-group {
   position: relative;
   display: flex;

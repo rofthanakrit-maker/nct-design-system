@@ -88,9 +88,12 @@ flows, status columns). These extend the system — they don't replace anything 
   --color-mid:      #1E5473;  /* named gradient midpoint, was already used inline */
   --color-teal-b:   #1A8D92;  /* true logo end-stop — GRADIENT STOP ONLY, never fill/line/text (3.4:1 on white) */
   --color-teal-up:  #8FBACE;  /* accent-2 lifted for text ON NAVY (4.8:1). Never on white (2.1:1) */
-  --color-risk:     #B3261E;  --color-risk-tint: #FBEAE8;
-  --color-warn:     #965900;  --color-warn-tint: #FBF1E3;  /* darkened from #B26B00 — 3.8:1 failed AA on its own tint */
-  --color-ok:       #1F7A54;  --color-ok-tint:   #E6F4EE;
+  /* text/tint pairs — always move them together. The tints must beat the dense-table
+     zebra: the old #E6F4EE ok-tint was 1.02:1 on --color-paper-2, the same mint, so
+     the fill vanished on even rows. All three now sit ~1.25:1 against it. */
+  --color-risk:     #B3261E;  --color-risk-tint: #F6D0CC;
+  --color-warn:     #7F4B00;  --color-warn-tint: #F2D9AC;
+  --color-ok:       #1A6647;  --color-ok-tint:   #BFE3CA;
 }
 ```
 - Status colors are data colors for tables/process flows only — never chrome, headings, or slide backgrounds. Max 3 statuses per slide.

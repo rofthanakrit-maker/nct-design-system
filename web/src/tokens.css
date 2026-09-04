@@ -16,11 +16,11 @@
   --nct-mid:         #1E5473;  /* gradient midpoint (L01 / L10) - gradient stop only */
   --nct-teal-b:      #1A8D92;  /* gradient END stop only - never fill/line/text (fails AA) */
   --nct-risk:        #B3261E;  /* status: blocker (table / process cells only) */
-  --nct-risk-tint:   #FBEAE8;  /* status fill behind --nct-risk */
-  --nct-warn:        #965900;  /* status: unconfirmed / needs decision */
-  --nct-warn-tint:   #FBF1E3;  /* status fill behind --nct-warn */
-  --nct-ok:          #1F7A54;  /* status: ready / passed */
-  --nct-ok-tint:     #E6F4EE;  /* status fill behind --nct-ok */
+  --nct-risk-tint:   #F6D0CC;  /* status fill behind --nct-risk */
+  --nct-warn:        #7F4B00;  /* status: unconfirmed / needs decision */
+  --nct-warn-tint:   #F2D9AC;  /* status fill behind --nct-warn */
+  --nct-ok:          #1A6647;  /* status: ready / passed */
+  --nct-ok-tint:     #BFE3CA;  /* status fill behind --nct-ok */
   --nct-cat-1:       #23436D;  /* category coding 1 of 4 - reuses navy */
   --nct-cat-2:       #216B7F;  /* category coding 2 of 4 - reuses teal */
   --nct-cat-3:       #4E8FA8;  /* category coding 3 of 4 - reuses teal-l */

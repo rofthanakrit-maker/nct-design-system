@@ -141,8 +141,8 @@ const CAT_VAR = ["--nct-cat-1", "--nct-cat-2", "--nct-cat-3", "--nct-cat-4"];
 
 /**
  * The deck's only table style: navy header, PAPER/PAPER2 banding, horizontal
- * hairlines and no vertical rules. Ten body rows is the ceiling — split the
- * slide rather than shrinking the type.
+ * hairlines and no vertical rules. Nine body rows is the ceiling on layout 16 —
+ * split the slide rather than shrinking the type.
  */
 export function DataTable({ columns, rows, widths, size = "dense" }: DataTableProps) {
   const total = widths?.reduce((a, b) => a + b, 0);
@@ -230,18 +230,21 @@ export function DiagramBox({ children, category }: DiagramBoxProps) {
   );
 }
 
-/** A connector between two boxes: straight, teal, solid triangle head. */
+/**
+ * A connector between two boxes: straight, teal, solid triangle head.
+ *
+ * The label is real HTML, not SVG `<text>` — an SVG label at `fontSize="10"`
+ * inside a 60-unit viewBox drawn at 60px renders 10px, i.e. 7.5pt, under the
+ * system's own 10pt floor. It reads `--nct-fs-densecell` like every other
+ * dense label, and sits on paper over the line the way the .potx spec draws it.
+ */
 export function DiagramLink({ label }: { label?: string }) {
   return (
     <div className="nct-dia-link">
-      <svg width="60" height="24" viewBox="0 0 60 24" aria-hidden="true">
-        {label && (
-          <text x="30" y="8" textAnchor="middle" fontSize="10" fill="var(--nct-ink-2)">
-            {label}
-          </text>
-        )}
-        <line x1="0" y1="16" x2="48" y2="16" stroke="currentColor" strokeWidth="1.7" />
-        <polygon points="48,11 60,16 48,21" fill="currentColor" />
+      {label && <span className="nct-dia-link__label">{label}</span>}
+      <svg width="60" height="16" viewBox="0 0 60 16" aria-hidden="true">
+        <line x1="0" y1="8" x2="48" y2="8" stroke="currentColor" strokeWidth="1.7" />
+        <polygon points="48,3 60,8 48,13" fill="currentColor" />
       </svg>
     </div>
   );
