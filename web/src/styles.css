@@ -1,0 +1,5 @@
+/* NCT slide design system - the one stylesheet a host page needs.
+   Everything the components use is reachable from this @import closure. */
+@import "./fonts.css";
+@import "./tokens.css";
+@import "./slides.css";

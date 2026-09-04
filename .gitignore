@@ -4,3 +4,4 @@ node_modules/
 web/dist/
 .design-sync/.cache/
 .backup-v1/
+web/demo/demo.js
