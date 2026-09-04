@@ -77,6 +77,10 @@ Tokens are also importable as values: `import { color, space, fontSize, canvas }
   only people-at-work photograph the system uses, and it is web-only: `.potx`
   layout 10 keeps the architectural band, so a deck headed for PowerPoint stays on
   the default `imageMode="band"`.
+- **The band is one geometry, spent four ways.** `--nct-band-w` (40% of the
+  canvas) and `--nct-band-text-w` are tokens; layouts 02, 15, 10 and
+  `SlideFullImage variant="fade"` all sit on them. Never retype the pixel values,
+  and never introduce a fifth width.
 - **Imagery is inlined, not linked.** `photoSection`, `photoFacade`, `photoTower`,
   `photoHandshake`, `mascot` and the logo exports are data URIs; an external `src`
   is dropped by the artifact CSP. Only frames a layout actually shows get inlined -

@@ -41,10 +41,8 @@ def _rule(sid, x=MX, y=RULE_Y, color=TEAL, alpha=None):
     return shape(sid, "Accent Rule", x, y, RULE_W, RULE_H, solid(color, alpha))
 
 
-# 02 section divider: photo band on the right, text column on the left
-SEC_PHOTO_W = 4876800                      # 40% of the canvas   5.33in
-SEC_PHOTO_X = SW - SEC_PHOTO_W
-SEC_TEXT_W = SEC_PHOTO_X - MX - GUT        # title/desc stop clear of the photo
+# the photo band, defined once in tokens.py so slides.css can be emitted from it
+SEC_PHOTO_W, SEC_PHOTO_X, SEC_TEXT_W = BAND_W, BAND_X, BAND_TW
 
 
 def _wrap(name, typ, shapes, bgfill=None):

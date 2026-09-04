@@ -244,7 +244,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  width: 40%;
+  width: var(--nct-band-w);
   height: 100%;
   object-fit: cover;
 }
@@ -252,7 +252,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  width: 40%;
+  width: var(--nct-band-w);
   height: 100%;
   background: linear-gradient(
     to right,
@@ -267,7 +267,7 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  width: 40%;
+  width: var(--nct-band-w);
   height: 30%;
   background: linear-gradient(
     to bottom,
@@ -276,9 +276,9 @@
     color-mix(in srgb, var(--nct-navy) 90%, transparent) 100%
   );
 }
-.nct-section__title--photo { width: 653px; }
-.nct-section__desc--photo { width: 653px; }
-.nct-agenda__list--photo { width: 653px; }
+.nct-section__title--photo { width: var(--nct-band-text-w); }
+.nct-section__desc--photo { width: var(--nct-band-text-w); }
+.nct-agenda__list--photo { width: var(--nct-band-text-w); }
 .nct-section__num {
   position: absolute;
   left: var(--nct-mx);
@@ -482,6 +482,47 @@
   color: rgb(255 255 255 / 0.8);
 }
 
+/* 08 fade variant: the same band as the section dividers, dissolving into the deep
+   panel instead of the navy one - type stays in the left half, so a photograph can
+   sit on a title slide without the copy landing on it. */
+.nct-image__media--fade { left: auto; right: 0; width: var(--nct-band-w); }
+.nct-image__fade {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: var(--nct-band-w);
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    var(--nct-deep) 0%,
+    color-mix(in srgb, var(--nct-deep) 84%, transparent) 26%,
+    color-mix(in srgb, var(--nct-deep) 30%, transparent) 62%,
+    color-mix(in srgb, var(--nct-deep) 12%, transparent) 100%
+  );
+}
+.nct-image__fade-foot {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: var(--nct-band-w);
+  height: 30%;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--nct-deep) 0%, transparent) 0%,
+    color-mix(in srgb, var(--nct-deep) 60%, transparent) 55%,
+    color-mix(in srgb, var(--nct-deep) 90%, transparent) 100%
+  );
+}
+.nct-image__title--fade { top: 249.6px; width: var(--nct-band-text-w); }
+.nct-image__rule {
+  position: absolute;
+  left: var(--nct-mx);
+  top: 393.6px;
+  width: var(--nct-rule-w);
+  height: var(--nct-rule-h);
+  background: var(--nct-teal);
+}
+.nct-image__caption--fade { top: 432px; width: 576px; }
 /* ---------------------------------------------------------------- 13 flow */
 .nct-flow { display: flex; align-items: stretch; gap: 0; }
 .nct-flow__step { flex: 0 0 var(--nct-fifth); background: var(--nct-paper-2); padding: 24px; height: 192px; }

@@ -95,8 +95,11 @@ function App() {
       <SlideFullImage
         {...chrome}
         pageNumber={8}
+        variant="fade"
+        src={photoFacade}
+        alt="อาคารสำนักงาน"
         title="ศูนย์ปฏิบัติการเครือข่าย"
-        caption="ใส่ภาพงานจริงหรือ screenshot — ไม่ใช้ภาพ stock"
+        caption="variant fade — ของจริงใส่ภาพงานหรือ screenshot ไม่ใช้ภาพ stock"
       />
       <SlideTable
         {...chrome}

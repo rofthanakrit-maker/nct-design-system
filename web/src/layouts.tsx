@@ -214,16 +214,46 @@ export interface SlideFullImageProps extends Base {
   alt?: string;
   title: ReactNode;
   caption?: ReactNode;
+  /**
+   * "full" is the .potx treatment: edge to edge behind a bottom scrim.
+   * "fade" narrows the picture to the same right-hand band the chapter openers
+   * use and holds the type in the left half — web only, layout 08 in PowerPoint
+   * stays full-bleed.
+   */
+  variant?: "full" | "fade";
 }
 
 /** 08 · Full Image. Chapter opener over photography. The scrim is not optional. */
-export function SlideFullImage({ src, alt = "", title, caption, ...chrome }: SlideFullImageProps) {
+export function SlideFullImage({
+  src, alt = "", title, caption, variant = "full", ...chrome
+}: SlideFullImageProps) {
+  const fade = variant === "fade";
   return (
     <Slide tone="deep" {...chrome}>
-      {src && <img className="nct-image__media" src={src} alt={alt} />}
-      <div className="nct-image__scrim" />
-      <h2 className="nct-image__title">{title}</h2>
-      {caption && <div className="nct-image__caption">{caption}</div>}
+      {src && (
+        <img
+          className={fade ? "nct-image__media nct-image__media--fade" : "nct-image__media"}
+          src={src}
+          alt={alt}
+        />
+      )}
+      {fade ? (
+        <>
+          <div className="nct-image__fade" />
+          <div className="nct-image__fade-foot" />
+        </>
+      ) : (
+        <div className="nct-image__scrim" />
+      )}
+      <h2 className={fade ? "nct-image__title nct-image__title--fade" : "nct-image__title"}>
+        {title}
+      </h2>
+      {fade && <div className="nct-image__rule" />}
+      {caption && (
+        <div className={fade ? "nct-image__caption nct-image__caption--fade" : "nct-image__caption"}>
+          {caption}
+        </div>
+      )}
     </Slide>
   );
 }

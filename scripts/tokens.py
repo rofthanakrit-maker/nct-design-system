@@ -41,6 +41,12 @@ THIRD   = (CW - 2*GUT)//3             # 3332480
 QUARTER = (CW - 3*GUT)//4             # v2: 4-up cards (L12)
 FIFTH   = (CW - 4*GUT)//5             # v2: process-flow steps only (L13) - not a 12-col unit
 
+# ---- photo band: the right-hand strip on L02 / L08 / L10 / L15 ----
+BAND_W  = 4876800                     # 40% of the canvas        5.333in
+BAND_X  = SW - BAND_W                 # 8.000in
+BAND_TW = BAND_X - MX - GUT           # text stops clear of it   6.800in
+BAND_FOOT_H = 2057400                 # bottom scrim, keeps footer chrome off glass
+
 def colx(i):                          # x of column i (0-based)
     return MX + i*(COL + GUT)
 

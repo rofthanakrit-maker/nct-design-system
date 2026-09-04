@@ -49,6 +49,7 @@ SPACE = [
     ("cw", T.CW), ("gut", T.GUT), ("col", T.COL),
     ("half", T.HALF), ("third", T.THIRD),
     ("quarter", T.QUARTER), ("fifth", T.FIFTH),
+    ("band-w", T.BAND_W), ("band-text-w", T.BAND_TW),
     ("title-y", T.TITLE_Y), ("title-h", T.TITLE_H),
     ("rule-y", T.RULE_Y), ("rule-h", T.RULE_H), ("rule-w", T.RULE_W),
     ("body-y", T.BODY_Y), ("body-h", T.BODY_H),

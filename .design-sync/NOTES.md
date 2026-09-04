@@ -62,3 +62,12 @@ Repo-specific gotchas. Read before re-syncing.
   component-to-layout mapping is worth more than the variant. `.potx` layout 10
   keeps the facade band. A deck that has to survive export to PowerPoint should
   stay on the default `imageMode="band"`.
+- **`SlideFullImage variant="fade"` is web-only too**, for the same reason as the
+  closing's full-bleed variant: `.potx` layout 08 is a full-bleed picture
+  placeholder and a PowerPoint layout cannot branch on a prop. The default stays
+  `"full"`, which is what the .potx does; `"fade"` narrows the picture to the band
+  and holds the type in the left half.
+- **Band geometry lives in `scripts/tokens.py` (`BAND_*`), not in the stylesheet.**
+  It is emitted as `--nct-band-w` / `--nct-band-text-w` and re-exported to
+  parts_layouts.py as `SEC_PHOTO_*`. Four layouts share it - change the token, not
+  the four call sites.

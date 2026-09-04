@@ -41,6 +41,8 @@ export const space = {
   third: 349.87,
   quarter: 257.6,
   fifth: 202.24,
+  band_w: 512,
+  band_text_w: 652.8,
   title_y: 57.6,
   title_h: 76.8,
   rule_y: 144,
