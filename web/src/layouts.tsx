@@ -318,13 +318,10 @@ export function SlideClosing({
       ) : !full && (
         <div className="nct-decor" style={{ right: -48, top: -48, width: 336, height: 336 }} />
       )}
-      <h2
-        className={image ? "nct-section__title nct-section__title--photo" : "nct-section__title"}
-        style={{ top: 163.2 }}
-      >
+      <h2 className={image ? "nct-closing__title nct-closing__title--photo" : "nct-closing__title"}>
         {title}
       </h2>
-      <div className="nct-cover__rule" style={{ top: 307.2 }} />
+      <div className="nct-closing__rule" />
       <div className={full ? "nct-closing__contact nct-closing__contact--full" : "nct-closing__contact"}>
         {contact.map((line, i) => (
           <div key={i}>{line}</div>
