@@ -43,6 +43,19 @@ def scrim(hexv=DEEP):
             '</a:gsLst><a:lin ang="5400000" scaled="0"/></a:gradFill>' % (hexv, hexv, hexv))
 
 
+def fade_x(hexv=NAVY):
+    """left-to-right fade: solid at the left edge, a thin veil at the right.
+
+    Lets a photograph sit against a solid panel without a hard seam - the same
+    job the CSS gradient does on .nct-section__photo-fade.
+    """
+    stops = ((0, 100000), (26000, 84000), (62000, 30000), (100000, 12000))
+    gs = "".join('<a:gs pos="%d"><a:srgbClr val="%s"><a:alpha val="%d"/></a:srgbClr></a:gs>'
+                 % (pos, hexv, a) for pos, a in stops)
+    return ('<a:gradFill rotWithShape="1"><a:gsLst>%s</a:gsLst>'
+            '<a:lin ang="0" scaled="0"/></a:gradFill>' % gs)
+
+
 # ---------------------------------------------------------------- text
 def _rpr(tag, sz, color, bold=False, font="mn", spc=0, italic=False, alpha=None):
     b = ' b="1"' if bold else ''

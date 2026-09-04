@@ -20,6 +20,10 @@ import {
   SlideTable,
   SlideThreeCards,
   SlideTwoColumn,
+  photoFacade,
+  photoHandshake,
+  photoSection,
+  photoTower,
 } from "../src";
 
 const chrome = { footer: "NCT · ข้อเสนอโครงการระบบบัญชี", date: "2569" };
@@ -36,6 +40,8 @@ function App() {
       <SlideSection
         {...chrome}
         pageNumber={2}
+        image={photoSection}
+        imageAlt="อาคารสำนักงานมองจากด้านล่าง"
         number="01"
         title="ภาพรวมบริษัท"
         description="ใครคือ NCT และเราทำอะไรให้ลูกค้าองค์กร"
@@ -171,6 +177,8 @@ function App() {
       </SlideDiagram>
       <SlideAgenda
         {...chrome}
+        image={photoTower}
+        imageAlt="อาคารสำนักงานมองจากด้านล่าง"
         pageNumber={14}
         number="02"
         title="หัวข้อนำเสนอ"
@@ -211,6 +219,9 @@ function App() {
       <SlideClosing
         {...chrome}
         pageNumber={16}
+        image={photoHandshake}
+        imageMode="full"
+        imageAlt="จับมือปิดดีลในห้องประชุม"
         contact={["โทร · 02-XXX-XXXX", "อีเมล · contact@nctthai.com", "เว็บไซต์ · nctthai.com"]}
       />
     </Deck>

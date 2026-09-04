@@ -151,7 +151,7 @@ map ไว้แล้วใน `.potx` — กราฟและตาราง
 | # | Layout | พื้น | Placeholder | ใช้เมื่อ |
 |---|---|---|---|---|
 | 01 | Title Slide | gradient navy→teal 45° | title, subtitle (โลโก้ฝังใน layout แก้ในสไลด์ไม่ได้) | หน้าปกเท่านั้น |
-| 02 | Section Divider | navy ทึบ + wedge teal | เลขหัวข้อ, title, คำอธิบาย | คั่นบท ทุก 4–8 สไลด์ |
+| 02 | Section Divider | navy ทึบ + แถบภาพขวา 40% fade เข้า navy | เลขหัวข้อ, title, คำอธิบาย | คั่นบท ทุก 4–8 สไลด์ |
 | 03 | Title and Content | ขาว | title, body 5 ระดับ | สไลด์เนื้อหาปกติ |
 | 04 | Two Column | ขาว | title, body ซ้าย, body ขวา | เทียบก่อน/หลัง, ข้อดี/ข้อเสีย |
 | 05 | Three Cards | ขาว + การ์ด `PAPER2` | title + (heading, body) × 3 | 3 บริการ / 3 เสาหลัก |
@@ -159,7 +159,7 @@ map ไว้แล้วใน `.potx` — กราฟและตาราง
 | 07 | Pull Quote | `PAPER2` + แถบ gradient ซ้าย | quote, attribution | testimonial, คำพูดลูกค้า |
 | 08 | Full Image | รูปเต็มจอ + scrim | picture, title, caption | ภาพเปิดบท, ภาพผลงาน |
 | 09 | Table / Comparison | ขาว | title, intro, table | เทียบแพ็กเกจ, spec |
-| 10 | Closing / Contact | gradient teal→navy 45° | title, contact (โลโก้ฝังใน layout) | หน้าสุดท้ายเท่านั้น |
+| 10 | Closing / Contact | gradient teal→navy 45° + แถบภาพขวา (web มีโหมดภาพเต็มหน้าเพิ่ม) | title, contact (โลโก้ฝังใน layout มุมซ้ายล่าง) | หน้าสุดท้ายเท่านั้น |
 
 layout 11–16 อยู่ใน `slide-design-system-v2.md`
 
@@ -189,8 +189,13 @@ layout 11–16 อยู่ใน `slide-design-system-v2.md`
 **ห้าม**
 - เพิ่มฟอนต์ที่ 3 หรือสีนอก token
 - ใส่เงา, bevel, 3-D, reflection — theme ตั้ง effect เป็น flat ทั้งหมดโดยตั้งใจ
-- ใช้ภาพ stock office ทั่วไป (`design.md` ระบุเป็น anti-pattern ของเว็บต้นทาง) —
-  ใช้ภาพงานจริง screenshot จริง หรือไม่ใส่ภาพเลย
+- ใช้ภาพ stock คนในออฟฟิศ — ประชุมยิ้ม มือประสานกัน (`design.md` ระบุเป็น
+  anti-pattern ของเว็บต้นทาง) — บน L08 ใช้ภาพงานจริง screenshot จริง หรือไม่ใส่
+  ภาพเลย ข้อยกเว้น:
+  - แถบภาพ L02 / L15 / L10 — ภาพสถาปัตยกรรม/นามธรรมโทน navy ทำหน้าเดโคเรต
+    ไม่ได้เล่าเรื่องคนทำงาน
+  - หน้าปิดฝั่ง web (`SlideClosing imageMode="full"`) — ภาพจับมือเต็มหน้า + scrim
+    เจ้าของระบบตัดสินใจเปิดข้อยกเว้นนี้เอง ฝั่ง .potx ยังเป็นแถบตึกเหมือนเดิม
 - ลาก placeholder ออกนอก margin 1 นิ้ว
 - กด `Reset` หลังแก้ layout เอง — จะดึงกลับไปตามที่ layout กำหนด (นี่คือฟีเจอร์ ไม่ใช่บั๊ก)
 

@@ -63,6 +63,24 @@ Tokens are also importable as values: `import { color, space, fontSize, canvas }
 - Every table slide and diagram slide carries a one-line `TakeawayBand`.
 - `SlideCover` and `SlideClosing` appear once each, as the deck's bookends.
 - Card heights are fixed. Trim the copy; never stretch a card.
+- **Photographs: architecture and abstract only, never people at work.** Smiling
+  meetings, handshakes and stacked hands are the templated-AI tell this system
+  exists to avoid. `SlideSection`, `SlideAgenda` and `SlideClosing` take an
+  optional `image` for the right 40% of the slide - `photoSection` and
+  `photoFacade` are the two house frames, and the band fades into the panel on its
+  own. Two chapter openers in a row should not share a frame; `SlideFullImage` wants a real screenshot or a real site photo, not
+  stock. The mascot (`mascot`) is brand art, not photography - it is welcome
+  wherever a slide has room for a light touch.
+- **One exception, decided by the system's owner: the closing slide.**
+  `SlideClosing` may run `photoHandshake` with `imageMode="full"` - the photograph
+  edge to edge behind a scrim rather than cropped into the 40% band. It is the
+  only people-at-work photograph the system uses, and it is web-only: `.potx`
+  layout 10 keeps the architectural band, so a deck headed for PowerPoint stays on
+  the default `imageMode="band"`.
+- **Imagery is inlined, not linked.** `photoSection`, `photoFacade`, `photoTower`,
+  `photoHandshake`, `mascot` and the logo exports are data URIs; an external `src`
+  is dropped by the artifact CSP. Only frames a layout actually shows get inlined -
+  every unused one is dead weight in every consumer bundle.
 
 ## A slide, idiomatically
 

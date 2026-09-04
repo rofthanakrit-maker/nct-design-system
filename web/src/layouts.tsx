@@ -42,17 +42,41 @@ export interface SlideSectionProps extends Base {
   number?: string;
   title: ReactNode;
   description?: ReactNode;
+  /** Photograph for the right 40% of the slide. Omit for the plain navy divider. */
+  image?: string;
+  imageAlt?: string;
 }
 
-/** 02 · Section Divider. Breaks the deck every 4–8 slides. Solid navy. */
-export function SlideSection({ number, title, description, ...chrome }: SlideSectionProps) {
+/** The photo band layouts 02 and 15 share: right 40%, faded into the navy panel.
+ *  Without an image the original teal wedge stands in. */
+function SectionBand({ image, alt }: { image?: string; alt?: string }) {
+  if (!image) return <div className="nct-section__wedge" />;
+  return (
+    <>
+      <img className="nct-section__photo" src={image} alt={alt ?? ""} />
+      <div className="nct-section__fade" />
+      <div className="nct-section__photo-foot" />
+    </>
+  );
+}
+
+/** 02 · Section Divider. Breaks the deck every 4–8 slides. Solid navy, photo optional. */
+export function SlideSection({
+  number, title, description, image, imageAlt = "", ...chrome
+}: SlideSectionProps) {
   return (
     <Slide tone="dark" {...chrome}>
-      <div className="nct-section__wedge" />
+      <SectionBand image={image} alt={imageAlt} />
       {number && <div className="nct-section__num">{number}</div>}
       <div className="nct-section__rule" />
-      <h2 className="nct-section__title">{title}</h2>
-      {description && <div className="nct-section__desc">{description}</div>}
+      <h2 className={image ? "nct-section__title nct-section__title--photo" : "nct-section__title"}>
+        {title}
+      </h2>
+      {description && (
+        <div className={image ? "nct-section__desc nct-section__desc--photo" : "nct-section__desc"}>
+          {description}
+        </div>
+      )}
     </Slide>
   );
 }
@@ -231,22 +255,56 @@ export interface SlideClosingProps extends Base {
   title?: ReactNode;
   /** Contact lines — phone, email, site. */
   contact?: ReactNode[];
+  /** Photograph for the right 40%. It takes the place of the top-right diamond. */
+  image?: string;
+  imageAlt?: string;
+  /**
+   * How `image` is placed. "band" is the right-hand strip layouts 02 and 15 use.
+   * "full" runs the photograph across the whole slide behind a scrim — for a
+   * subject that needs room to read, where a 40% strip would crop it to mush.
+   */
+  imageMode?: "band" | "full";
 }
 
 /** 10 · Closing / Contact. Teal→navy, the bookend to layout 01. Use once. */
-export function SlideClosing({ title = "ขอบคุณครับ", contact = [], ...chrome }: SlideClosingProps) {
+export function SlideClosing({
+  title = "ขอบคุณครับ", contact = [], image, imageAlt = "", imageMode = "band", ...chrome
+}: SlideClosingProps) {
+  const full = Boolean(image) && imageMode === "full";
+  const band = Boolean(image) && !full;
   return (
     <Slide tone="close" {...chrome}>
-      <div className="nct-decor" style={{ left: -144, top: 432, width: 384, height: 384 }} />
-      <div className="nct-decor" style={{ right: -48, top: -48, width: 336, height: 336 }} />
-      <h2 className="nct-section__title" style={{ top: 163.2 }}>{title}</h2>
+      {full ? (
+        <>
+          <img className="nct-closing__photo" src={image} alt={imageAlt} />
+          <div className="nct-closing__scrim" />
+          <div className="nct-closing__scrim-foot" />
+        </>
+      ) : (
+        <div className="nct-decor" style={{ left: -144, top: 432, width: 384, height: 384 }} />
+      )}
+      {band ? (
+        <SectionBand image={image} alt={imageAlt} />
+      ) : !full && (
+        <div className="nct-decor" style={{ right: -48, top: -48, width: 336, height: 336 }} />
+      )}
+      <h2
+        className={image ? "nct-section__title nct-section__title--photo" : "nct-section__title"}
+        style={{ top: 163.2 }}
+      >
+        {title}
+      </h2>
       <div className="nct-cover__rule" style={{ top: 307.2 }} />
-      <div className="nct-closing__contact">
+      <div className={full ? "nct-closing__contact nct-closing__contact--full" : "nct-closing__contact"}>
         {contact.map((line, i) => (
           <div key={i}>{line}</div>
         ))}
       </div>
-      <NctLogo variant="white" className="nct-closing__logo" width={269} />
+      <NctLogo
+        variant="white"
+        className={image ? "nct-closing__logo nct-closing__logo--photo" : "nct-closing__logo"}
+        width={269}
+      />
     </Slide>
   );
 }
@@ -444,17 +502,24 @@ export interface SlideAgendaProps extends Base {
   title: ReactNode;
   /** Four to six lines. More than six means the chapter is doing too much. */
   items: ReactNode[];
+  /** Photograph for the right 40%, same band as layout 02. */
+  image?: string;
+  imageAlt?: string;
 }
 
 /** 15 · Agenda. Layout 02 with a contents list. Opens a chapter. */
-export function SlideAgenda({ number, title, items, ...chrome }: SlideAgendaProps) {
+export function SlideAgenda({
+  number, title, items, image, imageAlt = "", ...chrome
+}: SlideAgendaProps) {
   return (
     <Slide tone="dark" {...chrome}>
-      <div className="nct-section__wedge" />
+      <SectionBand image={image} alt={imageAlt} />
       {number && <div className="nct-section__num">{number}</div>}
       <div className="nct-section__rule" />
-      <h2 className="nct-section__title">{title}</h2>
-      <div className="nct-agenda__list">
+      <h2 className={image ? "nct-section__title nct-section__title--photo" : "nct-section__title"}>
+        {title}
+      </h2>
+      <div className={image ? "nct-agenda__list nct-agenda__list--photo" : "nct-agenda__list"}>
         <BulletList items={items.map((t) => ({ text: t }))} onDark />
       </div>
     </Slide>

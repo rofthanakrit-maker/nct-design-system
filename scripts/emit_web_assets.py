@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
-"""Embed the NCT logo/mark as data URIs in web/src/assets.ts.
+"""Embed the NCT marks and the stock photography as data URIs in web/src/assets.ts.
 
-Artifacts render under a CSP that blocks external images, so the marks have to
-travel inside the bundle. They are downscaled to the largest size the layouts
-actually use (logo 2.56in wide, mark 0.30in) at 2x for retina, then quantised.
+Artifacts render under a CSP that blocks external images, so anything a layout
+shows has to travel inside the bundle. The marks are downscaled to the largest
+size the layouts actually use (logo 2.56in wide, mark 0.30in) at 2x for retina,
+then quantised; the photographs are already cropped and compressed by
+scripts/prepare_images.py and are passed through as-is.
+
+Only the photographs a layout or the demo actually shows are inlined - the rest
+of assets/ stays on disk for the .potx side, which reads files, not base64.
 """
 import base64, io, os
 from PIL import Image
@@ -19,6 +24,15 @@ ITEMS = [
     ("logoWhite", "nct-logo-white.png", 512, False),
     ("markColor", "nct-mark-color.png", 180, True),
     ("markWhite", "nct-mark-white.png", 180, False),
+]
+
+# name -> source file. Already sized by scripts/prepare_images.py; inlined verbatim.
+PHOTOS = [
+    ("photoSection", "photo-section.jpg", "image/jpeg"),
+    ("photoFacade", "photo-facade.jpg", "image/jpeg"),
+    ("photoTower", "photo-tower.jpg", "image/jpeg"),
+    ("photoHandshake", "photo-handshake.jpg", "image/jpeg"),
+    ("mascot", "mascot.png", "image/png"),
 ]
 
 
@@ -41,9 +55,21 @@ for name, fname, w, grad in ITEMS:
     b64, size, raw = encode(os.path.join(SRC, fname), w, grad)
     total += len(b64)
     lines.append("/** %s - %dx%d, %.1f KB */" % (fname, size[0], size[1], raw / 1024))
-    lines.append("export const %s = 'data:image/png;base64,%s';" % (name, b64))
+    # `: string` stops TS inferring a literal type - without it tsup copies the
+    # whole base64 blob into index.d.ts as well as index.js
+    lines.append("export const %s: string = 'data:image/png;base64,%s';" % (name, b64))
     lines.append("")
     print("  %-11s %4dx%-4d %7.1f KB raw" % (name, size[0], size[1], raw / 1024))
+
+for name, fname, mime in PHOTOS:
+    raw = open(os.path.join(SRC, fname), "rb").read()
+    b64 = base64.b64encode(raw).decode("ascii")
+    total += len(b64)
+    size = Image.open(os.path.join(SRC, fname)).size
+    lines.append("/** %s - %dx%d, %.1f KB */" % (fname, size[0], size[1], len(raw) / 1024))
+    lines.append("export const %s: string = 'data:%s;base64,%s';" % (name, mime, b64))
+    lines.append("")
+    print("  %-11s %4dx%-4d %7.1f KB raw" % (name, size[0], size[1], len(raw) / 1024))
 
 with open(OUT, "w", encoding="utf-8") as f:
     f.write("\n".join(lines))

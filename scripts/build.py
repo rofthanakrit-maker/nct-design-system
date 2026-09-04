@@ -17,12 +17,15 @@ IMG = {
     "logo-white.png": "nct-logo-white.png",
     "mark-color.png": "nct-mark-color.png",
     "mark-white.png": "nct-mark-white.png",
+    "photo-section.jpg": "photo-section.jpg",
+    "photo-facade.jpg": "photo-facade.jpg",
+    "photo-tower.jpg": "photo-tower.jpg",
 }
 
 # per-layout: (builder, [image files in rId2, rId3 ... order])
 LAYOUTS = [
     (lambda: PL.l01_title("rId2", "rId3"), ["logo-white.png", "mark-white.png"]),
-    (lambda: PL.l02_section("rId2"),       ["mark-white.png"]),
+    (lambda: PL.l02_section("rId2", "rId3"), ["mark-white.png", "photo-section.jpg"]),
     (lambda: PL.l03_content("rId2"),       ["mark-color.png"]),
     (lambda: PL.l04_two("rId2"),           ["mark-color.png"]),
     (lambda: PL.l05_cards("rId2"),         ["mark-color.png"]),
@@ -30,13 +33,13 @@ LAYOUTS = [
     (lambda: PL.l07_quote("rId2"),         ["mark-color.png"]),
     (lambda: PL.l08_image("rId2"),         ["mark-white.png"]),
     (lambda: PL.l09_table("rId2"),         ["mark-color.png"]),
-    (lambda: PL.l10_closing("rId2", None), ["logo-white.png"]),
+    (lambda: PL.l10_closing("rId2", "rId3"), ["logo-white.png", "photo-facade.jpg"]),
     # --- v2: dense / proposal-deck layouts ---
     (lambda: PL.l11_split("rId2"),         ["mark-color.png"]),
     (lambda: PL.l12_cards_band("rId2"),    ["mark-color.png"]),
     (lambda: PL.l13_process("rId2"),       ["mark-color.png"]),
     (lambda: PL.l14_diagram("rId2"),       ["mark-color.png"]),
-    (lambda: PL.l15_agenda("rId2"),        ["mark-white.png"]),
+    (lambda: PL.l15_agenda("rId2", "rId3"), ["mark-white.png", "photo-tower.jpg"]),
     (lambda: PL.l16_dense_table("rId2"),   ["mark-color.png"]),
 ]
 
@@ -213,6 +216,7 @@ def content_types(n_slides, is_template):
             '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
             '<Default Extension="xml" ContentType="application/xml"/>'
             '<Default Extension="png" ContentType="image/png"/>'
+            '<Default Extension="jpg" ContentType="image/jpeg"/>'
             '%s</Types>' % (CT, "".join(ov)))
 
 

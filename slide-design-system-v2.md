@@ -241,16 +241,16 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 
 ### 15 Agenda — ตัวแปรของ 02
 
-โครงเดียวกับ 02 Section Divider ทุกอย่าง (พื้น `NAVY` + wedge `TEAL`, `mark-white`)
+โครงเดียวกับ 02 Section Divider ทุกอย่าง (พื้น `NAVY` + แถบภาพขวา, `mark-white`)
 เปลี่ยนแค่กล่องล่าง
 
 | ชิ้น | x | y | w | h | สเปก |
 |---|---|---|---|---|---|
-| Accent Wedge | 9.833 | 0.000 | 3.500 | 7.500 | เหมือน L02 |
+| Section Photo | 8.000 | 0.000 | 5.333 | 7.500 | เหมือน L02 — ภาพ + fade + scrim ล่าง |
 | Section Number PH | 1.000 | 1.600 | 2.500 | 1.100 | 60 pt Kanit Bold `TEAL_L` |
 | Accent Rule | 1.000 | 2.800 | 0.600 | 0.050 | `TEAL` |
-| Title PH | 1.000 | 2.900 | 9.000 | 0.900 | 40 pt Kanit Bold `PAPER` |
-| Agenda list PH | 1.000 | 4.000 | 8.000 | 2.400 | 18 pt · `PAPER` 88% · bullet `TEAL` · **สูงสุด 6 บรรทัด** |
+| Title PH | 1.000 | 2.900 | 6.800 | 0.900 | 40 pt Kanit Bold `PAPER` |
+| Agenda list PH | 1.000 | 4.000 | 6.800 | 2.400 | 18 pt · `PAPER` 88% · bullet `TEAL` · **สูงสุด 6 บรรทัด** |
 
 - เลขบทยังต้องพิมพ์เอง ไม่ auto เหมือน L02
 - ใช้ L15 ตอนเปิดบท ใช้ L02 ตอนคั่นบทย่อยที่ไม่ต้องลิสต์ — ไม่ใช้สลับกันมั่ว

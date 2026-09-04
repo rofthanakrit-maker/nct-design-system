@@ -72,5 +72,14 @@ export type {
   FlowStep,
 } from "./layouts";
 
+/* Stock imagery, inlined as data URIs so it survives a CSP that blocks external
+   images. Pass one to SlideSection's `image` or SlideFullImage's `src`. */
+export {
+  photoSection,
+  photoFacade,
+  photoTower,
+  photoHandshake,
+  mascot,
+} from "./assets";
 export { color, canvas, space, fontSize } from "./tokens";
 export type { NctColor } from "./tokens";

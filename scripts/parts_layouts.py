@@ -41,6 +41,12 @@ def _rule(sid, x=MX, y=RULE_Y, color=TEAL, alpha=None):
     return shape(sid, "Accent Rule", x, y, RULE_W, RULE_H, solid(color, alpha))
 
 
+# 02 section divider: photo band on the right, text column on the left
+SEC_PHOTO_W = 4876800                      # 40% of the canvas   5.33in
+SEC_PHOTO_X = SW - SEC_PHOTO_W
+SEC_TEXT_W = SEC_PHOTO_X - MX - GUT        # title/desc stop clear of the photo
+
+
 def _wrap(name, typ, shapes, bgfill=None):
     t = ' type="%s"' % typ if typ else ''
     return ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
@@ -66,17 +72,21 @@ def l01_title(rid_logo_white, rid_mark_white):
 
 
 # ---------------------------------------------------------------- 02 Section
-def l02_section(rid_mark_white):
-    s = [shape(10, "Accent Wedge", SW - 3200400, 0, 3200400, SH, solid(TEAL, 20),
-               prst="rtTriangle"),
+def l02_section(rid_mark_white, rid_photo):
+    # the photograph takes the right 40%; text keeps the left panel to itself
+    s = [pic(9, "Section Photo", rid_photo, SEC_PHOTO_X, 0, SEC_PHOTO_W, SH),
+         shape(10, "Photo Fade", SEC_PHOTO_X, 0, SEC_PHOTO_W, SH, fade_x(NAVY)),
+         # the footer chrome sits on top of the band - keep it on navy, not on glass
+         shape(15, "Photo Foot Scrim", SEC_PHOTO_X, SH - 2057400, SEC_PHOTO_W, 2057400,
+               scrim(NAVY)),
          placeholder(11, "Section Number", "body", MX, 1737360, 2286000, 1005840,
                      [S("01", sz=6000, color=TEAL_L, bold=True, font="mj", line=100000)],
                      idx=1, anchor="b"),
          _rule(12, y=2834640, color=TEAL_L),
-         placeholder(13, "Title Placeholder", "title", MX, 2926080, 8229600, 1188720,
+         placeholder(13, "Title Placeholder", "title", MX, 2926080, SEC_TEXT_W, 1188720,
                      [S("ชื่อหัวข้อ", sz=T_SECTION, color=PAPER, bold=True,
                         font="mj", line=108000)], anchor="t"),
-         placeholder(14, "Description", "body", MX, 4297680, 6858000, 731520,
+         placeholder(14, "Description", "body", MX, 4297680, SEC_TEXT_W, 731520,
                      [S("คำอธิบายหัวข้อสั้น ๆ หนึ่งถึงสองบรรทัด", sz=T_BODY, color=PAPER,
                         alpha=78, line=130000)], idx=2)]
     s += chrome(dark=True, mark_rid=rid_mark_white)
@@ -195,17 +205,21 @@ def l09_table(rid_mark_color):
 
 
 # ---------------------------------------------------------------- 10 Closing
-def l10_closing(rid_logo_white, _unused=None):
+def l10_closing(rid_logo_white, rid_photo):
+    # the band replaces the top-right diamond; the logo drops under the contact block
     s = [_diamond(10, -1371600, SH - 2743200, 3657600, 9),
-         _diamond(11, SW - 2743200, -457200, 3200400, 7),
-         placeholder(12, "Title Placeholder", "title", MX, 1554480, 8229600, 1188720,
+         pic(11, "Section Photo", rid_photo, SEC_PHOTO_X, 0, SEC_PHOTO_W, SH),
+         shape(16, "Photo Fade", SEC_PHOTO_X, 0, SEC_PHOTO_W, SH, fade_x(NAVY)),
+         shape(17, "Photo Foot Scrim", SEC_PHOTO_X, SH - 2057400, SEC_PHOTO_W, 2057400,
+               scrim(NAVY)),
+         placeholder(12, "Title Placeholder", "title", MX, 1554480, SEC_TEXT_W, 1188720,
                      [S("ขอบคุณครับ", sz=T_SECTION, color=PAPER, bold=True,
                         font="mj", line=108000)], anchor="b"),
          _rule(13, y=2926080, color=PAPER, alpha=70),
          placeholder(14, "Contact", "body", MX, 3200400, 5486400, 1828800,
                      [S("โทร · 0X-XXX-XXXX", sz=T_BODY, color=PAPER, alpha=88,
                         line=100000, space_before=600)], idx=1),
-         _logo(15, rid_logo_white, SW - MX - 2560320, 3383280, 2560320)]
+         _logo(15, rid_logo_white, MX, 4476750, 2560320)]
     s += chrome(dark=True, mark_rid=None)
     return _wrap("10 Closing / Contact", "obj", s, bgfill=grad(TEAL_B, NAVY, 45, c_mid=MID))
 
@@ -342,17 +356,20 @@ def l14_diagram(rid_mark_color):
 
 
 # ---------------------------------------------------------------- 15 Agenda (variant of 02)
-def l15_agenda(rid_mark_white):
-    s = [shape(10, "Accent Wedge", SW - 3200400, 0, 3200400, SH, solid(TEAL, 20),
-               prst="rtTriangle"),
+def l15_agenda(rid_mark_white, rid_photo):
+    # same band as L02 - 15 is a chapter opener too, not a content slide
+    s = [pic(9, "Section Photo", rid_photo, SEC_PHOTO_X, 0, SEC_PHOTO_W, SH),
+         shape(10, "Photo Fade", SEC_PHOTO_X, 0, SEC_PHOTO_W, SH, fade_x(NAVY)),
+         shape(19, "Photo Foot Scrim", SEC_PHOTO_X, SH - 2057400, SEC_PHOTO_W, 2057400,
+               scrim(NAVY)),
          placeholder(11, "Section Number", "body", MX, 1737360, 2286000, 1005840,
                      [S("01", sz=6000, color=TEAL_L, bold=True, font="mj", line=100000)],
                      idx=1, anchor="b"),
          _rule(12, y=2834640, color=TEAL_L),
-         placeholder(13, "Title Placeholder", "title", MX, 2926080, 8229600, 1188720,
+         placeholder(13, "Title Placeholder", "title", MX, 2926080, SEC_TEXT_W, 1188720,
                      [S("ชื่อบท", sz=T_SECTION, color=PAPER, bold=True, font="mj",
                         line=108000)], anchor="t"),
-         placeholder(14, "Agenda List", "body", MX, 4297680, 7315200, 2194560,
+         placeholder(14, "Agenda List", "body", MX, 4297680, SEC_TEXT_W, 2194560,
                      [S("หัวข้อที่หนึ่ง", sz=T_BODY, color=PAPER, alpha=88, bullet=True,
                         bullet_color=TEAL_L, indent=274320, marL=274320,
                         line=145000, space_before=300),

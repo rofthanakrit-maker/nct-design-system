@@ -38,3 +38,27 @@ Repo-specific gotchas. Read before re-syncing.
   server sends only `Last-Modified`, and browsers reuse a cached `@import` through
   a hard reload - a regenerated `tokens.css` keeps rendering the old palette and
   the edit loop lies to you. `scripts/serve.py` sends `no-store`.
+- **Photographs come from `scripts/prepare_images.py`, not from the raw drop.**
+  `icons and images/` holds untouched sources (tens of MB, gitignored); the script
+  centre-crops each one to the aspect the layout places it at and writes
+  `assets/photo-*.jpg` + `assets/mascot*.png`. Cropping there rather than in CSS is
+  what keeps the web and the .potx framing identical - PowerPoint stretches a
+  picture to its frame and would distort anything cropped only by `object-fit`.
+  `emit_web_assets.py` then inlines the three the components use.
+- **Layouts 02, 15 and 10 carry the photograph.** 02 and 15 are both chapter
+  openers; 10 is the closing, where the band replaces the top-right diamond and the
+  logo moves under the contact block (there is no margin left for it). In
+  PowerPoint the band is baked into each layout (like the wedge it replaced); in
+  React it appears only when the component gets an `image`, and `SectionBand` in
+  layouts.tsx is the one place that renders it. One frame each, never repeated:
+  02 `photo-section.jpg`, 15 `photo-tower.jpg`, 10 `photo-facade.jpg`. All three are
+  architecture. Same geometry both sides: `SEC_PHOTO_*` in parts_layouts.py
+  mirrors `.nct-section__photo` in slides.css - change one, change the other.
+- **`SlideClosing imageMode="full"` exists on the web only - this is deliberate,
+  not drift.** The band crops its subject to about 560x720; a handshake read as a
+  blur at that size, so the full-bleed variant runs the photograph edge to edge
+  behind a `DEEP` scrim. PowerPoint has no props: mirroring it would mean either
+  losing the band on layout 10 or adding a seventeenth layout, and the 1:1
+  component-to-layout mapping is worth more than the variant. `.potx` layout 10
+  keeps the facade band. A deck that has to survive export to PowerPoint should
+  stay on the default `imageMode="band"`.
