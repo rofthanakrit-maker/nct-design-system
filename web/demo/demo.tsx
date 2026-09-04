@@ -106,14 +106,9 @@ function App() {
           [{ value: "รายงานสุขภาพระบบ", bold: true }, { value: "ไตรมาส", align: "center" }, { value: "รายเดือน", align: "center" }, { value: "รายสัปดาห์", align: "center" }],
         ]}
       />
-      <SlideClosing
-        {...chrome}
-        pageNumber={10}
-        contact={["โทร · 02-XXX-XXXX", "อีเมล · contact@nctthai.com", "เว็บไซต์ · nctthai.com"]}
-      />
       <SlideSplitPanel
         {...chrome}
-        pageNumber={11}
+        pageNumber={10}
         title="สภาพระบบบัญชีปัจจุบัน"
         context={[
           "คีย์เอกสารซ้ำสามระบบ ไม่มีจุดตรวจกลาง",
@@ -131,7 +126,7 @@ function App() {
       />
       <SlideFourCards
         {...chrome}
-        pageNumber={12}
+        pageNumber={11}
         title="สี่ผลลัพธ์ที่ข้อเสนอนี้ให้"
         cards={[
           { heading: "ลดงานคีย์ซ้ำ", body: "รับเอกสารเข้าระบบเดียว แล้วกระจายต่อให้ทุกปลายทางอัตโนมัติ" },
@@ -143,7 +138,7 @@ function App() {
       />
       <SlideProcessFlow
         {...chrome}
-        pageNumber={13}
+        pageNumber={12}
         title="กระบวนการที่เสนอ"
         subtitle="ห้าขั้นตอน ทำงานต่อเนื่องโดยไม่ต้องคีย์ซ้ำ"
         steps={[
@@ -157,7 +152,7 @@ function App() {
       />
       <SlideDiagram
         {...chrome}
-        pageNumber={14}
+        pageNumber={13}
         title="ภาพรวมสถาปัตยกรรมระบบ"
         subtitle="ใช้ชุดชิ้นส่วนมาตรฐาน — กล่องมุมตรง เส้นหักมุมฉาก ไม่มีเงา"
         legend="กล่องทึบ = ระบบที่มีอยู่ · กล่องมีสีหมวด = ส่วนที่เพิ่ม · เส้นทึบ = ข้อมูลไหลอัตโนมัติ"
@@ -176,7 +171,7 @@ function App() {
       </SlideDiagram>
       <SlideAgenda
         {...chrome}
-        pageNumber={15}
+        pageNumber={14}
         number="02"
         title="หัวข้อนำเสนอ"
         items={[
@@ -189,7 +184,7 @@ function App() {
       />
       <SlideDenseTable
         {...chrome}
-        pageNumber={16}
+        pageNumber={15}
         title="ขอบเขตงานรายกระบวนการ"
         intro="แปดกระบวนการที่อยู่ในขอบเขต แบ่งตามหมวดและรอบส่งมอบ"
         widths={[0.6, 3.2, 1.3, 1.6, 1.6, 1.4]}
@@ -212,6 +207,11 @@ function App() {
           [{ value: 8, category: 4 }, "รายงานภาษีซื้อ-ขาย", { value: "GL", align: "center", bold: true }, { value: "2 ชุด", align: "center" }, { value: "ติดข้อจำกัด", status: "risk" }, { value: "รอบ 3", align: "center" }],
         ]}
         footnote="ปริมาณเป็นค่าเฉลี่ยจากข้อมูล 3 เดือนล่าสุด · รายการติดข้อจำกัดรอผลการตรวจสิทธิ์เข้าระบบ"
+      />
+      <SlideClosing
+        {...chrome}
+        pageNumber={16}
+        contact={["โทร · 02-XXX-XXXX", "อีเมล · contact@nctthai.com", "เว็บไซต์ · nctthai.com"]}
       />
     </Deck>
   );

@@ -355,11 +355,6 @@ def demo_slides():
     S.append((9, [sp_text(2, "Title", "title", None, ["เปรียบเทียบแพ็กเกจ"]),
                   sp_text(3, "Intro", "body", 2, ["เลือกระดับบริการให้ตรงกับขนาดองค์กร"]),
                   table(4, "Package Table", 1, MX, 2286000, w9, rows9)]))
-    # 10 closing
-    S.append((10, [sp_text(2, "Title", "title", None, ["ขอบคุณครับ"]),
-                   sp_text(3, "Contact", "body", 1,
-                           ["โทร · 02-XXX-XXXX", "อีเมล · contact@nctthai.com",
-                            "เว็บไซต์ · nctthai.com"])]))
 
     # ---------------------------------------------------------- v2 layouts 11-16
     # 11 split panel
@@ -466,6 +461,12 @@ def demo_slides():
                    sp_text(5, "Foot", "body", 3,
                            ["ปริมาณเป็นค่าเฉลี่ยจากข้อมูล 3 เดือนล่าสุด · "
                             "รายการติดข้อจำกัดรอผลการตรวจสิทธิ์เข้าระบบ"])]))
+    # closing goes last: it is layout 10, but a deck ends on the thank-you page
+    S.append((10, [sp_text(2, "Title", "title", None, ["ขอบคุณครับ"]),
+                   sp_text(3, "Contact", "body", 1,
+                           ["โทร · 02-XXX-XXXX", "อีเมล · contact@nctthai.com",
+                            "เว็บไซต์ · nctthai.com"])]))
+
     return S
 
 
