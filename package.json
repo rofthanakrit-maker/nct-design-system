@@ -1,0 +1,14 @@
+{
+  "name": "nct-design-system",
+  "version": "2.0.0",
+  "private": true,
+  "description": "NCT design system - one token source feeding a PowerPoint template and a React slide library",
+  "workspaces": ["web"],
+  "scripts": {
+    "build": "npm run build --workspace @nct/slides",
+    "build:potx": "py scripts/build.py",
+    "tokens": "py scripts/emit_web_tokens.py",
+    "fonts": "py scripts/build_webfonts.py",
+    "assets": "py scripts/emit_web_assets.py"
+  }
+}

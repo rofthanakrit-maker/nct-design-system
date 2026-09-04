@@ -1,0 +1,10 @@
+{
+  "pkg": "@nct/slides",
+  "globalName": "NctSlides",
+  "shape": "package",
+  "buildCmd": "npm run build --workspace @nct/slides",
+  "srcDir": "src",
+  "tsconfig": "tsconfig.json",
+  "cssEntry": "src/styles.css",
+  "readmeHeader": ".design-sync/conventions.md"
+}
