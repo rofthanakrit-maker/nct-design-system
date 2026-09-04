@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+node_modules/
+web/dist/
+.design-sync/.cache/
+.backup-v1/
