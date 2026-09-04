@@ -51,8 +51,7 @@ npm run assets               # โลโก้เป็น data URI
 ดูของจริง:
 
 ```bash
-npx esbuild web/demo/demo.tsx --bundle --format=esm --jsx=automatic \
-  --outfile=web/demo/demo.js --loader:.tsx=tsx
+npm run demo                 # bundle demo.tsx -> demo.js (demo:watch = แก้แล้ว build เอง)
 python -m http.server 5173 --directory web    # เปิด /demo/index.html
 ```
 

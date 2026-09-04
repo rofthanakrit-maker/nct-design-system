@@ -3,7 +3,7 @@
   "configurations": [
     {
       "name": "nct-slides-demo",
-      "runtimeExecutable": "py",
+      "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "5173", "--directory", "web"],
       "port": 5173
     }
