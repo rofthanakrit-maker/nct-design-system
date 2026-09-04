@@ -27,7 +27,8 @@ COLORS = [
     ("rule", T.RULE, "hairline, divider"),
     ("navy", T.NAVY, "headings, dark panels, primary accent"),
     ("teal", T.TEAL, "rules, bullets, links, secondary accent"),
-    ("teal-l", T.TEAL_L, "section numbers on dark, 2nd chart series"),
+    ("teal-l", T.TEAL_L, "2nd chart series, category 3 - on white only"),
+    ("teal-up", T.TEAL_UP, "the same teal lifted to read ON NAVY - never on white"),
     ("deep", T.DEEP, "photo scrim, full-image background"),
     ("mid", T.MID, "gradient midpoint (L01 / L10) - gradient stop only"),
     ("teal-b", T.TEAL_B, "gradient END stop only - never fill/line/text (fails AA)"),
@@ -53,6 +54,9 @@ SPACE = [
     ("title-y", T.TITLE_Y), ("title-h", T.TITLE_H),
     ("rule-y", T.RULE_Y), ("rule-h", T.RULE_H), ("rule-w", T.RULE_W),
     ("body-y", T.BODY_Y), ("body-h", T.BODY_H),
+    ("take-h", T.TAKE_H), ("note-h", T.NOTE_H),
+    # distance from the foot of the body box, so the CSS can pin both from bottom
+    ("note-up", T.BODY_Y + T.BODY_H - T.NOTE_Y - T.NOTE_H),
 ]
 
 TYPE = [

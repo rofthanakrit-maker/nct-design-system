@@ -30,7 +30,10 @@ file is the rule.
   --color-paper:      oklch(100%   0     0);      /* #FFFFFF — page bg */
   --color-paper-2:    oklch(96.2%  0.015 191.8);   /* #E8F6F5 — decorative blob tint */
   --color-ink:        oklch(32.1%  0     0);       /* #333333 — body text */
-  --color-ink-2:      oklch(71.9%  0     0);       /* #A4A4A4 — footer/muted text */
+  --color-ink-2:      oklch(48.7%  0     0);       /* #5F5F5F — footer/muted text.
+                                                      Was #A4A4A4, which measured 2.5:1 on
+                                                      paper and failed AA at every size it
+                                                      was used at. Never lighten it again. */
   --color-rule:       oklch(90%    0     0);       /* estimated — no strong rule colour observed on source */
   --color-accent:     oklch(38.0%  0.082 255.9);   /* #23436D — navy, headings + primary CTA */
   --color-accent-2:   oklch(49.2%  0.077 219.7);   /* #216B7F — teal, links + secondary CTA */
@@ -84,8 +87,9 @@ flows, status columns). These extend the system — they don't replace anything 
 :root {
   --color-mid:      #1E5473;  /* named gradient midpoint, was already used inline */
   --color-teal-b:   #1A8D92;  /* true logo end-stop — GRADIENT STOP ONLY, never fill/line/text (3.4:1 on white) */
+  --color-teal-up:  #8FBACE;  /* accent-2 lifted for text ON NAVY (4.8:1). Never on white (2.1:1) */
   --color-risk:     #B3261E;  --color-risk-tint: #FBEAE8;
-  --color-warn:     #B26B00;  --color-warn-tint: #FBF1E3;
+  --color-warn:     #965900;  --color-warn-tint: #FBF1E3;  /* darkened from #B26B00 — 3.8:1 failed AA on its own tint */
   --color-ok:       #1F7A54;  --color-ok-tint:   #E6F4EE;
 }
 ```

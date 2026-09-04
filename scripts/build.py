@@ -358,7 +358,11 @@ def demo_slides():
                                  for i, t in enumerate(r)]))
     S.append((9, [sp_text(2, "Title", "title", None, ["เปรียบเทียบแพ็กเกจ"]),
                   sp_text(3, "Intro", "body", 2, ["เลือกระดับบริการให้ตรงกับขนาดองค์กร"]),
-                  table(4, "Package Table", 1, MX, 2286000, w9, rows9)]))
+                  table(4, "Package Table", 1, MX, 2286000, w9, rows9),
+                  sp_text(5, "TL", "body", 3, ["สรุป"]),
+                  sp_text(6, "TC", "body", 4,
+                          ["องค์กร 50-200 ที่นั่งเลือก Business เป็นค่าเริ่มต้น "
+                           "ตอบกลับ 4 ชั่วโมงครอบคลุมงานปิดงบรายเดือน"])]))
 
     # ---------------------------------------------------------- v2 layouts 11-16
     # 11 split panel
@@ -419,6 +423,9 @@ def demo_slides():
             sp_text(4, "Leg", "body", 2,
                     ["กล่องทึบ = ระบบที่มีอยู่  ·  กล่องมีสีหมวด = ส่วนที่เพิ่ม  ·  "
                      "เส้นทึบ = ข้อมูลไหลอัตโนมัติ"])]
+    sh14.append(sp_text(5, "TL", "body", 3, ["สรุป"]))
+    sh14.append(sp_text(6, "TC", "body", 4,
+                        ["ระบบเดิมไม่ถูกแก้ ของใหม่แทรกเป็นคิวและตัวตรวจกฎคั่นกลางเท่านั้น"]))
     sh14 += _diagram_kit(10)
     S.append((14, sh14))
 
@@ -461,10 +468,14 @@ def demo_slides():
     S.append((16, [sp_text(2, "Title", "title", None, ["ขอบเขตงานรายกระบวนการ"]),
                    sp_text(3, "Intro", "body", 2,
                            ["แปดกระบวนการที่อยู่ในขอบเขต แบ่งตามหมวดและรอบส่งมอบ"]),
-                   table(4, "Scope Table", 1, MX, 2148840, w16, rows16),
+                   table(4, "Scope Table", 1, MX, 2011680, w16, rows16),
                    sp_text(5, "Foot", "body", 3,
                            ["ปริมาณเป็นค่าเฉลี่ยจากข้อมูล 3 เดือนล่าสุด · "
-                            "รายการติดข้อจำกัดรอผลการตรวจสิทธิ์เข้าระบบ"])]))
+                            "รายการติดข้อจำกัดรอผลการตรวจสิทธิ์เข้าระบบ"]),
+                   sp_text(6, "TL", "body", 4, ["สรุป"]),
+                   sp_text(7, "TC", "body", 5,
+                           ["หกในแปดกระบวนการเริ่มได้ทันทีในรอบ 1-2 "
+                            "อีกสองรายการรอสิทธิ์เข้าระบบ ยืนยันภายใน 15 วัน"])]))
     # closing goes last: it is layout 10, but a deck ends on the thank-you page
     S.append((10, [sp_text(2, "Title", "title", None, ["ขอบคุณครับ"]),
                    sp_text(3, "Contact", "body", 1,

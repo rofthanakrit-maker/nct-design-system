@@ -263,18 +263,33 @@ export interface SlideTableProps extends Base, Pick<DataTableProps, "columns" | 
   title: ReactNode;
   /** One-line lead-in above the table. */
   intro?: ReactNode;
+  takeawayLabel?: string;
+  /**
+   * Required, not optional. A comparison grid with no stated conclusion leaves
+   * the reader to pick for themselves, which is the one thing this slide exists
+   * to prevent — say which column you are recommending and why.
+   */
+  takeaway: ReactNode;
 }
 
 /** 09 · Table / Comparison. Package or spec comparison at 14pt. */
-export function SlideTable({ title, intro, columns, rows, widths, ...chrome }: SlideTableProps) {
+export function SlideTable({
+  title,
+  intro,
+  columns,
+  rows,
+  widths,
+  takeawayLabel = "สรุป",
+  takeaway,
+  ...chrome
+}: SlideTableProps) {
   return (
     <Slide {...chrome}>
       <SlideTitle>{title}</SlideTitle>
       <div className="nct-body">
-        {intro && <p className="nct-caption" style={{ margin: 0 }}>{intro}</p>}
-        <div style={{ marginTop: 33.6 }}>
-          <DataTable columns={columns} rows={rows} widths={widths} size="roomy" />
-        </div>
+        {intro && <p className="nct-caption nct-caption--lead">{intro}</p>}
+        <DataTable columns={columns} rows={rows} widths={widths} size="roomy" />
+        <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
       </div>
     </Slide>
   );
@@ -504,20 +519,32 @@ export interface SlideDiagramProps extends Base {
   /** Compose with DiagramBox / DiagramLink / DiagramGroup. */
   children?: ReactNode;
   legend?: ReactNode;
+  takeawayLabel?: string;
+  /** Required. The drawing shows the shape; this says what it means. */
+  takeaway: ReactNode;
 }
 
 /**
  * 14 · Diagram Canvas. A deliberately empty frame — the drawing is yours, built
  * from the diagram kit. Past ~30 boxes, split the slide.
  */
-export function SlideDiagram({ title, subtitle, children, legend, ...chrome }: SlideDiagramProps) {
+export function SlideDiagram({
+  title,
+  subtitle,
+  children,
+  legend,
+  takeawayLabel = "สรุป",
+  takeaway,
+  ...chrome
+}: SlideDiagramProps) {
   return (
     <Slide {...chrome}>
       <SlideTitle>{title}</SlideTitle>
       <div className="nct-body">
-        {subtitle && <p className="nct-caption" style={{ margin: 0 }}>{subtitle}</p>}
+        {subtitle && <p className="nct-caption nct-caption--sub">{subtitle}</p>}
         <div className="nct-canvas">{children}</div>
         {legend && <div className="nct-dia-legend">{legend}</div>}
+        <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
       </div>
     </Slide>
   );
@@ -560,9 +587,15 @@ export interface SlideDenseTableProps
   title: ReactNode;
   intro?: ReactNode;
   footnote?: ReactNode;
+  takeawayLabel?: string;
+  /**
+   * Required. Eight rows of status is evidence, not an answer — and if any row
+   * is red, this line is where the reader learns what happens about it.
+   */
+  takeaway: ReactNode;
 }
 
-/** 16 · Dense Table. Eight to ten rows at the 10pt floor. Never smaller. */
+/** 16 · Dense Table. Eight to nine rows at the 10pt floor. Never smaller. */
 export function SlideDenseTable({
   title,
   intro,
@@ -570,21 +603,18 @@ export function SlideDenseTable({
   rows,
   widths,
   footnote,
+  takeawayLabel = "สรุป",
+  takeaway,
   ...chrome
 }: SlideDenseTableProps) {
   return (
     <Slide {...chrome}>
       <SlideTitle>{title}</SlideTitle>
       <div className="nct-body">
-        {intro && <p className="nct-dense" style={{ margin: 0, color: "var(--nct-ink-2)" }}>{intro}</p>}
-        <div style={{ marginTop: 19.2 }}>
-          <DataTable columns={columns} rows={rows} widths={widths} />
-        </div>
-        {footnote && (
-          <p style={{ marginTop: 14.4, fontSize: "var(--nct-fs-densecell)", color: "var(--nct-ink-2)" }}>
-            {footnote}
-          </p>
-        )}
+        {intro && <p className="nct-dense nct-dense--lead">{intro}</p>}
+        <DataTable columns={columns} rows={rows} widths={widths} />
+        {footnote && <p className="nct-note">{footnote}</p>}
+        <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
       </div>
     </Slide>
   );

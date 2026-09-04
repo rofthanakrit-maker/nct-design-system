@@ -86,15 +86,21 @@ export interface TakeawayBandProps {
   /** One line. If it needs two, the slide is carrying too much. */
   children: ReactNode;
   tone?: "tint" | "dark";
+  /**
+   * Pin the strip to the foot of the body box instead of letting it flow after
+   * the content. Layouts 09/14/16 use this so the conclusion lands at the same
+   * y whether the table above runs four rows or ten.
+   */
+  foot?: boolean;
 }
 
 /**
  * The one-line conclusion strip. Every table slide and every diagram slide must
  * carry one — the reader has to get the point without reading the grid.
  */
-export function TakeawayBand({ label, children, tone = "tint" }: TakeawayBandProps) {
+export function TakeawayBand({ label, children, tone = "tint", foot }: TakeawayBandProps) {
   return (
-    <div className={`nct-band nct-band--${tone}`}>
+    <div className={`nct-band nct-band--${tone}${foot ? " nct-band--foot" : ""}`}>
       <span className="nct-band__label">{label}</span>
       <span className="nct-band__copy">{children}</span>
     </div>

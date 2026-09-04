@@ -77,11 +77,12 @@ cd scripts && py build.py
 | `PAPER` | `#FFFFFF` | พื้นสไลด์สว่าง | design.md |
 | `PAPER2` | `#E8F6F5` | พื้นการ์ด, พื้น quote slide | design.md |
 | `INK` | `#333333` | body text | design.md |
-| `INK2` | `#A4A4A4` | caption, label, footer | design.md |
+| `INK2` | `#5F5F5F` | caption, label, footer | design.md (แก้จาก `#A4A4A4`) |
 | `RULE` | `#E5E5E5` | hairline, divider | design.md |
 | `NAVY` | `#23436D` | หัวเรื่อง, ตัวเลขเด่น, พื้น section | design.md accent |
 | `TEAL` | `#216B7F` | rule, bullet, tab, link | design.md accent-2 |
-| `TEAL_L` | `#4E8FA8` | เลขหัวข้อบนพื้นเข้ม, series ที่ 2 ในกราฟ | **derived** |
+| `TEAL_L` | `#4E8FA8` | series ที่ 2 ในกราฟ, หมวดที่ 3 — **พื้นขาวเท่านั้น** | **derived** |
+| `TEAL_UP` | `#8FBACE` | เลขหัวข้อ / bullet / label **บนพื้น navy เท่านั้น** | **derived** |
 | `DEEP` | `#16324F` | scrim ทับรูป, พื้น full-image | **derived** |
 
 ### Theme color slot (PowerPoint)
@@ -158,7 +159,7 @@ map ไว้แล้วใน `.potx` — กราฟและตาราง
 | 06 | Key Figures | ขาว | title + (ตัวเลข, label) × 3 + footnote | ตัวเลขที่อยากให้จำ |
 | 07 | Pull Quote | `PAPER2` + แถบ gradient ซ้าย | quote, attribution | testimonial, คำพูดลูกค้า |
 | 08 | Full Image | รูปเต็มจอ + scrim | picture, title, caption | ภาพเปิดบท, ภาพผลงาน |
-| 09 | Table / Comparison | ขาว | title, intro, table | เทียบแพ็กเกจ, spec |
+| 09 | Table / Comparison | ขาว | title, intro, table, takeaway | เทียบแพ็กเกจ, spec |
 | 10 | Closing / Contact | gradient teal→navy 45° + แถบภาพขวา (web มีโหมดภาพเต็มหน้าเพิ่ม) | title, contact (โลโก้ฝังใน layout มุมซ้ายล่าง) | หน้าสุดท้ายเท่านั้น |
 
 layout 11–16 อยู่ใน `slide-design-system-v2.md`

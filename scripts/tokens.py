@@ -5,9 +5,14 @@
 NAVY    = "23436D"   # accent      - primary brand navy
 TEAL    = "216B7F"   # accent-2    - secondary brand teal
 TEAL_L  = "4E8FA8"   # accent-3    - derived light teal (charts, 2nd series)
+TEAL_UP = "8FBACE"   # accent-3 on navy - the same hue lifted until it reads.
+                      # TEAL_L on NAVY is 2.8:1 and fails AA; this is 4.8:1.
+                      # ON NAVY ONLY - it is 2.1:1 on white. Adds no new hue.
 DEEP    = "16324F"   # accent-6    - derived deep navy (dark scrim, shadow)
 INK     = "333333"   # body text
-INK2    = "A4A4A4"   # muted text
+INK2    = "5F5F5F"   # muted text - caption, label, footer. 6.4:1 on PAPER,
+                      # 5.8:1 on PAPER2. Was A4A4A4 (2.5:1), which failed AA at
+                      # every size it was used at - never go lighter than this.
 PAPER   = "FFFFFF"   # page bg
 PAPER2  = "E8F6F5"   # tinted surface (cards, quote bg)
 RULE    = "E5E5E5"   # hairline
@@ -19,7 +24,9 @@ TEAL_B  = "1A8D92"   # true gradient END (logo end-stop) - GRADIENT STOP ONLY,
 
 # ---- v2: status tokens (tables / process flows only - never chrome/headings) ----
 RISK    = "B3261E";  RISK_T = "FBEAE8"   # high risk, blocker
-WARN    = "B26B00";  WARN_T = "FBF1E3"   # unconfirmed, TBC, needs decision
+WARN    = "965900";  WARN_T = "FBF1E3"   # unconfirmed, TBC, needs decision.
+                                          # 5.0:1 on its own tint - B26B00 was 3.8:1,
+                                          # the only status colour that failed AA.
 OK      = "1F7A54";  OK_T   = "E6F4EE"   # ready, quick win, passed
 
 # ---- v2: category coding - reuses existing accents, adds no new hues ----
@@ -56,6 +63,14 @@ RULE_Y,  RULE_H  = 1371600, 45720             # 4pt teal rule under title
 RULE_W           = 548640                     # 0.60in
 BODY_Y           = 1691640                    # 1.85in
 BODY_H           = SH - BODY_Y - 822960       # leaves footer band
+
+# ---- takeaway strip: pinned to the foot of the body box on L09 / L14 / L16 ----
+# Fixed y, not "after the content", so the reader finds the conclusion in the
+# same place whether the table above it runs four rows or ten.
+TAKE_H  = 411480                      # 0.45in - matches .nct-band min-height
+TAKE_Y  = BODY_Y + BODY_H - TAKE_H    # 5623560
+NOTE_H  = 274320                      # legend / source note - one line
+NOTE_Y  = TAKE_Y - 91440 - NOTE_H     # sits just above the strip
 
 # ---- type scale (hundredths of a pt) ----
 T_DISPLAY = 4400   # 44pt  title slide

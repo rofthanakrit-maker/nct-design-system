@@ -52,15 +52,25 @@ Tokens are also importable as values: `import { color, space, fontSize, canvas }
   never add a third family. Never italic — Thai italics are synthesised obliques.
 - **`--nct-fs-densecell` (10pt) is the floor.** Content that will not fit is a
   second slide, never smaller type. The dense sizes are legal on layouts 11–14 and
-  16 only; 03/04/05 stay at 18/16/14pt.
+  16 only; 03/04/05 stay at 18/16/14pt. `SlideDenseTable` holds 8–9 rows at that
+  size once the takeaway strip has taken its 0.4in.
 - **On dark slides text is `--nct-paper`, dimmed with alpha — never grey.**
   Dark tones: `SlideCover`, `SlideSection`, `SlideAgenda`, `SlideClosing`,
   `SlideFullImage`, and the left panel of `SlideSplitPanel`.
 - **Status colours are data colours.** Tables and process cells only — never a
   heading, a rule or a slide background. Three statuses per slide, maximum.
 - **`--nct-teal-b` is a gradient stop only.** It fails contrast as text or fill.
+- **`--nct-ink-2` is the floor for muted text, not a dial.** `#5F5F5F` clears AA
+  at 10pt on both `--nct-paper` and `--nct-paper-2`. Never lighten it.
+- **`--nct-teal-l` on white, `--nct-teal-up` on navy.** They are the same hue;
+  `teal-l` reads at 2.8:1 on navy and `teal-up` at 2.1:1 on white. Swapping them
+  is the mistake this pair exists to prevent.
 - **Flat.** No shadows, bevels, 3-D or reflections anywhere, diagrams included.
-- Every table slide and diagram slide carries a one-line `TakeawayBand`.
+- Every table slide and diagram slide carries a one-line `TakeawayBand`. On
+  `SlideTable`, `SlideDiagram` and `SlideDenseTable` the `takeaway` prop is
+  **required** — the type checker enforces the rule so it cannot be forgotten.
+  All three pin the strip to the foot of the body box, so the conclusion lands
+  at the same y whether the grid runs four rows or ten.
 - `SlideCover` and `SlideClosing` appear once each, as the deck's bookends.
 - Card heights are fixed. Trim the copy; never stretch a card.
 - **Photographs: architecture and abstract only, never people at work.** Smiling
@@ -113,6 +123,7 @@ import '@nct/slides/styles.css';
        { value: 'ติดข้อจำกัด', status: 'risk' }, { value: 'รอบ 3', align: 'center' }],
     ]}
     footnote="ปริมาณเป็นค่าเฉลี่ย 3 เดือนล่าสุด"
+    takeaway="หนึ่งในสองกระบวนการเริ่มได้ทันที อีกรายการรอสิทธิ์เข้าระบบ"
   />
 </Deck>
 ```

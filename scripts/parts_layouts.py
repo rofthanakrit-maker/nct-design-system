@@ -41,6 +41,26 @@ def _rule(sid, x=MX, y=RULE_Y, color=TEAL, alpha=None):
     return shape(sid, "Accent Rule", x, y, RULE_W, RULE_H, solid(color, alpha))
 
 
+def _takeaway(sid, idx, label="สรุป", prompt="ประเด็นสรุปหนึ่งบรรทัด"):
+    """The one-line conclusion strip, pinned to the foot of the body box.
+
+    Fixed y rather than "below whatever is above it", so the reader finds the
+    conclusion in the same place whether the table runs four rows or ten. L09,
+    L14 and L16 all carry one: a grid or a drawing without a stated conclusion
+    makes the reader do the work the slide was supposed to do.
+    """
+    ly = TAKE_Y + (TAKE_H - 289560) // 2
+    return [shape(sid, "Takeaway Band", MX, TAKE_Y, CW, TAKE_H, solid(PAPER2)),
+            placeholder(sid + 1, "Takeaway Label", "body", MX + 182880, ly,
+                        1828800, 289560,
+                        [S(label, sz=T_LABEL, color=TEAL, bold=True, spc=120,
+                           line=100000)], idx=idx, anchor="ctr"),
+            placeholder(sid + 2, "Takeaway Copy", "body", MX + 2011680, ly,
+                        CW - 2011680 - 182880, 289560,
+                        [S(prompt, sz=T_BODY3, color=INK, line=100000)],
+                        idx=idx + 1, anchor="ctr")]
+
+
 # the photo band, defined once in tokens.py so slides.css can be emitted from it
 SEC_PHOTO_W, SEC_PHOTO_X, SEC_TEXT_W = BAND_W, BAND_X, BAND_TW
 
@@ -78,9 +98,9 @@ def l02_section(rid_mark_white, rid_photo):
          shape(15, "Photo Foot Scrim", SEC_PHOTO_X, SH - 2057400, SEC_PHOTO_W, 2057400,
                scrim(NAVY)),
          placeholder(11, "Section Number", "body", MX, 1737360, 2286000, 1005840,
-                     [S("01", sz=6000, color=TEAL_L, bold=True, font="mj", line=100000)],
+                     [S("01", sz=6000, color=TEAL_UP, bold=True, font="mj", line=100000)],
                      idx=1, anchor="b"),
-         _rule(12, y=2834640, color=TEAL_L),
+         _rule(12, y=2834640, color=TEAL_UP),
          placeholder(13, "Title Placeholder", "title", MX, 2926080, SEC_TEXT_W, 1188720,
                      [S("ชื่อหัวข้อ", sz=T_SECTION, color=PAPER, bold=True,
                         font="mj", line=108000)], anchor="t"),
@@ -198,6 +218,7 @@ def l09_table(rid_mark_color):
          placeholder(12, "Intro", "body", MX, BODY_Y, CW, 457200,
                      [S("ประโยคนำหนึ่งบรรทัด", sz=T_BODY3, color=INK2, line=130000)], idx=2),
          tbl_placeholder(13, "Table Placeholder", MX, 2286000, CW, 3200400, 1)]
+    s += _takeaway(14, 3)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("09 Table / Comparison", "tbl", s, bgfill=solid(PAPER))
 
@@ -234,7 +255,7 @@ def l11_split(rid_mark_color):
          placeholder(14, "Context Body", "body", MX + PAD, PY + PAD + 548640,
                      HALF - 2 * PAD, PH - PAD - 548640,
                      dense_specs(["บริบทหรือปัญหาที่พบ", "ระดับที่สอง"],
-                                 color=PAPER, alpha=88, bullet_color=TEAL_L), idx=2),
+                                 color=PAPER, alpha=88, bullet_color=TEAL_UP), idx=2),
          shape(15, "Outcome Panel", MX + HALF + GUT, PY, HALF, PH, solid(PAPER2)),
          placeholder(16, "Outcome Kicker", "body", MX + HALF + GUT + PAD, PY + PAD,
                      HALF - 2 * PAD, 365760,
@@ -285,7 +306,7 @@ def l12_cards_band(rid_mark_color):
     sid += 1
     s.append(placeholder(sid, "Band Label", "body", MX + 228600,
                          CARD_Y + CARD_H + 137160 + 91440, 2011680, 365760,
-                         [S("สรุป", sz=T_LABEL, color=TEAL_L, bold=True, spc=120,
+                         [S("สรุป", sz=T_LABEL, color=TEAL_UP, bold=True, spc=120,
                             line=100000)], idx=13, anchor="ctr")); sid += 1
     s.append(placeholder(sid, "Band Copy", "body", MX + 2240280,
                          CARD_Y + CARD_H + 137160 + 91440, CW - 2240280 - 228600, 365760,
@@ -342,13 +363,14 @@ def l13_process(rid_mark_color):
 # ---------------------------------------------------------------- 14 Diagram Canvas
 def l14_diagram(rid_mark_color):
     s = [_title(10), _rule(11),
-         placeholder(12, "Subtitle", "body", MX, 1691640, CW, 365760,
+         placeholder(12, "Subtitle", "body", MX, BODY_Y, CW, 228600,
                      [S("คำโปรยหนึ่งบรรทัด", sz=T_BODY3, color=INK2, line=130000)], idx=1),
          # v2 §14: the drawing area carries NO shape of its own - a dashed guide
          # here would print on every slide built from this layout
-         placeholder(14, "Legend", "body", MX, 5669280, CW, 365760,
+         placeholder(14, "Legend", "body", MX, NOTE_Y, CW, NOTE_H,
                      [S("คำอธิบายสัญลักษณ์", sz=T_DENSEBODY, color=INK2, line=130000)],
                      idx=2)]
+    s += _takeaway(15, 3)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("14 Diagram Canvas", "obj", s, bgfill=solid(PAPER))
 
@@ -361,21 +383,21 @@ def l15_agenda(rid_mark_white, rid_photo):
          shape(19, "Photo Foot Scrim", SEC_PHOTO_X, SH - 2057400, SEC_PHOTO_W, 2057400,
                scrim(NAVY)),
          placeholder(11, "Section Number", "body", MX, 1737360, 2286000, 1005840,
-                     [S("01", sz=6000, color=TEAL_L, bold=True, font="mj", line=100000)],
+                     [S("01", sz=6000, color=TEAL_UP, bold=True, font="mj", line=100000)],
                      idx=1, anchor="b"),
-         _rule(12, y=2834640, color=TEAL_L),
+         _rule(12, y=2834640, color=TEAL_UP),
          placeholder(13, "Title Placeholder", "title", MX, 2926080, SEC_TEXT_W, 1188720,
                      [S("ชื่อบท", sz=T_SECTION, color=PAPER, bold=True, font="mj",
                         line=108000)], anchor="t"),
          placeholder(14, "Agenda List", "body", MX, 4297680, SEC_TEXT_W, 2194560,
                      [S("หัวข้อที่หนึ่ง", sz=T_BODY, color=PAPER, alpha=88, bullet=True,
-                        bullet_color=TEAL_L, indent=274320, marL=274320,
+                        bullet_color=TEAL_UP, indent=274320, marL=274320,
                         line=145000, space_before=300),
                       S("หัวข้อที่สอง", sz=T_BODY, color=PAPER, alpha=88, bullet=True,
-                        bullet_color=TEAL_L, indent=274320, marL=274320,
+                        bullet_color=TEAL_UP, indent=274320, marL=274320,
                         line=145000, space_before=300),
                       S("หัวข้อที่สาม", sz=T_BODY, color=PAPER, alpha=88, bullet=True,
-                        bullet_color=TEAL_L, indent=274320, marL=274320,
+                        bullet_color=TEAL_UP, indent=274320, marL=274320,
                         line=145000, space_before=300)], idx=2)]
     s += chrome(dark=True, mark_rid=rid_mark_white)
     return _wrap("15 Agenda", "secHead", s, bgfill=solid(NAVY))
@@ -384,12 +406,15 @@ def l15_agenda(rid_mark_white, rid_photo):
 # ---------------------------------------------------------------- 16 Dense Table (variant of 09)
 def l16_dense_table(rid_mark_color):
     s = [_title(10), _rule(11),
-         placeholder(12, "Intro", "body", MX, BODY_Y, CW, 365760,
+         placeholder(12, "Intro", "body", MX, BODY_Y, CW, 228600,
                      [S("ประโยคนำหนึ่งบรรทัด", sz=T_DENSEBODY, color=INK2, line=130000)],
                      idx=2),
-         tbl_placeholder(13, "Table Placeholder", MX, 2148840, CW, 3520440, 1),
-         placeholder(14, "Footnote", "body", MX, 5761200, CW, 274320,
+         # the strip and the note cost this table 0.55in of grid: eight to nine
+         # rows now, not eight to ten. Split the slide rather than shrink the type.
+         tbl_placeholder(13, "Table Placeholder", MX, 2011680, CW, 3154680, 1),
+         placeholder(14, "Footnote", "body", MX, NOTE_Y, CW, NOTE_H,
                      [S("ที่มาของข้อมูล / หมายเหตุ", sz=T_DENSECELL, color=INK2,
                         line=130000)], idx=3)]
+    s += _takeaway(15, 4)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("16 Dense Table", "tbl", s, bgfill=solid(PAPER))

@@ -6,17 +6,18 @@
   --nct-paper:       #FFFFFF;  /* page background */
   --nct-paper-2:     #E8F6F5;  /* tinted surface: cards, quote slide */
   --nct-ink:         #333333;  /* body text */
-  --nct-ink-2:       #A4A4A4;  /* caption, label, footer */
+  --nct-ink-2:       #5F5F5F;  /* caption, label, footer */
   --nct-rule:        #E5E5E5;  /* hairline, divider */
   --nct-navy:        #23436D;  /* headings, dark panels, primary accent */
   --nct-teal:        #216B7F;  /* rules, bullets, links, secondary accent */
-  --nct-teal-l:      #4E8FA8;  /* section numbers on dark, 2nd chart series */
+  --nct-teal-l:      #4E8FA8;  /* 2nd chart series, category 3 - on white only */
+  --nct-teal-up:     #8FBACE;  /* the same teal lifted to read ON NAVY - never on white */
   --nct-deep:        #16324F;  /* photo scrim, full-image background */
   --nct-mid:         #1E5473;  /* gradient midpoint (L01 / L10) - gradient stop only */
   --nct-teal-b:      #1A8D92;  /* gradient END stop only - never fill/line/text (fails AA) */
   --nct-risk:        #B3261E;  /* status: blocker (table / process cells only) */
   --nct-risk-tint:   #FBEAE8;  /* status fill behind --nct-risk */
-  --nct-warn:        #B26B00;  /* status: unconfirmed / needs decision */
+  --nct-warn:        #965900;  /* status: unconfirmed / needs decision */
   --nct-warn-tint:   #FBF1E3;  /* status fill behind --nct-warn */
   --nct-ok:          #1F7A54;  /* status: ready / passed */
   --nct-ok-tint:     #E6F4EE;  /* status fill behind --nct-ok */
@@ -47,6 +48,9 @@
   --nct-rule-w:      57.6px;
   --nct-body-y:      177.6px;
   --nct-body-h:      456px;
+  --nct-take-h:      43.2px;
+  --nct-note-h:      28.8px;
+  --nct-note-up:     52.8px;
 
   /* ---- type scale (pt in the deck, px here) ---- */
   --nct-fs-display:   58.67px;  /* 44pt - title slide */

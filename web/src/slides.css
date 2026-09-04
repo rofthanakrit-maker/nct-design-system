@@ -102,7 +102,12 @@
 }
 .nct-lead { font-size: var(--nct-fs-lead); line-height: 1.3; }
 .nct-caption { font-size: var(--nct-fs-body-3); color: var(--nct-ink-2); line-height: 1.3; }
+.nct-caption--lead { margin: 0 0 33.6px; }
+/* L14 only: the drawing region owns its own vertical space, so the subtitle
+   sits tight against it - the gap here matches the .potx canvas top exactly */
+.nct-caption--sub { margin: 0 0 9.6px; }
 .nct-dense { font-size: var(--nct-fs-densebody); line-height: 1.32; }
+.nct-dense--lead { margin: 0 0 19.2px; color: var(--nct-ink-2); }
 .nct-densehead {
   font-family: var(--nct-font-display);
   font-weight: 700;
@@ -138,7 +143,12 @@
 .nct-list--dense .nct-list__item { padding-left: 19.2px; font-size: var(--nct-fs-densebody); }
 .nct-list--dense .nct-list__item + .nct-list__item { margin-top: 6px; }
 .nct-list--on-dark { color: rgb(255 255 255 / 0.88); }
-.nct-list--on-dark .nct-list__item::before { color: var(--nct-teal-l); }
+.nct-list--on-dark .nct-list__item::before { color: var(--nct-teal-up); }
+/* --nct-ink-2 is a colour for white grounds; on navy it is near-invisible, so
+   the lower levels take paper at alpha instead - same rule the .potx follows */
+.nct-list--on-dark .nct-list__item--2::before,
+.nct-list--on-dark .nct-list__item--3::before { color: var(--nct-teal-up); }
+.nct-list--on-dark .nct-list__item--3 { color: rgb(255 255 255 / 0.72); }
 
 /* ---------------------------------------------------------------- 01 / 10 */
 .nct-cover__logo { position: absolute; left: var(--nct-mx); top: 91.2px; width: 268.8px; }
@@ -286,7 +296,7 @@
   font-weight: 700;
   font-size: 80px;
   line-height: 1;
-  color: var(--nct-teal-l);
+  color: var(--nct-teal-up);
 }
 .nct-section__rule {
   position: absolute;
@@ -294,7 +304,7 @@
   top: 297.6px;
   width: var(--nct-rule-w);
   height: var(--nct-rule-h);
-  background: var(--nct-teal-l);
+  background: var(--nct-teal-up);
 }
 .nct-section__title,
 .nct-closing__title {
@@ -362,8 +372,28 @@
   letter-spacing: 0.12em;
 }
 .nct-band--tint .nct-band__label { color: var(--nct-teal); }
-.nct-band--dark .nct-band__label { color: var(--nct-teal-l); }
+.nct-band--dark .nct-band__label { color: var(--nct-teal-up); }
 .nct-band__copy { font-size: var(--nct-fs-body-3); }
+/* 09 / 14 / 16 pin the strip to the foot of the body box: the conclusion lands
+   at the same y whether the table above it runs four rows or ten */
+.nct-band--foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: var(--nct-take-h);
+}
+/* the source note / legend rides just above it, on the same fixed baseline */
+.nct-note,
+.nct-dia-legend {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--nct-note-up);
+  margin: 0;
+  font-size: var(--nct-fs-densecell);
+  color: var(--nct-ink-2);
+}
 
 /* ---------------------------------------------------------------- cards */
 .nct-cards { display: grid; gap: var(--nct-gut); }
@@ -558,7 +588,7 @@
 }
 
 /* ---------------------------------------------------------------- 14 diagram */
-.nct-canvas { position: relative; height: 355.2px; }
+.nct-canvas { position: relative; height: 331.2px; }
 .nct-dia-row { display: flex; align-items: center; justify-content: center; gap: 0; height: 100%; }
 .nct-dia-box {
   height: 57.6px;
@@ -592,7 +622,6 @@
   letter-spacing: 0.12em;
   color: var(--nct-ink-2);
 }
-.nct-dia-legend { font-size: var(--nct-fs-densebody); color: var(--nct-ink-2); }
 
 /* ---------------------------------------------------------------- tables */
 .nct-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
