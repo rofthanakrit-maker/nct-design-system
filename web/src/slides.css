@@ -590,23 +590,39 @@
 /* ---------------------------------------------------------------- 14 diagram */
 .nct-canvas { position: relative; height: 331.2px; }
 .nct-dia-row { display: flex; align-items: center; justify-content: center; gap: 0; height: 100%; }
+/* a system that already exists: the navy L11 uses for "how things are today" */
 .nct-dia-box {
-  height: 57.6px;
-  min-width: 134.4px;
+  position: relative;
+  height: 76.8px;
+  min-width: 172.8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 14.4px;
+  padding: 0 24px;
   text-align: center;
-  background: var(--nct-paper-2);
-  border: 1px solid var(--nct-teal);
+  background: var(--nct-navy);
   font-size: var(--nct-fs-densebody);
   line-height: 1.1;
+  color: var(--nct-paper);
+}
+/* something this project adds: light on the tinted zone, tabbed like an L12 card */
+.nct-dia-box--added {
+  background: var(--nct-paper);
+  border: 1px solid var(--nct-dia-cat);
   color: var(--nct-ink);
+}
+.nct-dia-box--added::before {
+  content: "";
+  position: absolute;
+  left: 9.6px;
+  top: 9.6px;
+  width: 21.6px;
+  height: 4.8px;
+  background: var(--nct-dia-cat);
 }
 .nct-dia-link {
   position: relative;
-  flex: 0 0 62.4px;
+  flex: 0 0 48px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -617,29 +633,30 @@
   bottom: calc(50% + 6px);
   left: 50%;
   transform: translateX(-50%);
-  padding: 0 2.4px;
-  background: var(--nct-paper);
   font-size: var(--nct-fs-densecell);
   line-height: 1;
   color: var(--nct-ink-2);
   white-space: nowrap;
 }
+/* the zone the flow passes through - flat fill, no outline. Vertical padding is
+   symmetric on purpose: the boxes inside must sit on the same line as the ones
+   outside, and .nct-dia-row centres everything on the group box */
 .nct-dia-group {
   position: relative;
   display: flex;
   align-items: center;
   gap: 0;
-  padding: 33.6px 19.2px 19.2px;
-  border: 1px dashed var(--nct-rule);
+  padding: 48px 28.8px;
+  background: var(--nct-paper-2);
 }
 .nct-dia-group__label {
   position: absolute;
-  left: 14.4px;
-  top: 9.6px;
+  left: 28.8px;
+  top: 16.8px;
   font-size: var(--nct-fs-densebody);
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: var(--nct-ink-2);
+  color: var(--nct-teal);
 }
 
 /* ---------------------------------------------------------------- tables */

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { logoColor, logoWhite, markColor, markWhite } from "./assets";
 
 /* ------------------------------------------------------------------ logo */
@@ -209,19 +209,29 @@ export function DataTable({ columns, rows, widths, size = "dense" }: DataTablePr
 
 export interface DiagramBoxProps {
   children: ReactNode;
-  /** Colours the box with a category tint + matching border. */
+  /**
+   * Marks the box as something this project adds, in one of the four category
+   * colours. Omit it and the box is a system that already exists.
+   */
   category?: 1 | 2 | 3 | 4;
 }
 
-/** A system box: square corners, flat fill, one label. No icons, no shadows. */
+/**
+ * A system box: square corners, flat fill, one label. No icons, no shadows.
+ *
+ * Tone carries the only distinction a reader needs on an architecture slide.
+ * A plain box is a system that is already there, in the same navy L11 uses for
+ * "how things are today"; a `category` box is something being added, set light
+ * and tabbed like an L12 card. The legend confirms that reading — it no longer
+ * has to supply it.
+ */
 export function DiagramBox({ children, category }: DiagramBoxProps) {
-  const v = category ? `var(${CAT_VAR[category - 1]})` : undefined;
   return (
     <div
-      className="nct-dia-box"
+      className={category ? "nct-dia-box nct-dia-box--added" : "nct-dia-box"}
       style={
         category
-          ? { borderColor: v, background: `color-mix(in srgb, ${v} 15%, white)` }
+          ? ({ "--nct-dia-cat": `var(${CAT_VAR[category - 1]})` } as CSSProperties)
           : undefined
       }
     >
@@ -242,15 +252,19 @@ export function DiagramLink({ label }: { label?: string }) {
   return (
     <div className="nct-dia-link">
       {label && <span className="nct-dia-link__label">{label}</span>}
-      <svg width="60" height="16" viewBox="0 0 60 16" aria-hidden="true">
-        <line x1="0" y1="8" x2="48" y2="8" stroke="currentColor" strokeWidth="1.7" />
-        <polygon points="48,3 60,8 48,13" fill="currentColor" />
+      <svg width="48" height="16" viewBox="0 0 48 16" aria-hidden="true">
+        <line x1="0" y1="8" x2="36" y2="8" stroke="currentColor" strokeWidth="1.7" />
+        <polygon points="36,3 48,8 36,13" fill="currentColor" />
       </svg>
     </div>
   );
 }
 
-/** A dashed frame grouping boxes that belong together. */
+/**
+ * A tinted zone holding the boxes that belong together — the region the flow
+ * passes through. Flat fill, no outline: the dashed grey frame it replaces was
+ * the only dashed line in the system and the weakest device on the slide.
+ */
 export function DiagramGroup({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="nct-dia-group">

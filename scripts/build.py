@@ -240,13 +240,30 @@ def sp_text(sid, name, phtype, idx, paras_text, **kw):
             % (sid, name, ph_t, ph_i, "".join(ps)))
 
 
+DIA_BOX_H = 731520                       # 0.80in - the standard system box
+DIA_TAB_W, DIA_TAB_H = 205740, 45720     # the L12 card tab, reused on added boxes
+DIA_PAD_Y, DIA_PAD_X = 457200, 274320    # zone padding: symmetric so every box
+                                          # inside sits on the line of those outside
+
+
 def _dia_box(sid, name, x, y, w, text, cat=None):
-    """v2 §14 standard part: square corners, 0.60in tall, flat, 12pt label"""
-    fill = solid(cat, 15) if cat else solid(PAPER2)
-    line = '<a:ln w="12700">%s</a:ln>' % solid(cat or TEAL)
-    return shape(sid, name, x, y, w, 548640, fill, prst="rect", line=line,
-                 body=txbody([para(text, sz=T_DENSEBODY, color=INK, algn="ctr",
-                                   line=110000)], anchor="ctr"))
+    """v2 §14 standard part: square corners, 0.80in tall, flat, 12pt label.
+
+    Tone is the distinction: no category means a system that already exists, so
+    it takes the same NAVY L11 uses for the current state. A category means this
+    project adds it, so it goes light with the category on its edge and its tab.
+    """
+    if cat:
+        box = shape(sid, name, x, y, w, DIA_BOX_H, solid(PAPER), prst="rect",
+                    line='<a:ln w="12700">%s</a:ln>' % solid(cat),
+                    body=txbody([para(text, sz=T_DENSEBODY, color=INK, algn="ctr",
+                                      line=110000)], anchor="ctr"))
+        tab = shape(sid + 100, name + " Tab", x + 114300, y + 114300,
+                    DIA_TAB_W, DIA_TAB_H, solid(cat))
+        return [box, tab]
+    return [shape(sid, name, x, y, w, DIA_BOX_H, solid(NAVY), prst="rect",
+                  body=txbody([para(text, sz=T_DENSEBODY, color=PAPER, algn="ctr",
+                                    line=110000)], anchor="ctr"))]
 
 
 def _dia_link(sid, name, x, y, w):
@@ -258,26 +275,32 @@ def _dia_link(sid, name, x, y, w):
 
 def _diagram_kit(sid):
     """the demo drawing on L14 -- shows every part of the standard kit in use"""
-    BW, BY = 2011680, 3017520
+    BW = 2011680
+    # centred in the layout's drawing region (2.200in .. 5.650in)
+    BY = (2011680 + 5166360) // 2 - DIA_BOX_H // 2
     xs = [1143000, 3840480, 6537960, 9235440]
     out = []
-    # group frame around the two new components
-    out.append(shape(sid, "Group Frame", 3657600, 2560320, 5074920, 1554480, nofill(),
-                     # a:ln child order is fixed: fill BEFORE prstDash
-                     line=('<a:ln w="12700">%s<a:prstDash val="dash"/></a:ln>' % solid(RULE))))
-    out.append(shape(sid + 1, "Group Label", 3749040, 2606040, 3200400, 274320, nofill(),
-                     body=txbody([para("ส่วนที่เพิ่มใหม่", sz=T_DENSEBODY, color=INK2,
+    # the zone the flow passes through - flat tint, no outline. The dashed frame
+    # this replaces was the only dashed line in the system.
+    zx, zw = xs[1] - DIA_PAD_X, (xs[2] + BW + DIA_PAD_X) - (xs[1] - DIA_PAD_X)
+    out.append(shape(sid, "Group Zone", zx, BY - DIA_PAD_Y, zw,
+                     DIA_BOX_H + 2 * DIA_PAD_Y, solid(PAPER2)))
+    out.append(shape(sid + 1, "Group Label", zx + DIA_PAD_X, BY - DIA_PAD_Y + 160020,
+                     3200400, 228600, nofill(),
+                     body=txbody([para("ส่วนที่เพิ่มใหม่", sz=T_DENSEBODY, color=TEAL,
                                        bold=True, spc=120, line=100000)], anchor="ctr")))
     sid += 2
     labels = [("ระบบ ERP ปัจจุบัน", None), ("คิวเอกสารกลาง", NAVY),
               ("ตัวตรวจกฎธุรกิจ", TEAL), ("ระบบบัญชี", None)]
     for i, (t, cat) in enumerate(labels):
-        out.append(_dia_box(sid, "Box %d" % (i + 1), xs[i], BY, BW, t, cat)); sid += 1
+        out += _dia_box(sid, "Box %d" % (i + 1), xs[i], BY, BW, t, cat); sid += 1
     for i in range(3):
         gx = xs[i] + BW + 114300
-        out.append(_dia_link(sid, "Link %d" % (i + 1), gx, BY + 274320, 457200)); sid += 1
-    out.append(shape(sid, "Edge Label", xs[1] + BW - 45720, BY - 274320, 822960, 228600,
-                     solid(PAPER),
+        out.append(_dia_link(sid, "Link %d" % (i + 1), gx, BY + DIA_BOX_H // 2, 457200))
+        sid += 1
+    # the label rides above the line, so it needs no fill to mask it
+    out.append(shape(sid, "Edge Label", xs[1] + BW - 45720, BY + 45720, 822960, 228600,
+                     nofill(),
                      body=txbody([para("ผ่านกฎ", sz=T_DENSECELL, color=INK2, algn="ctr",
                                        line=100000)], anchor="ctr")))
     return out
