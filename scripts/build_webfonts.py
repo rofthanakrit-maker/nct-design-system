@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 """Convert the two brand families to woff2 for the web package.
 
-Kanit is installed per-user on this machine (Google Fonts, OFL); Noto Sans Thai
-already lives in fonts/ (googlefonts build - the one that carries Latin glyphs).
-Both are OFL, so self-hosting is allowed; the licence text ships alongside.
+Both families live in fonts/ (googlefonts builds - the ones that carry Latin
+glyphs). Both are OFL, so self-hosting is allowed; the licence text ships
+alongside.
 """
 import os, shutil, sys
 from fontTools.ttLib import TTFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-USER_FONTS = os.path.join(os.environ["LOCALAPPDATA"], "Microsoft", "Windows", "Fonts")
 REPO_FONTS = os.path.join(ROOT, "fonts")
 OUT = os.path.join(ROOT, "web", "src", "fonts")   # next to styles.css so ./fonts/ resolves
 
@@ -18,7 +17,7 @@ WEIGHTS = [("Light", 300), ("Regular", 400), ("Medium", 500),
            ("SemiBold", 600), ("Bold", 700)]
 
 FAMILIES = [
-    ("Kanit", USER_FONTS, "Kanit-%s.ttf"),
+    ("Kanit", REPO_FONTS, "Kanit-%s.ttf"),
     ("Noto Sans Thai", REPO_FONTS, "NotoSansThai-%s.ttf"),
 ]
 
@@ -60,7 +59,7 @@ def main():
     with open(os.path.join(ROOT, "web", "src", "fonts.css"), "w", encoding="utf-8") as f:
         f.write("\n".join(css) + "\n")
 
-    for lic in ("OFL-NotoSansThai.txt",):
+    for lic in ("OFL-NotoSansThai.txt", "OFL-Kanit.txt"):
         shutil.copy(os.path.join(REPO_FONTS, lic), os.path.join(OUT, lic))
     print("\n%d faces -> web/fonts/, @font-face -> web/src/fonts.css" % len(faces))
 

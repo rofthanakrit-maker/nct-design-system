@@ -25,7 +25,7 @@ scripts/tokens.py            ← single source of truth
 ## PowerPoint
 
 ```bash
-py scripts/build.py          # เขียนทับ .potx และ .pptx ที่ root
+python scripts/build.py          # เขียนทับ .potx และ .pptx ที่ root
 ```
 
 - `NCT-Slide-Template.potx` — 1 slide master + 16 custom layouts + NCT theme
@@ -53,7 +53,7 @@ npm run assets               # โลโก้เป็น data URI
 ```bash
 npx esbuild web/demo/demo.tsx --bundle --format=esm --jsx=automatic \
   --outfile=web/demo/demo.js --loader:.tsx=tsx
-py -m http.server 5173 --directory web    # เปิด /demo/index.html
+python -m http.server 5173 --directory web    # เปิด /demo/index.html
 ```
 
 ## Import เข้า Claude Design

@@ -6,9 +6,9 @@
   "workspaces": ["web"],
   "scripts": {
     "build": "npm run build --workspace @nct/slides",
-    "build:potx": "py scripts/build.py",
-    "tokens": "py scripts/emit_web_tokens.py",
-    "fonts": "py scripts/build_webfonts.py",
-    "assets": "py scripts/emit_web_assets.py"
+    "build:potx": "python scripts/build.py",
+    "tokens": "python scripts/emit_web_tokens.py",
+    "fonts": "python scripts/build_webfonts.py",
+    "assets": "python scripts/emit_web_assets.py"
   }
 }

@@ -23,8 +23,8 @@
     "*.css"
   ],
   "scripts": {
-    "tokens": "py ../scripts/emit_web_tokens.py",
-    "fonts": "py ../scripts/build_webfonts.py",
+    "tokens": "python ../scripts/emit_web_tokens.py",
+    "fonts": "python ../scripts/build_webfonts.py",
     "build": "npm run tokens && tsup",
     "dev": "tsup --watch"
   },
