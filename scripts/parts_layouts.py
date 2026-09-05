@@ -41,6 +41,13 @@ def _rule(sid, x=MX, y=RULE_Y, color=TEAL, alpha=None):
     return shape(sid, "Accent Rule", x, y, RULE_W, RULE_H, solid(color, alpha))
 
 
+def _foot_scrim(sid):
+    """L01 / L10 only: the gradients run TEAL_B into the bottom-right corner, and
+    TEAL_B is 4.0:1 against pure white - no footer alpha clears AA there. Darken
+    the ground instead, with the same scrim the photo bands already use."""
+    return shape(sid, "Footer Scrim", 0, SH - 1463040, SW, 1463040, scrim(DEEP))
+
+
 def _takeaway(sid, idx, label="สรุป", prompt="ประเด็นสรุปหนึ่งบรรทัด"):
     """The one-line conclusion strip, pinned to the foot of the body box.
 
@@ -84,7 +91,8 @@ def l01_title(rid_logo_white, rid_mark_white):
          _rule(14, y=4206240, color=PAPER, alpha=70),
          placeholder(15, "Subtitle", "subTitle", MX, 4480560, 7315200, 731520,
                      [S("คำโปรย / ชื่อลูกค้า / วันที่", sz=T_LEAD, color=PAPER,
-                        alpha=82, line=130000)], idx=1)]
+                        alpha=82, line=130000)], idx=1),
+         _foot_scrim(16)]
     s += chrome(dark=True, mark_rid=rid_mark_white)
     return _wrap("01 Title Slide", "title", s, bgfill=grad(NAVY, TEAL_B, 45, c_mid=MID))
 
@@ -224,8 +232,15 @@ def l09_table(rid_mark_color):
 
 
 # ---------------------------------------------------------------- 10 Closing
-def l10_closing(rid_logo_white, rid_photo):
-    # the band replaces the top-right diamond; the logo drops under the contact block
+def l10_closing(rid_mark_white, rid_photo):
+    """The ask, not a thank-you.
+
+    A proposal's last slide is the one the room remembers, and the old one said
+    "ขอบคุณครับ" over three contact lines - no next step, no owner, no date. The
+    thank-you is now the title over that ask. The full lockup goes with it: with
+    the ask holding the left column from 3.5in to 6.6in there is nowhere left for
+    it, and the corner mark signs the slide the way it signs every other one.
+    """
     s = [_diamond(10, -1371600, SH - 2743200, 3657600, 9),
          pic(11, "Section Photo", rid_photo, SEC_PHOTO_X, 0, SEC_PHOTO_W, SH),
          shape(16, "Photo Fade", SEC_PHOTO_X, 0, SEC_PHOTO_W, SH, fade_x(NAVY)),
@@ -235,11 +250,22 @@ def l10_closing(rid_logo_white, rid_photo):
                      [S("ขอบคุณครับ", sz=T_SECTION, color=PAPER, bold=True,
                         font="mj", line=108000)], anchor="b"),
          _rule(13, y=2926080, color=PAPER, alpha=70),
-         placeholder(14, "Contact", "body", MX, 3200400, 5486400, 1828800,
-                     [S("โทร · 0X-XXX-XXXX", sz=T_BODY, color=PAPER, alpha=88,
-                        line=100000, space_before=600)], idx=1),
-         _logo(15, rid_logo_white, MX, 4476750, 2560320)]
-    s += chrome(dark=True, mark_rid=None)
+         placeholder(14, "Next Steps Label", "body", MX, 3200400, 2743200, 228600,
+                     [S("ขั้นตอนถัดไป", sz=T_LABEL, color=TEAL_UP, bold=True, spc=120,
+                        line=100000)], idx=1, anchor="ctr"),
+         placeholder(15, "Next Steps", "body", MX, 3474720, 5486400, 1188720,
+                     [S("สิ่งที่ต้องเกิดขึ้นต่อ พร้อมผู้รับผิดชอบ", sz=T_BODY2, color=PAPER,
+                        alpha=92, bullet=True, bullet_auto=True,
+                        bullet_color=TEAL_UP, indent=320040, marL=320040,
+                        line=140000, space_before=400)], idx=2),
+         placeholder(18, "Decision By", "body", MX, 4709160, 5486400, 228600,
+                     [S("ต้องการคำตอบภายในวันที่ ...", sz=T_BODY3, color=TEAL_UP,
+                        bold=True, line=100000)], idx=3, anchor="ctr"),
+         placeholder(19, "Contact", "body", MX, 5303520, 5486400, 731520,
+                     [S("โทร · 0X-XXX-XXXX", sz=T_BODY3, color=PAPER, alpha=88,
+                        line=135000)], idx=4),
+         _foot_scrim(20)]
+    s += chrome(dark=True, mark_rid=rid_mark_white)
     return _wrap("10 Closing / Contact", "obj", s, bgfill=grad(TEAL_B, NAVY, 45, c_mid=MID))
 
 
@@ -389,7 +415,9 @@ def l15_agenda(rid_mark_white, rid_photo):
          placeholder(13, "Title Placeholder", "title", MX, 2926080, SEC_TEXT_W, 1188720,
                      [S("ชื่อบท", sz=T_SECTION, color=PAPER, bold=True, font="mj",
                         line=108000)], anchor="t"),
-         placeholder(14, "Agenda List", "body", MX, 4297680, SEC_TEXT_W, 2194560,
+         # 3931920, not 4297680: at the documented ceiling of six lines the list
+         # ran past the footer rule. Six now stops 12px short of it.
+         placeholder(14, "Agenda List", "body", MX, 3931920, SEC_TEXT_W, 2194560,
                      [S("หัวข้อที่หนึ่ง", sz=T_BODY, color=PAPER, alpha=88, bullet=True,
                         bullet_color=TEAL_UP, indent=274320, marL=274320,
                         line=145000, space_before=300),
@@ -412,9 +440,15 @@ def l16_dense_table(rid_mark_color):
          # the strip and the note cost this table 0.55in of grid: eight to nine
          # rows now, not eight to ten. Split the slide rather than shrink the type.
          tbl_placeholder(13, "Table Placeholder", MX, 2011680, CW, 3154680, 1),
-         placeholder(14, "Footnote", "body", MX, NOTE_Y, CW, NOTE_H,
+         # the note line carries two things: the key for any category coding on
+         # the left, the source note on the right. A coded column with no key on
+         # the slide asks the reader to decode four navies 1.31:1 apart from memory
+         placeholder(14, "Category Key", "body", MX, NOTE_Y, CW // 2, NOTE_H,
+                     [S("■ หมวด 1  ■ หมวด 2  ■ หมวด 3", sz=T_DENSECELL, color=INK2,
+                        line=130000)], idx=3),
+         placeholder(19, "Footnote", "body", MX + CW // 2, NOTE_Y, CW // 2, NOTE_H,
                      [S("ที่มาของข้อมูล / หมายเหตุ", sz=T_DENSECELL, color=INK2,
-                        line=130000)], idx=3)]
-    s += _takeaway(15, 4)
+                        algn="r", line=130000)], idx=4)]
+    s += _takeaway(15, 5)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("16 Dense Table", "tbl", s, bgfill=solid(PAPER))

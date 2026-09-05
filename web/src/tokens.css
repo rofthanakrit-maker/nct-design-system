@@ -10,7 +10,6 @@
   --nct-rule:        #E5E5E5;  /* hairline, divider */
   --nct-navy:        #23436D;  /* headings, dark panels, primary accent */
   --nct-teal:        #216B7F;  /* rules, bullets, links, secondary accent */
-  --nct-teal-l:      #4E8FA8;  /* 2nd chart series, category 3 - on white only */
   --nct-teal-up:     #8FBACE;  /* the same teal lifted to read ON NAVY - never on white */
   --nct-deep:        #16324F;  /* photo scrim, full-image background */
   --nct-mid:         #1E5473;  /* gradient midpoint (L01 / L10) - gradient stop only */
@@ -30,14 +29,8 @@
   --nct-slide-w:     1280px;
   --nct-slide-h:     720px;
   --nct-mx:          96px;
-  --nct-mt:          57.6px;
-  --nct-mb:          57.6px;
   --nct-cw:          1088px;
   --nct-gut:         19.2px;
-  --nct-col:         73.07px;
-  --nct-half:        534.4px;
-  --nct-third:       349.87px;
-  --nct-quarter:     257.6px;
   --nct-fifth:       202.24px;
   --nct-band-w:      512px;
   --nct-band-text-w: 652.8px;
@@ -49,7 +42,6 @@
   --nct-body-y:      177.6px;
   --nct-body-h:      456px;
   --nct-take-h:      43.2px;
-  --nct-note-h:      28.8px;
   --nct-note-up:     52.8px;
 
   /* ---- type scale (pt in the deck, px here) ---- */
@@ -74,8 +66,16 @@
   --nct-font-display: 'Kanit', 'Noto Sans Thai', system-ui, sans-serif;
   --nct-font-body: 'Noto Sans Thai', 'Kanit', system-ui, sans-serif;
 
-  /* ---- gradients: L01 opens navy->teal, L10 closes teal->navy ---- */
-  --nct-grad-open: linear-gradient(135deg, #23436D 0%, #1E5473 55%, #216B7F 100%);
-  --nct-grad-close: linear-gradient(135deg, #216B7F 0%, #1E5473 55%, #23436D 100%);
-  --nct-scrim: linear-gradient(to bottom, transparent 0%, #16324F99 55%, #16324Fe6 100%);
+  /* ---- gradients: L01 opens navy->teal-b, L10 closes teal-b->navy ---- */
+  /* stops are var()s, not repeated literals: the same four colours
+     restated as hex here is how --nct-mid ended up declared but unused,
+     and how the web gradient drifted to --nct-teal instead of the
+     --nct-teal-b end-stop grad() gives the .potx */
+  --nct-grad-open: linear-gradient(135deg, var(--nct-navy) 0%, var(--nct-mid) 55%, var(--nct-teal-b) 100%);
+  --nct-grad-close: linear-gradient(135deg, var(--nct-teal-b) 0%, var(--nct-mid) 55%, var(--nct-navy) 100%);
+  --nct-scrim: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--nct-deep) 60%, transparent) 55%, color-mix(in srgb, var(--nct-deep) 90%, transparent) 100%);
+  /* the footer chrome rides the light end of both gradients: teal-b is 4.0:1
+     against white even at full opacity, so the strip gets the same bottom scrim
+     the photo bands use rather than a lighter text colour */
+  --nct-tone-foot: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--nct-deep) 55%, transparent) 55%, color-mix(in srgb, var(--nct-deep) 88%, transparent) 100%);
 }

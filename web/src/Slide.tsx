@@ -1,4 +1,14 @@
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import { markColor, markWhite } from "./assets";
 import { canvas } from "./tokens";
 
@@ -89,6 +99,10 @@ export function Slide({
       style={style}
     >
       {children}
+      {/* the gradient tones run their light end into the bottom-right corner,
+          under the page number: --nct-teal-b is 4.0:1 against white even at full
+          opacity, so the ground is darkened rather than the ink lightened */}
+      {(tone === "open" || tone === "close") && <div className="nct-tone-foot" />}
       {!hideFooter && (
         <div className="nct-footer">
           <span>{date}</span>
@@ -121,7 +135,31 @@ export function SlideTitle({ children }: { children?: ReactNode }) {
   );
 }
 
-/** Stacks slides vertically for a full deck preview. */
-export function Deck({ children }: { children?: ReactNode }) {
-  return <div className="nct-deck">{children}</div>;
+export interface DeckProps extends SlideChromeProps {
+  children?: ReactNode;
+}
+
+/**
+ * Stacks slides vertically for a full deck preview, and owns the chrome.
+ *
+ * `footer`, `date` and `hideFooter` set here reach every slide, and page numbers
+ * are counted from position — hand-typing `pageNumber` on sixteen slides meant
+ * inserting one at the front was fourteen edits with nothing to catch a repeat.
+ * A prop set on the slide itself still wins, so a cover can pass `hideFooter`
+ * or a slide can carry a number the count would not give it.
+ */
+export function Deck({ children, ...chrome }: DeckProps) {
+  const slides = Children.toArray(children).filter(isValidElement);
+  return (
+    <div className="nct-deck">
+      {slides.map((child, i) => {
+        const el = child as ReactElement<SlideChromeProps>;
+        return cloneElement(el, {
+          ...chrome,
+          ...el.props,
+          pageNumber: el.props.pageNumber ?? i + 1,
+        });
+      })}
+    </div>
+  );
 }

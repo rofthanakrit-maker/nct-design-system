@@ -117,7 +117,13 @@ export interface TableCell {
   align?: CellAlign;
   /** Tints the cell with the matching status pair. Data cells only. */
   status?: CellStatus;
-  /** Fills the cell with a category colour (1–4) and white bold text. */
+  /**
+   * Marks the cell with a category colour (1–4) as a bar down its leading edge.
+   * Not a fill: white on `--nct-cat-3` measures 3.61:1 and dark ink on it 3.50:1,
+   * so at the 10pt floor there is no legible text colour for a filled cat-3 cell.
+   * The bar leaves the value on paper, where it reads at 12.6:1.
+   * A coded column needs a `CategoryKey` on the same slide.
+   */
   category?: 1 | 2 | 3 | 4;
   bold?: boolean;
 }
@@ -126,7 +132,7 @@ export type TableRow = (TableCell | string | number)[];
 
 export interface DataTableProps {
   /** Header labels. The header row is navy with white 11pt type. */
-  columns: (string | { label: string; align?: CellAlign })[];
+  columns: (string | { label: ReactNode; align?: CellAlign })[];
   rows: TableRow[];
   /** Relative column widths, e.g. `[3, 1, 1, 1]`. Defaults to equal columns. */
   widths?: number[];
@@ -135,6 +141,13 @@ export interface DataTableProps {
    * `roomy` is the 14pt comparison table used by layout 09.
    */
   size?: "dense" | "roomy";
+  /**
+   * Index of the column this deck is recommending. It takes a teal header, a
+   * teal cap rule and a tinted wash, so the reader sees the answer before they
+   * read the grid. Set it on any comparison whose takeaway names a winner —
+   * three columns of identical weight are not a recommendation.
+   */
+  recommended?: number;
 }
 
 const CAT_VAR = ["--nct-cat-1", "--nct-cat-2", "--nct-cat-3", "--nct-cat-4"];
@@ -144,7 +157,13 @@ const CAT_VAR = ["--nct-cat-1", "--nct-cat-2", "--nct-cat-3", "--nct-cat-4"];
  * hairlines and no vertical rules. Nine body rows is the ceiling on layout 16 —
  * split the slide rather than shrinking the type.
  */
-export function DataTable({ columns, rows, widths, size = "dense" }: DataTableProps) {
+export function DataTable({
+  columns,
+  rows,
+  widths,
+  size = "dense",
+  recommended,
+}: DataTableProps) {
   const total = widths?.reduce((a, b) => a + b, 0);
   return (
     <table className={`nct-table${size === "roomy" ? " nct-table--roomy" : ""}`}>
@@ -161,7 +180,7 @@ export function DataTable({ columns, rows, widths, size = "dense" }: DataTablePr
             const label = typeof c === "string" ? c : c.label;
             const align = typeof c === "string" ? undefined : c.align;
             return (
-              <th key={i} data-align={align}>
+              <th key={i} scope="col" data-align={align} data-rec={i === recommended || undefined}>
                 {label}
               </th>
             );
@@ -187,12 +206,15 @@ export function DataTable({ columns, rows, widths, size = "dense" }: DataTablePr
                   key={c}
                   className={cls || undefined}
                   data-align={cell.align}
-                  style={{
-                    fontWeight: cell.bold ? 700 : undefined,
-                    background: cell.category
-                      ? `var(${CAT_VAR[cell.category - 1]})`
-                      : undefined,
-                  }}
+                  data-rec={c === recommended || undefined}
+                  style={
+                    {
+                      fontWeight: cell.bold ? 700 : undefined,
+                      "--nct-cell-cat": cell.category
+                        ? `var(${CAT_VAR[cell.category - 1]})`
+                        : undefined,
+                    } as CSSProperties
+                  }
                 >
                   {cell.value}
                 </td>
@@ -202,6 +224,35 @@ export function DataTable({ columns, rows, widths, size = "dense" }: DataTablePr
         ))}
       </tbody>
     </table>
+  );
+}
+
+export interface CategoryKeyItem {
+  category: 1 | 2 | 3 | 4;
+  /** What the colour means — "AP", "งานรอบแรก". Two or three words at most. */
+  label: ReactNode;
+}
+
+/**
+ * The decoder for `--nct-cat-*`. A colour-coded column without one asks the
+ * reader to remember which navy meant which thing, and the four category
+ * colours sit as little as 1.31:1 apart — close enough that the key is what
+ * makes the coding readable at all. Put it on the note line of the slide that
+ * uses the coding, never on a different slide.
+ */
+export function CategoryKey({ items }: { items: CategoryKeyItem[] }) {
+  return (
+    <span className="nct-key">
+      {items.map((it, i) => (
+        <span className="nct-key__item" key={i}>
+          <span
+            className="nct-key__dot"
+            style={{ background: `var(${CAT_VAR[it.category - 1]})` }}
+          />
+          {it.label}
+        </span>
+      ))}
+    </span>
   );
 }
 

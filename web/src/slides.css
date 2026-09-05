@@ -87,7 +87,23 @@
 .nct-slide--close .nct-footer,
 .nct-slide--deep .nct-footer {
   border-top-color: rgb(255 255 255 / 0.22);
-  color: rgb(255 255 255 / 0.55);
+  /* 0.55 measured 4.26:1 on navy and 3.00:1 on the light end of the gradients -
+     under the 4.5:1 the 10pt footer needs. Raised here; the gradient tones also
+     get .nct-tone-foot below, because no alpha passes on --nct-teal-b */
+  color: rgb(255 255 255 / 0.72);
+}
+/* The two gradient slides run their light end into the bottom-right corner,
+   exactly where the page number sits. --nct-teal-b is 4.0:1 against pure white,
+   so the ground has to change, not the ink: the same bottom scrim the photo
+   bands already use, painted under the footer rather than over it. */
+.nct-tone-foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 20%;
+  background: var(--nct-tone-foot);
+  pointer-events: none;
 }
 .nct-footer__text { flex: 1; text-align: center; }
 .nct-footer__mark { width: 28.8px; height: auto; opacity: 0.9; }
@@ -199,9 +215,66 @@
   color: rgb(255 255 255 / 0.88);
 }
 .nct-closing__logo { position: absolute; right: var(--nct-mx); top: 355.2px; width: 268.8px; }
-/* with the photo band on the right there is no room at the margin - drop the logo
-   under the contact block instead (mirrors _logo() in l10_closing) */
+/* any photograph pushes the lockup off the right margin, in both modes and for
+   two different reasons: in "band" the picture is literally there, and in "full"
+   the scrim only clears the left half, so white on the right lands on open glass.
+   Drop it under the contact block instead (mirrors _logo() in l10_closing). */
 .nct-closing__logo--photo { right: auto; left: var(--nct-mx); top: 470px; }
+
+/* --- the ask. A proposal's last slide is where the client learns what happens
+   next and by when; the thank-you is the title above it, not the content. --- */
+.nct-closing__ask-label {
+  position: absolute;
+  left: var(--nct-mx);
+  top: 336px;
+  font-size: var(--nct-fs-label);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--nct-teal-up);
+}
+.nct-closing__ask {
+  position: absolute;
+  left: var(--nct-mx);
+  top: 364.8px;
+  width: 576px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: nct-ask;
+}
+.nct-closing__ask li {
+  position: relative;
+  padding-left: 33.6px;
+  font-size: var(--nct-fs-body-2);
+  line-height: 1.4;
+  color: rgb(255 255 255 / 0.92);
+}
+.nct-closing__ask li + li { margin-top: 9.6px; }
+.nct-closing__ask li::before {
+  counter-increment: nct-ask;
+  content: counter(nct-ask);
+  position: absolute;
+  left: 0;
+  font-family: var(--nct-font-display);
+  font-weight: 700;
+  color: var(--nct-teal-up);
+}
+.nct-closing__decision {
+  position: absolute;
+  left: var(--nct-mx);
+  top: 494.4px;
+  width: 576px;
+  font-size: var(--nct-fs-body-3);
+  font-weight: 700;
+  color: var(--nct-teal-up);
+}
+/* with an ask on the slide the contact block steps down and back: it is where
+   the reader looks after they have accepted, not before */
+.nct-closing--ask .nct-closing__contact {
+  top: 556.8px;
+  font-size: var(--nct-fs-body-3);
+  line-height: 1.35;
+}
 /* full-bleed closing: the photograph runs edge to edge, the type sits on a scrim
    that clears the left half. `object-position` pushes the subject right so the
    copy never lands on it. */
@@ -330,7 +403,10 @@
   color: rgb(255 255 255 / 0.78);
   line-height: 1.3;
 }
-.nct-agenda__list { position: absolute; left: var(--nct-mx); top: 451.2px; width: 768px; }
+/* 412.8, not 451.2: at the documented ceiling of six lines the list ran to
+   679.7 and crossed the footer rule at 655.2. Six now ends at 641, four still
+   sit under the title without floating */
+.nct-agenda__list { position: absolute; left: var(--nct-mx); top: 412.8px; width: 768px; }
 /* narrowed beside the photo band - must follow the three rules above,
    or the base widths win on source order */
 .nct-section__title--photo,
@@ -365,8 +441,11 @@
 }
 .nct-band--tint { background: var(--nct-paper-2); }
 .nct-band--dark { background: var(--nct-navy); color: var(--nct-paper); }
+/* auto, not a fixed 168px column: a three-character Thai label left ~130px of
+   dead space after it on six slides and read as a broken grid, not a label */
 .nct-band__label {
-  flex: 0 0 168px;
+  flex: 0 0 auto;
+  min-width: 96px;
   font-size: var(--nct-fs-label);
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -383,7 +462,9 @@
   bottom: 0;
   min-height: var(--nct-take-h);
 }
-/* the source note / legend rides just above it, on the same fixed baseline */
+/* the source note / legend rides just above it, on the same fixed baseline.
+   L16 puts the category key on the left of this line and the source note on the
+   right, so the colour coding has somewhere to be decoded on the slide itself */
 .nct-note,
 .nct-dia-legend {
   position: absolute;
@@ -394,6 +475,19 @@
   font-size: var(--nct-fs-densecell);
   color: var(--nct-ink-2);
 }
+.nct-note {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 28.8px;
+}
+.nct-note__source { text-align: right; }
+
+/* the key for --nct-cat-*: a swatch plus its meaning, because four navies
+   1.31:1 apart cannot carry a taxonomy on hue alone */
+.nct-key { display: inline-flex; align-items: center; gap: 19.2px; }
+.nct-key__item { display: inline-flex; align-items: center; gap: 6px; }
+.nct-key__dot { width: 14.4px; height: 9.6px; flex: none; }
 
 /* ---------------------------------------------------------------- cards */
 .nct-cards { display: grid; gap: var(--nct-gut); }
@@ -628,15 +722,20 @@
   justify-content: center;
   color: var(--nct-teal);
 }
+/* a labelled edge is a wider edge. Without this the label kept `nowrap` in a
+   48px slot - "ส่งเข้าระบบบัญชีอัตโนมัติ" measured 130.8px and hung 41.4px over
+   the boxes on either side */
+.nct-dia-link:has(.nct-dia-link__label) { flex: 0 0 124.8px; }
 .nct-dia-link__label {
   position: absolute;
   bottom: calc(50% + 6px);
   left: 50%;
   transform: translateX(-50%);
+  max-width: 124.8px;
   font-size: var(--nct-fs-densecell);
-  line-height: 1;
+  line-height: 1.15;
+  text-align: center;
   color: var(--nct-ink-2);
-  white-space: nowrap;
 }
 /* the zone the flow passes through - flat fill, no outline. Vertical padding is
    symmetric on purpose: the boxes inside must sit on the same line as the ones
@@ -677,11 +776,39 @@
 .nct-table--roomy tbody td { font-size: var(--nct-fs-body-3); }
 .nct-table [data-align="center"] { text-align: center; }
 .nct-table [data-align="right"] { text-align: right; }
-.nct-table__chip {
-  background: var(--nct-cat-1);
-  color: var(--nct-paper);
+/* a bar, not a fill: on --nct-cat-3 neither white (3.61:1) nor ink (3.50:1)
+   clears AA at the 10pt floor, so the colour moves to the cell edge and the
+   value stays on paper. Needs a CategoryKey on the same slide to decode. */
+/* the row's own hairline, thickened and recoloured on this one cell - not a fill
+   behind the value (no text colour clears AA on --nct-cat-3 at 10pt) and not a
+   stripe down its side (that is the side-tab tell). A real border, not a pseudo-
+   element, so it collapses with the row rule exactly as the .potx cell's lnB does. */
+.nct-table tbody td.nct-table__chip {
   font-weight: 700;
   text-align: center;
+  border-bottom: 3.6px solid var(--nct-cell-cat, var(--nct-cat-1));
+}
+/* the recommended column on a comparison table. Three columns of equal weight
+   plus a sentence underneath is not a recommendation - this marks the one the
+   takeaway is arguing for, in the rule vocabulary the title already uses. The
+   wash keeps the zebra step inside the column so the rows still track. */
+.nct-table th[data-rec] { position: relative; background: var(--nct-teal); }
+.nct-table th[data-rec]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(-1 * var(--nct-rule-h));
+  height: var(--nct-rule-h);
+  background: var(--nct-teal);
+}
+/* :not() so a status or category cell keeps the fill that carries its meaning -
+   the wash is for the column's plain cells only */
+.nct-table tbody td[data-rec]:not(.nct-status):not(.nct-table__chip) {
+  background: color-mix(in srgb, var(--nct-teal) 8%, var(--nct-paper));
+}
+.nct-table tbody tr:nth-child(even) td[data-rec]:not(.nct-status):not(.nct-table__chip) {
+  background: color-mix(in srgb, var(--nct-teal) 8%, var(--nct-paper-2));
 }
 .nct-status { font-weight: 700; text-align: center; }
 .nct-status--ok { background: var(--nct-ok-tint); color: var(--nct-ok); }

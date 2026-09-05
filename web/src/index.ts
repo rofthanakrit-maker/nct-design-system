@@ -6,7 +6,7 @@
  * matching number. Import "@nct/slides/styles.css" once at the app root.
  */
 export { Slide, SlideTitle, Deck, isDarkTone } from "./Slide";
-export type { SlideProps, SlideChromeProps, SlideTone } from "./Slide";
+export type { SlideProps, SlideChromeProps, SlideTone, DeckProps } from "./Slide";
 
 export {
   NctLogo,
@@ -14,6 +14,7 @@ export {
   BulletList,
   TakeawayBand,
   DataTable,
+  CategoryKey,
   DiagramBox,
   DiagramLink,
   DiagramGroup,
@@ -24,6 +25,7 @@ export type {
   BulletListProps,
   TakeawayBandProps,
   DataTableProps,
+  CategoryKeyItem,
   DiagramBoxProps,
   TableCell,
   TableRow,
@@ -70,6 +72,8 @@ export type {
   NumberedCard,
   FigureItem,
   FlowStep,
+  FlowSteps,
+  AgendaItems,
 } from "./layouts";
 
 /* Stock imagery, inlined as data URIs so it survives a CSP that blocks external

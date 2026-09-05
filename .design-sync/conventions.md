@@ -37,14 +37,21 @@ your own layout glue, use the CSS variables:
 
 | Family | Real names |
 |---|---|
-| Colour | `--nct-paper` `--nct-paper-2` `--nct-ink` `--nct-ink-2` `--nct-rule` `--nct-navy` `--nct-teal` `--nct-teal-l` `--nct-deep` |
+| Colour | `--nct-paper` `--nct-paper-2` `--nct-ink` `--nct-ink-2` `--nct-rule` `--nct-navy` `--nct-teal` `--nct-teal-up` `--nct-deep` `--nct-mid` `--nct-teal-b` |
 | Status (data cells only) | `--nct-ok` `--nct-ok-tint` `--nct-warn` `--nct-warn-tint` `--nct-risk` `--nct-risk-tint` |
 | Category (max 4) | `--nct-cat-1` … `--nct-cat-4` |
 | Type | `--nct-fs-display` `--nct-fs-section` `--nct-fs-h1` `--nct-fs-stat` `--nct-fs-quote` `--nct-fs-lead` `--nct-fs-body` `--nct-fs-body-2` `--nct-fs-body-3` `--nct-fs-label` `--nct-fs-foot` `--nct-fs-densehead` `--nct-fs-densebody` `--nct-fs-tblhead` `--nct-fs-densecell` |
 | Family | `--nct-font-display` (Kanit, headings) `--nct-font-body` (Noto Sans Thai, copy) |
-| Grid | `--nct-mx` `--nct-cw` `--nct-gut` `--nct-half` `--nct-third` `--nct-quarter` `--nct-fifth` |
+| Grid | `--nct-mx` `--nct-cw` `--nct-gut` `--nct-fifth` |
 
 Tokens are also importable as values: `import { color, space, fontSize, canvas } from '@nct/slides'`.
+
+`tokens.css` emits only what something reads. The grid units `--nct-mt` `--nct-mb`
+`--nct-col` `--nct-half` `--nct-third` `--nct-quarter` and `--nct-note-h` were
+declared for nine months without a single `var()` and are gone; `scripts/tokens.py`
+still holds every one of them, so adding one back is a line in `emit_web_tokens.py`
+the day a rule actually needs it. A token nobody reads is a promise the system
+does not keep.
 
 ## Rules that are not preferences
 
@@ -59,7 +66,15 @@ Tokens are also importable as values: `import { color, space, fontSize, canvas }
   `SlideFullImage`, and the left panel of `SlideSplitPanel`.
 - **Status colours are data colours.** Tables and process cells only — never a
   heading, a rule or a slide background. Three statuses per slide, maximum.
-- **`--nct-teal-b` is a gradient stop only.** It fails contrast as text or fill.
+- **`--nct-teal-b` is a gradient stop only.** It fails contrast as text or fill —
+  and it is the *end* stop of both `--nct-grad-open` and `--nct-grad-close`, so the
+  light end of each gradient lands in a corner where chrome sits. `Slide` paints a
+  `.nct-tone-foot` scrim under the footer on those two tones for exactly that
+  reason: white at full opacity is still 4.0:1 on `TEAL_B`, so the ground has to
+  change, not the ink. Never remove it.
+- **Footer chrome on dark tones is `rgb(255 255 255 / 0.72)`.** 0.55 measured
+  4.26:1 on navy and 3.00:1 at the teal end — under AA at 10pt, on the two slides
+  that stay on screen longest.
 - **`--nct-ink-2` is the floor for muted text, not a dial.** `#5F5F5F` clears AA
   at 10pt on both `--nct-paper` and `--nct-paper-2`. Never lighten it.
 - **`--nct-teal-l` on white, `--nct-teal-up` on navy.** They are the same hue;
@@ -72,13 +87,41 @@ Tokens are also importable as values: `import { color, space, fontSize, canvas }
   All three pin the strip to the foot of the body box, so the conclusion lands
   at the same y whether the grid runs four rows or ten.
 - `SlideCover` and `SlideClosing` appear once each, as the deck's bookends.
+- **`SlideClosing` is the ask, not a thank-you.** Pass `nextSteps` (two to four
+  actions, each with an owner) and `decisionBy`. `ขอบคุณครับ` is the title above
+  them. A proposal whose last slide asks for nothing has spent the peak-end slot
+  on politeness. With both an ask and a photograph the full lockup is dropped —
+  the left column is full and the corner mark already signs the slide.
+- **Price lives on `SlideTable`.** Put the investment in as a bold last row and
+  set `recommended` to the column the takeaway argues for. Three columns of equal
+  weight plus a sentence underneath is not a recommendation, and a comparison
+  with no prices makes the client guess.
+- **Ceilings are types, not sentences.** `cards` (3 and 4), `steps` (3–5) and
+  agenda `items` (4–6) are tuple unions, so the compiler refuses the slide that
+  would overflow. Anything with a documented maximum and a fixed box belongs in
+  that list — prose ceilings were what let a six-line agenda cross the footer and
+  an eight-step flow run 518px off the canvas, both in silence.
+- **`Deck` owns the chrome.** Pass `footer` and `date` to it once; page numbers
+  come from position. A prop set on the slide still wins, which is how the cover
+  gets `hideFooter` — a cover is not page 1 of anything.
+- **A slide title is one line.** Two fit but eat 15px of the 1in top margin, because
+  `.nct-title` is a fixed 0.8in box that grows upward from its baseline. Three do
+  not fit at all. Shorten the title; that is the fix.
+- **Rounded corners exist once, on L05.** `.nct-card` is 16px, `.nct-card--square`
+  (L12) is 0, and the `.potx` draws the same split (`roundRect` on 05, `rect` on
+  12). Three parallel points are a set and read softer; four category-coded ones
+  are a taxonomy and read as a grid. No third radius.
 - Card heights are fixed. Trim the copy; never stretch a card.
 - **Photographs: architecture and abstract only, never people at work.** Smiling
   meetings, handshakes and stacked hands are the templated-AI tell this system
   exists to avoid. `SlideSection`, `SlideAgenda` and `SlideClosing` take an
-  optional `image` for the right 40% of the slide - `photoSection` and
-  `photoFacade` are the two house frames, and the band fades into the panel on its
-  own. Two chapter openers in a row should not share a frame; `SlideFullImage` wants a real screenshot or a real site photo, not
+  optional `image` for the right 40% of the slide - `photoSection`, `photoFacade`
+  and `photoTower` are the three house frames, and the band fades into the panel on
+  its own. There are only two architecture sources behind them, so `photoSection`
+  and `photoFacade` come from one shot: two anchors alone left them reading as the
+  same photograph, and `photoFacade` is now a zoomed crop of the facade grid
+  instead (`scripts/prepare_images.py`). Two chapter openers should not share a
+  frame; `SlideFullImage` wants a real screenshot or a real site photo, not
   stock. The mascot (`mascot`) is brand art, not photography - it is welcome
   wherever a slide has room for a light touch.
 - **One exception, decided by the system's owner: the closing slide.**
@@ -91,6 +134,11 @@ Tokens are also importable as values: `import { color, space, fontSize, canvas }
   canvas) and `--nct-band-text-w` are tokens; layouts 02, 15, 10 and
   `SlideFullImage variant="fade"` all sit on them. Never retype the pixel values,
   and never introduce a fifth width.
+- **`.potx` parity is 16↔16 by count, and by rendering everywhere but two.**
+  `SlideFullImage variant="fade"` and `SlideClosing imageMode="full"` are web-only
+  treatments; PowerPoint layout 08 stays full-bleed and layout 10 keeps the 40%
+  band. Every other layout renders the same on both sides. State it that way —
+  "1:1" on its own has been read as "identical", which is false for those two.
 - **Imagery is inlined, not linked.** `photoSection`, `photoFacade`, `photoTower`,
   `photoHandshake`, `mascot` and the logo exports are data URIs; an external `src`
   is dropped by the artifact CSP. Only frames a layout actually shows get inlined -
@@ -99,19 +147,18 @@ Tokens are also importable as values: `import { color, space, fontSize, canvas }
 ## A slide, idiomatically
 
 ```tsx
-import { Deck, SlideSplitPanel, SlideDenseTable } from '@nct/slides';
+import { CategoryKey, Deck, SlideSplitPanel, SlideDenseTable, SlideClosing } from '@nct/slides';
 import '@nct/slides/styles.css';
 
-<Deck>
+// chrome and page numbers live on Deck, once
+<Deck footer="NCT · ข้อเสนอโครงการ" date="2569">
   <SlideSplitPanel
-    footer="NCT · ข้อเสนอโครงการ" pageNumber={4}
     title="สภาพระบบบัญชีปัจจุบัน"
     context={['คีย์เอกสารซ้ำสามระบบ', { text: 'เฉลี่ย 1,200 ใบต่อเดือน', level: 2 }]}
     outcome={['คีย์จุดเดียว ระบบกระจายต่อให้อัตโนมัติ']}
     takeaway="ปัญหาหลักคือการคีย์ซ้ำ ไม่ใช่จำนวนเอกสาร"
   />
   <SlideDenseTable
-    footer="NCT · ข้อเสนอโครงการ" pageNumber={5}
     title="ขอบเขตงานรายกระบวนการ"
     widths={[0.6, 3.2, 1.6, 1.6]}
     columns={[{ label: '#', align: 'center' }, 'กระบวนการ',
@@ -122,8 +169,16 @@ import '@nct/slides/styles.css';
       [{ value: 2, category: 4 }, 'ปรับปรุงบัญชีสิ้นเดือน',
        { value: 'ติดข้อจำกัด', status: 'risk' }, { value: 'รอบ 3', align: 'center' }],
     ]}
+    // a coded column needs its key on the same slide
+    legend={<CategoryKey items={[{ category: 1, label: 'AP' }, { category: 4, label: 'GL' }]} />}
     footnote="ปริมาณเป็นค่าเฉลี่ย 3 เดือนล่าสุด"
     takeaway="หนึ่งในสองกระบวนการเริ่มได้ทันที อีกรายการรอสิทธิ์เข้าระบบ"
+  />
+  // the last slide asks for something
+  <SlideClosing
+    nextSteps={['ยืนยันขอบเขตงาน', 'เปิดสิทธิ์เข้าระบบให้ทีมสำรวจ', 'ลงนามและเริ่มรอบที่ 1']}
+    decisionBy="ต้องการคำตอบภายใน 30 กันยายน 2569"
+    contact={['โทร · 02-XXX-XXXX', 'อีเมล · contact@nctthai.com']}
   />
 </Deck>
 ```

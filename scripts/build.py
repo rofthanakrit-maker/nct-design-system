@@ -33,7 +33,7 @@ LAYOUTS = [
     (lambda: PL.l07_quote("rId2"),         ["mark-color.png"]),
     (lambda: PL.l08_image("rId2"),         ["mark-white.png"]),
     (lambda: PL.l09_table("rId2"),         ["mark-color.png"]),
-    (lambda: PL.l10_closing("rId2", "rId3"), ["logo-white.png", "photo-facade.jpg"]),
+    (lambda: PL.l10_closing("rId2", "rId3"), ["mark-white.png", "photo-facade.jpg"]),
     # --- v2: dense / proposal-deck layouts ---
     (lambda: PL.l11_split("rId2"),         ["mark-color.png"]),
     (lambda: PL.l12_cards_band("rId2"),    ["mark-color.png"]),
@@ -129,7 +129,17 @@ ROW_HEAD = 347472        # 0.380in
 ROW_BODY = 352044        # 0.385in
 
 
-def _cell(text, sz, color, bold=False, algn="l", fill=None, spc=0):
+def _cell(text, sz, color, bold=False, algn="l", fill=None, spc=0, bar=None):
+    """`bar` underlines the cell with a category colour.
+
+    Not a fill: white on CAT_3 is 3.61:1 and INK on it 3.50:1, so a filled
+    category cell has no legible text colour at the 10pt floor. Not a left edge
+    either - a coloured stripe down one side of a box is the side-tab tell. The
+    colour goes under the value, which stays on paper. Line elements come before
+    fill in tcPr.
+    """
+    ln = ('<a:lnB w="34925" cap="flat"><a:solidFill><a:srgbClr val="%s"/></a:solidFill>'
+          '<a:prstDash val="solid"/></a:lnB>' % bar) if bar else ''
     f = ('<a:solidFill><a:srgbClr val="%s"/></a:solidFill>' % fill) if fill else ''
     s = ' spc="%d"' % spc if spc else ''
     b = ' b="1"' if bold else ''
@@ -141,8 +151,8 @@ def _cell(text, sz, color, bold=False, algn="l", fill=None, spc=0):
         '<a:endParaRPr lang="th-TH" sz="%d"/>' % sz
     return ('<a:tc><a:txBody><a:bodyPr/><a:lstStyle/>'
             '<a:p><a:pPr algn="%s" marL="0" indent="0"><a:buNone/></a:pPr>%s</a:p></a:txBody>'
-            '<a:tcPr marL="%d" marR="%d" marT="%d" marB="%d" anchor="ctr">%s</a:tcPr></a:tc>'
-            % (algn, run, TBL_PAD, TBL_PAD, TBL_PAD, TBL_PAD, f))
+            '<a:tcPr marL="%d" marR="%d" marT="%d" marB="%d" anchor="ctr">%s%s</a:tcPr></a:tc>'
+            % (algn, run, TBL_PAD, TBL_PAD, TBL_PAD, TBL_PAD, ln, f))
 
 
 def table(sid, name, idx, x, y, widths, rows):
@@ -314,81 +324,33 @@ def slide(shapes):
 
 
 def demo_slides():
+    """The demo runs in argument order, not layout-number order.
+
+    It is the file people copy, so it has to teach an argument: cover, agenda,
+    the problem, what changes, how the work is done, what is in scope, who is
+    doing it, what it costs, what happens next. Each of the sixteen layouts
+    still appears exactly once - the 1:1 parity with the .potx is the point.
+    """
     S = []
-    # 1 title
-    S.append((1, [sp_text(2, "Title", "ctrTitle", None, ["บริการที่ปรึกษาเทคโนโลยีสารสนเทศ"]),
+    # ---------------------------------------------------------------- 1 · cover
+    S.append((1, [sp_text(2, "Title", "ctrTitle", None,
+                          ["ข้อเสนอโครงการวางระบบบัญชีอัตโนมัติ"]),
                   sp_text(3, "Subtitle", "subTitle", 1,
                           ["New Computer Technology Consulting Co., Ltd. · 2569"])]))
-    # 2 section
+    # ---------------------------------------------------------------- 2 · agenda (L15)
+    # six lines, the documented ceiling, on the corrected list y
+    S.append((15, [sp_text(2, "Num", "body", 1, ["00"]),
+                   sp_text(3, "Title", "title", None, ["หัวข้อนำเสนอ"]),
+                   sp_text(4, "List", "body", 2,
+                           ["บริบทและปัญหาที่พบ", "ผลลัพธ์ที่ข้อเสนอนี้ให้",
+                            "วิธีการทำงานและสถาปัตยกรรม", "ขอบเขตงานรายกระบวนการ",
+                            "ทีมงานและประสบการณ์", "แพ็กเกจและงบประมาณ"])]))
+    # ---------------------------------------------------------------- 3 · chapter 01 (L02)
     S.append((2, [sp_text(2, "Number", "body", 1, ["01"]),
-                  sp_text(3, "Title", "title", None, ["ภาพรวมบริษัท"]),
-                  sp_text(4, "Desc", "body", 2, ["ใครคือ NCT และเราทำอะไรให้ลูกค้าองค์กร"])]))
-    # 3 content
-    S.append((3, [sp_text(2, "Title", "title", None, ["ขอบเขตบริการ"]),
-                  sp_text(3, "Body", "body", 1,
-                          ["วางระบบโครงสร้างพื้นฐานไอทีสำหรับองค์กร",
-                           ("ออกแบบเครือข่าย ระบบสำรองข้อมูล และความปลอดภัย", 1),
-                           "ดูแลระบบต่อเนื่องแบบ Managed Service",
-                           ("มีทีมซัพพอร์ตตอบกลับภายใน SLA ที่ตกลงกัน", 1),
-                           "ให้คำปรึกษาการย้ายระบบขึ้นคลาวด์"])]))
-    # 4 two column
-    S.append((4, [sp_text(2, "Title", "title", None, ["ก่อนและหลังใช้บริการ"]),
-                  sp_text(3, "L", "body", 1,
-                          ["ก่อน", ("ระบบล่มบ่อย ไม่มีคนดูแลประจำ", 1),
-                           ("ค่าใช้จ่ายไม่แน่นอน", 1)]),
-                  sp_text(4, "R", "body", 2,
-                          ["หลัง", ("มอนิเตอร์ 24 ชั่วโมง แจ้งเตือนอัตโนมัติ", 1),
-                           ("ค่าใช้จ่ายคงที่ต่อเดือน", 1)])]))
-    # 5 cards
-    S.append((5, [sp_text(2, "Title", "title", None, ["สามเสาหลักของบริการ"]),
-                  sp_text(3, "C1H", "body", 1, ["Infrastructure"]),
-                  sp_text(4, "C1B", "body", 2, ["ออกแบบและติดตั้งเครือข่าย เซิร์ฟเวอร์ และระบบสำรองข้อมูล"]),
-                  sp_text(5, "C2H", "body", 3, ["Managed Service"]),
-                  sp_text(6, "C2B", "body", 4, ["ดูแลระบบรายเดือน พร้อมทีมซัพพอร์ตและรายงานสุขภาพระบบ"]),
-                  sp_text(7, "C3H", "body", 5, ["Cloud & Security"]),
-                  sp_text(8, "C3B", "body", 6, ["ย้ายระบบขึ้นคลาวด์ และวางมาตรการความปลอดภัยตามมาตรฐาน"])]))
-    # 6 stats
-    S.append((6, [sp_text(2, "Title", "title", None, ["ตัวเลขที่บอกเรื่องเรา"]),
-                  sp_text(3, "F1", "body", 1, ["12"]),
-                  sp_text(4, "F1L", "body", 2, ["ปีที่ให้บริการองค์กรไทย"]),
-                  sp_text(5, "F2", "body", 3, ["99.9%"]),
-                  sp_text(6, "F2L", "body", 4, ["Uptime เฉลี่ยของระบบที่ดูแล"]),
-                  sp_text(7, "F3", "body", 5, ["24/7"]),
-                  sp_text(8, "F3L", "body", 6, ["ทีมเฝ้าระวังและตอบกลับ"]),
-                  sp_text(9, "FN", "body", 7, ["ข้อมูล ณ ไตรมาส 1 ปี 2569"])]))
-    # 7 quote
-    S.append((7, [sp_text(2, "Q", "body", 1,
-                          ["ระบบไม่ล่มอีกเลยตั้งแต่เปลี่ยนมาใช้ทีมนี้ดูแล และเราวางแผนงบประมาณได้ล่วงหน้าจริง ๆ"]),
-                  sp_text(3, "A", "body", 2, ["คุณสมชาย ป. — ผู้จัดการฝ่ายไอที, บริษัทตัวอย่าง จำกัด"])]))
-    # 8 full image
-    S.append((8, [sp_text(2, "Title", "title", None, ["ศูนย์ปฏิบัติการเครือข่าย"]),
-                  sp_text(3, "Cap", "body", 2, ["คลิกไอคอนกลางสไลด์เพื่อใส่ภาพเต็มจอ"])]))
-    # 9 table -- v2 §1 #4: the demo must actually carry a table, not just a title
-    w9 = [3181080, 2394040, 2394040, 2394040]
-    head9 = ["", "Essential", "Business", "Enterprise"]
-    body9 = [
-        ["ชั่วโมงซัพพอร์ต", "จันทร์–ศุกร์ 9–18", "จันทร์–เสาร์ 8–20", "24/7"],
-        ["เวลาตอบกลับ (SLA)", "8 ชั่วโมง", "4 ชั่วโมง", "1 ชั่วโมง"],
-        ["มอนิเตอร์ระบบ", "รายวัน", "ต่อเนื่อง", "ต่อเนื่อง + แจ้งเตือน"],
-        ["รายงานสุขภาพระบบ", "ไตรมาส", "รายเดือน", "รายสัปดาห์"],
-    ]
-    rows9 = [(ROW_HEAD, [_cell(t, T_TBLHEAD, PAPER, bold=True, spc=60,
-                               algn="l" if i == 0 else "ctr")
-                         for i, t in enumerate(head9)])]
-    for r in body9:
-        rows9.append((ROW_BODY, [_cell(t, T_DENSECELL, INK, bold=(i == 0),
-                                       algn="l" if i == 0 else "ctr")
-                                 for i, t in enumerate(r)]))
-    S.append((9, [sp_text(2, "Title", "title", None, ["เปรียบเทียบแพ็กเกจ"]),
-                  sp_text(3, "Intro", "body", 2, ["เลือกระดับบริการให้ตรงกับขนาดองค์กร"]),
-                  table(4, "Package Table", 1, MX, 2286000, w9, rows9),
-                  sp_text(5, "TL", "body", 3, ["สรุป"]),
-                  sp_text(6, "TC", "body", 4,
-                          ["องค์กร 50-200 ที่นั่งเลือก Business เป็นค่าเริ่มต้น "
-                           "ตอบกลับ 4 ชั่วโมงครอบคลุมงานปิดงบรายเดือน"])]))
-
-    # ---------------------------------------------------------- v2 layouts 11-16
-    # 11 split panel
+                  sp_text(3, "Title", "title", None, ["บริบทและปัญหา"]),
+                  sp_text(4, "Desc", "body", 2,
+                          ["สิ่งที่เราพบจากการสำรวจงานบัญชีของท่านสองสัปดาห์"])]))
+    # ---------------------------------------------------------------- 4 · the problem (L11)
     S.append((11, [sp_text(2, "Title", "title", None, ["สภาพระบบบัญชีปัจจุบัน"]),
                    sp_text(3, "CtxK", "body", 1, ["สภาพปัจจุบัน"]),
                    sp_text(4, "CtxB", "body", 2,
@@ -405,8 +367,15 @@ def demo_slides():
                    sp_text(7, "TkL", "body", 5, ["สรุป"]),
                    sp_text(8, "TkC", "body", 6,
                            ["ปัญหาหลักคือการคีย์ซ้ำ ไม่ใช่จำนวนเอกสาร"])]))
-
-    # 12 four cards + band
+    # ---------------------------------------------------------------- 5 · before/after (L04)
+    S.append((4, [sp_text(2, "Title", "title", None, ["ก่อนและหลังใช้บริการ"]),
+                  sp_text(3, "L", "body", 1,
+                          ["ก่อน", ("ระบบล่มบ่อย ไม่มีคนดูแลประจำ", 1),
+                           ("ค่าใช้จ่ายไม่แน่นอน", 1)]),
+                  sp_text(4, "R", "body", 2,
+                          ["หลัง", ("มอนิเตอร์ 24 ชั่วโมง แจ้งเตือนอัตโนมัติ", 1),
+                           ("ค่าใช้จ่ายคงที่ต่อเดือน", 1)])]))
+    # ---------------------------------------------------------------- 6 · outcomes (L12)
     cards12 = [("ลดงานคีย์ซ้ำ", "รับเอกสารเข้าระบบเดียว แล้วกระจายต่อให้ทุกปลายทางอัตโนมัติ"),
                ("ตรวจสอบได้", "ทุกรายการมี audit trail ผู้ทำ เวลา และค่าก่อนหลัง"),
                ("ปิดงบเร็วขึ้น", "กระทบยอดอัตโนมัติรายวัน ไม่ต้องรอสิ้นเดือน"),
@@ -421,8 +390,11 @@ def demo_slides():
     sh12.append(sp_text(sid, "BC", "body", 14,
                         ["ทั้งสี่ข้อมาจากการแก้จุดเดียวกัน คือรวมจุดรับเอกสาร"]))
     S.append((12, sh12))
-
-    # 13 process flow
+    # ---------------------------------------------------------------- 7 · chapter 02 (L08)
+    S.append((8, [sp_text(2, "Title", "title", None, ["วิธีการทำงาน"]),
+                  sp_text(3, "Cap", "body", 2,
+                          ["กระบวนการ สถาปัตยกรรม และขอบเขตที่ตกลงกัน"])]))
+    # ---------------------------------------------------------------- 8 · process (L13)
     steps13 = [("รับเอกสาร", "สแกนหรือรับไฟล์เข้าคิวกลาง"),
                ("อ่านข้อมูล", "ดึงฟิลด์สำคัญ ตรวจกับต้นทาง"),
                ("ตรวจสอบ", "กฎธุรกิจและวงเงินอนุมัติ"),
@@ -439,10 +411,10 @@ def demo_slides():
     sh13.append(sp_text(sid, "RC", "body", 18,
                         ["เอกสารหนึ่งใบผ่านครบห้าขั้นโดยไม่มีการคีย์ซ้ำเลย"]))
     S.append((13, sh13))
-
-    # 14 diagram canvas -- demo draws the v2 §14 standard parts kit
+    # ---------------------------------------------------------------- 9 · architecture (L14)
     sh14 = [sp_text(2, "Title", "title", None, ["ภาพรวมสถาปัตยกรรมระบบ"]),
-            sp_text(3, "Sub", "body", 1, ["ตัวอย่างการใช้ชุดชิ้นส่วนมาตรฐานตาม v2 §14"]),
+            sp_text(3, "Sub", "body", 1,
+                    ["ใช้ชุดชิ้นส่วนมาตรฐาน — กล่องมุมตรง เส้นหักมุมฉาก ไม่มีเงา"]),
             sp_text(4, "Leg", "body", 2,
                     ["กล่องทึบ = ระบบที่มีอยู่  ·  กล่องมีสีหมวด = ส่วนที่เพิ่ม  ·  "
                      "เส้นทึบ = ข้อมูลไหลอัตโนมัติ"])]
@@ -451,16 +423,7 @@ def demo_slides():
                         ["ระบบเดิมไม่ถูกแก้ ของใหม่แทรกเป็นคิวและตัวตรวจกฎคั่นกลางเท่านั้น"]))
     sh14 += _diagram_kit(10)
     S.append((14, sh14))
-
-    # 15 agenda
-    S.append((15, [sp_text(2, "Num", "body", 1, ["02"]),
-                   sp_text(3, "Title", "title", None, ["หัวข้อนำเสนอ"]),
-                   sp_text(4, "List", "body", 2,
-                           ["บริบทและปัญหาที่พบ", "วัตถุประสงค์ของโครงการ",
-                            "ขอบเขตงานรายกระบวนการ", "แผนดำเนินงานและผู้รับผิดชอบ",
-                            "งบประมาณและเงื่อนไข"])]))
-
-    # 16 dense table
+    # ---------------------------------------------------------------- 10 · scope (L16)
     w16 = [594360, 3200400, 1965960, 1600200, 1554480, 1447800]
     head16 = ["#", "กระบวนการ", "หมวด", "ปริมาณ/เดือน", "ความพร้อม", "รอบที่ทำ"]
     cats16 = [NAVY, TEAL, TEAL_L, DEEP]
@@ -481,7 +444,8 @@ def demo_slides():
     for n, (proc, cat, qty, (st, stc, stt), rnd) in enumerate(body16, 1):
         c = cats16[catmap[cat]]
         rows16.append((ROW_BODY, [
-            _cell(str(n), T_DENSECELL, PAPER, bold=True, algn="ctr", fill=c),
+            # the category rides the cell's leading edge; the number stays on paper
+            _cell(str(n), T_DENSECELL, INK, bold=True, algn="ctr", bar=c),
             _cell(proc, T_DENSECELL, INK),
             _cell(cat, T_DENSECELL, c, bold=True, algn="ctr"),
             _cell(qty, T_DENSECELL, INK, algn="ctr"),
@@ -492,16 +456,87 @@ def demo_slides():
                    sp_text(3, "Intro", "body", 2,
                            ["แปดกระบวนการที่อยู่ในขอบเขต แบ่งตามหมวดและรอบส่งมอบ"]),
                    table(4, "Scope Table", 1, MX, 2011680, w16, rows16),
-                   sp_text(5, "Foot", "body", 3,
-                           ["ปริมาณเป็นค่าเฉลี่ยจากข้อมูล 3 เดือนล่าสุด · "
-                            "รายการติดข้อจำกัดรอผลการตรวจสิทธิ์เข้าระบบ"]),
-                   sp_text(6, "TL", "body", 4, ["สรุป"]),
-                   sp_text(7, "TC", "body", 5,
+                   sp_text(5, "Key", "body", 3,
+                           ["■ AP · เจ้าหนี้   ■ AR · ลูกหนี้   ■ GL · บัญชีแยกประเภท"]),
+                   sp_text(6, "Foot", "body", 4,
+                           ["ปริมาณเป็นค่าเฉลี่ยจากข้อมูล 3 เดือนล่าสุด"]),
+                   sp_text(7, "TL", "body", 5, ["สรุป"]),
+                   sp_text(8, "TC", "body", 6,
                            ["หกในแปดกระบวนการเริ่มได้ทันทีในรอบ 1-2 "
                             "อีกสองรายการรอสิทธิ์เข้าระบบ ยืนยันภายใน 15 วัน"])]))
-    # closing goes last: it is layout 10, but a deck ends on the thank-you page
+    # ---------------------------------------------------------------- 11 · services (L03)
+    S.append((3, [sp_text(2, "Title", "title", None, ["ขอบเขตบริการของ NCT"]),
+                  sp_text(3, "Body", "body", 1,
+                          ["วางระบบโครงสร้างพื้นฐานไอทีสำหรับองค์กร",
+                           ("ออกแบบเครือข่าย ระบบสำรองข้อมูล และความปลอดภัย", 1),
+                           "ดูแลระบบต่อเนื่องแบบ Managed Service",
+                           ("มีทีมซัพพอร์ตตอบกลับภายใน SLA ที่ตกลงกัน", 1),
+                           "ให้คำปรึกษาการย้ายระบบขึ้นคลาวด์"])]))
+    # ---------------------------------------------------------------- 12 · pillars (L05)
+    S.append((5, [sp_text(2, "Title", "title", None, ["สามเสาหลักของบริการ"]),
+                  sp_text(3, "C1H", "body", 1, ["Infrastructure"]),
+                  sp_text(4, "C1B", "body", 2, ["ออกแบบและติดตั้งเครือข่าย เซิร์ฟเวอร์ และระบบสำรองข้อมูล"]),
+                  sp_text(5, "C2H", "body", 3, ["Managed Service"]),
+                  sp_text(6, "C2B", "body", 4, ["ดูแลระบบรายเดือน พร้อมทีมซัพพอร์ตและรายงานสุขภาพระบบ"]),
+                  sp_text(7, "C3H", "body", 5, ["Cloud & Security"]),
+                  sp_text(8, "C3B", "body", 6, ["ย้ายระบบขึ้นคลาวด์ และวางมาตรการความปลอดภัยตามมาตรฐาน"])]))
+    # ---------------------------------------------------------------- 13 · figures (L06)
+    S.append((6, [sp_text(2, "Title", "title", None, ["ตัวเลขที่บอกเรื่องเรา"]),
+                  sp_text(3, "F1", "body", 1, ["12"]),
+                  sp_text(4, "F1L", "body", 2, ["ปีที่ให้บริการองค์กรไทย"]),
+                  sp_text(5, "F2", "body", 3, ["99.9%"]),
+                  sp_text(6, "F2L", "body", 4, ["Uptime เฉลี่ยของระบบที่ดูแล"]),
+                  sp_text(7, "F3", "body", 5, ["24/7"]),
+                  sp_text(8, "F3L", "body", 6, ["ทีมเฝ้าระวังและตอบกลับ"]),
+                  sp_text(9, "FN", "body", 7, ["ข้อมูล ณ ไตรมาส 1 ปี 2569"])]))
+    # ---------------------------------------------------------------- 14 · quote (L07)
+    S.append((7, [sp_text(2, "Q", "body", 1,
+                          ["ระบบไม่ล่มอีกเลยตั้งแต่เปลี่ยนมาใช้ทีมนี้ดูแล และเราวางแผนงบประมาณได้ล่วงหน้าจริง ๆ"]),
+                  sp_text(3, "A", "body", 2, ["คุณสมชาย ป. — ผู้จัดการฝ่ายไอที, บริษัทตัวอย่าง จำกัด"])]))
+    # ---------------------------------------------------------------- 15 · money (L09)
+    # the price row belongs here, and the column the takeaway argues for is marked
+    w9 = [3181080, 2394040, 2394040, 2394040]
+    REC = 2                                   # "Business"
+    head9 = ["", "Essential", "Business", "Enterprise"]
+    body9 = [
+        ["ชั่วโมงซัพพอร์ต", "จันทร์–ศุกร์ 9–18", "จันทร์–เสาร์ 8–20", "24/7"],
+        ["เวลาตอบกลับ (SLA)", "8 ชั่วโมง", "4 ชั่วโมง", "1 ชั่วโมง"],
+        ["มอนิเตอร์ระบบ", "รายวัน", "ต่อเนื่อง", "ต่อเนื่อง + แจ้งเตือน"],
+        ["รายงานสุขภาพระบบ", "ไตรมาส", "รายเดือน", "รายสัปดาห์"],
+        ["ค่าบริการต่อเดือน", "18,000 บาท", "32,000 บาท", "65,000 บาท"],
+    ]
+    rows9 = [(ROW_HEAD, [_cell(t, T_TBLHEAD, PAPER, bold=True, spc=60,
+                               algn="l" if i == 0 else "ctr",
+                               fill=TEAL if i == REC else None)
+                         for i, t in enumerate(head9)])]
+    for r_i, r in enumerate(body9):
+        price = r_i == len(body9) - 1
+        rows9.append((ROW_BODY, [_cell(t, T_DENSECELL, INK, bold=(i == 0 or price),
+                                       algn="l" if i == 0 else "ctr")
+                                 for i, t in enumerate(r)]))
+    rec_x = MX + sum(w9[:REC])
+    S.append((9, [sp_text(2, "Title", "title", None, ["แพ็กเกจและงบประมาณ"]),
+                  sp_text(3, "Intro", "body", 2,
+                          ["เลือกระดับบริการให้ตรงกับขนาดองค์กร ราคาไม่รวมภาษีมูลค่าเพิ่ม"]),
+                  table(4, "Package Table", 1, MX, 2286000, w9, rows9),
+                  # the cap rule over the recommended column, in the same vocabulary
+                  # the slide title's rule uses
+                  shape(9, "Recommended Cap", rec_x, 2286000 - RULE_H, w9[REC], RULE_H,
+                        solid(TEAL)),
+                  sp_text(5, "TL", "body", 3, ["สรุป"]),
+                  sp_text(6, "TC", "body", 4,
+                          ["องค์กร 50-200 ที่นั่งเลือก Business เป็นค่าเริ่มต้น "
+                           "ตอบกลับ 4 ชั่วโมงครอบคลุมงานปิดงบรายเดือน"])]))
+    # ---------------------------------------------------------------- 16 · the ask (L10)
     S.append((10, [sp_text(2, "Title", "title", None, ["ขอบคุณครับ"]),
-                   sp_text(3, "Contact", "body", 1,
+                   sp_text(3, "NSL", "body", 1, ["ขั้นตอนถัดไป"]),
+                   sp_text(4, "NS", "body", 2,
+                           ["ยืนยันแพ็กเกจและขอบเขตงานรายกระบวนการ",
+                            "เปิดสิทธิ์เข้าระบบให้ทีมสำรวจ 2 รายการที่ยังติดข้อจำกัด",
+                            "ลงนามสัญญาและเริ่มรอบที่ 1 ภายใน 30 วัน"]),
+                   sp_text(5, "DB", "body", 3,
+                           ["ต้องการคำตอบภายใน 30 กันยายน 2569 เพื่อเริ่มรอบแรกในไตรมาสนี้"]),
+                   sp_text(6, "Contact", "body", 4,
                            ["โทร · 02-XXX-XXXX", "อีเมล · contact@nctthai.com",
                             "เว็บไซต์ · nctthai.com"])]))
 

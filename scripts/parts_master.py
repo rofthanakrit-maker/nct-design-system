@@ -58,15 +58,20 @@ def _sldnum_sp(sid, dark):
             '<a:t>2</a:t></a:fld><a:endParaRPr lang="th-TH" sz="%d"/></a:p></p:txBody></p:sp>'
             % (sid, xfrm(SW - MX - 1371600, FOOT_Y, 1371600, 274320),
                lst_style([dict(sz=T_FOOT, color=c, algn="r",
-                               alpha=60 if dark else None)]),
+                               alpha=72 if dark else None)]),
                SLDNUM_GUID, T_FOOT, c, alpha, T_FOOT))
 
 
 def chrome(dark=False, mark_rid=None, first_id=90):
-    """hairline + date + footer + page number + corner mark, shared by every layout"""
+    """hairline + date + footer + page number + corner mark, shared by every layout
+
+    72, not 55: PAPER at 55% measured 4.26:1 on NAVY and 3.00:1 on the light end
+    of the two gradients, under the 4.5:1 a 10pt line needs. L01 and L10 also get
+    a foot scrim, because no alpha clears AA on TEAL_B.
+    """
     out = []
     c = PAPER if dark else INK2
-    alpha = 55 if dark else None
+    alpha = 72 if dark else None
     out.append(shape(first_id, "Footer Rule", MX, FOOT_Y - 137160, CW, 12700,
                      solid(PAPER if dark else RULE, 22 if dark else None)))
     out.append(placeholder(first_id + 1, "Date Placeholder", "dt", MX, FOOT_Y, 2743200, 274320,

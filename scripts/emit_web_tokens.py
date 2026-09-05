@@ -27,7 +27,6 @@ COLORS = [
     ("rule", T.RULE, "hairline, divider"),
     ("navy", T.NAVY, "headings, dark panels, primary accent"),
     ("teal", T.TEAL, "rules, bullets, links, secondary accent"),
-    ("teal-l", T.TEAL_L, "2nd chart series, category 3 - on white only"),
     ("teal-up", T.TEAL_UP, "the same teal lifted to read ON NAVY - never on white"),
     ("deep", T.DEEP, "photo scrim, full-image background"),
     ("mid", T.MID, "gradient midpoint (L01 / L10) - gradient stop only"),
@@ -44,17 +43,18 @@ COLORS = [
     ("cat-4", T.CAT_4, "category coding 4 of 4 - reuses deep"),
 ]
 
+# Only what something actually consumes. A token nobody reads is a promise the
+# system does not keep - the grid units MT/MB/COL/HALF/THIRD/QUARTER lived here
+# for nine months without a single var() and were removed; add one back the day
+# a rule needs it, from tokens.py, which still holds them all.
 SPACE = [
     ("slide-w", T.SW), ("slide-h", T.SH),
-    ("mx", T.MX), ("mt", T.MT), ("mb", T.MB),
-    ("cw", T.CW), ("gut", T.GUT), ("col", T.COL),
-    ("half", T.HALF), ("third", T.THIRD),
-    ("quarter", T.QUARTER), ("fifth", T.FIFTH),
+    ("mx", T.MX), ("cw", T.CW), ("gut", T.GUT), ("fifth", T.FIFTH),
     ("band-w", T.BAND_W), ("band-text-w", T.BAND_TW),
     ("title-y", T.TITLE_Y), ("title-h", T.TITLE_H),
     ("rule-y", T.RULE_Y), ("rule-h", T.RULE_H), ("rule-w", T.RULE_W),
     ("body-y", T.BODY_Y), ("body-h", T.BODY_H),
-    ("take-h", T.TAKE_H), ("note-h", T.NOTE_H),
+    ("take-h", T.TAKE_H),
     # distance from the foot of the body box, so the CSS can pin both from bottom
     ("note-up", T.BODY_Y + T.BODY_H - T.NOTE_Y - T.NOTE_H),
 ]
@@ -101,13 +101,26 @@ def css():
     out.append("  --nct-font-display: 'Kanit', 'Noto Sans Thai', system-ui, sans-serif;")
     out.append("  --nct-font-body: 'Noto Sans Thai', 'Kanit', system-ui, sans-serif;")
     out.append("")
-    out.append("  /* ---- gradients: L01 opens navy->teal, L10 closes teal->navy ---- */")
-    out.append("  --nct-grad-open: linear-gradient(135deg, #%s 0%%, #%s 55%%, #%s 100%%);"
-               % (T.NAVY, T.MID, T.TEAL))
-    out.append("  --nct-grad-close: linear-gradient(135deg, #%s 0%%, #%s 55%%, #%s 100%%);"
-               % (T.TEAL, T.MID, T.NAVY))
-    out.append("  --nct-scrim: linear-gradient(to bottom, transparent 0%%, "
-               "#%s99 55%%, #%se6 100%%);" % (T.DEEP, T.DEEP))
+    out.append("  /* ---- gradients: L01 opens navy->teal-b, L10 closes teal-b->navy ---- */")
+    out.append("  /* stops are var()s, not repeated literals: the same four colours")
+    out.append("     restated as hex here is how --nct-mid ended up declared but unused,")
+    out.append("     and how the web gradient drifted to --nct-teal instead of the")
+    out.append("     --nct-teal-b end-stop grad() gives the .potx */")
+    out.append("  --nct-grad-open: linear-gradient(135deg, var(--nct-navy) 0%,"
+               " var(--nct-mid) 55%, var(--nct-teal-b) 100%);")
+    out.append("  --nct-grad-close: linear-gradient(135deg, var(--nct-teal-b) 0%,"
+               " var(--nct-mid) 55%, var(--nct-navy) 100%);")
+    out.append("  --nct-scrim: linear-gradient(to bottom, transparent 0%,"
+               " color-mix(in srgb, var(--nct-deep) 60%, transparent) 55%,"
+               " color-mix(in srgb, var(--nct-deep) 90%, transparent) 100%);")
+    out.append("  /* the footer chrome rides the light end of both gradients: teal-b is"
+               " 4.0:1")
+    out.append("     against white even at full opacity, so the strip gets the same"
+               " bottom scrim")
+    out.append("     the photo bands use rather than a lighter text colour */")
+    out.append("  --nct-tone-foot: linear-gradient(to bottom, transparent 0%,"
+               " color-mix(in srgb, var(--nct-deep) 55%, transparent) 55%,"
+               " color-mix(in srgb, var(--nct-deep) 88%, transparent) 100%);")
     out.append("}")
     return "\n".join(out) + "\n"
 

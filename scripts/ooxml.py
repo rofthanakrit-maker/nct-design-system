@@ -72,13 +72,18 @@ def rpr(sz, color, bold=False, font="mn", spc=0, italic=False, alpha=None):
 
 
 def _ppr_inner(line=100000, space_before=0, space_after=0, bullet=False, bullet_color=None,
-               bullet_char=None):
+               bullet_char=None, bullet_auto=False):
     out = '<a:lnSpc><a:spcPct val="%d"/></a:lnSpc>' % line
     if space_before:
         out += '<a:spcBef><a:spcPts val="%d"/></a:spcBef>' % space_before
     if space_after:
         out += '<a:spcAft><a:spcPts val="%d"/></a:spcAft>' % space_after
-    if bullet:
+    if bullet and bullet_auto:
+        # numbered, not bulleted - "1. 2. 3." is a sequence, a dot is a set
+        out += ('<a:buClr><a:srgbClr val="%s"/></a:buClr><a:buSzPct val="90000"/>'
+                '<a:buFont typeface="Arial"/><a:buAutoNum type="arabicPeriod"/>'
+                % (bullet_color or TEAL))
+    elif bullet:
         out += ('<a:buClr><a:srgbClr val="%s"/></a:buClr><a:buSzPct val="90000"/>'
                 '<a:buFont typeface="Arial"/><a:buChar char="%s"/>'
                 % (bullet_color or TEAL, bullet_char or BULLET))
@@ -98,10 +103,12 @@ def _ppr_attrs(algn="l", indent=0, marL=None):
 
 def lvl_ppr(n, sz=T_BODY, color=INK, bold=False, font="mn", algn="l", spc=0, italic=False,
             alpha=None, line=100000, bullet=False, bullet_color=None, bullet_char=None,
+            bullet_auto=False,
             indent=0, marL=None, space_before=0, space_after=0):
     return ('<a:lvl%dpPr%s>%s%s</a:lvl%dpPr>'
             % (n, _ppr_attrs(algn, indent, marL),
-               _ppr_inner(line, space_before, space_after, bullet, bullet_color, bullet_char),
+               _ppr_inner(line, space_before, space_after, bullet, bullet_color,
+                          bullet_char, bullet_auto),
                rpr(sz, color, bold, font, spc, italic, alpha), n))
 
 
@@ -113,6 +120,7 @@ def lst_style(specs):
 
 def para(text, sz=T_BODY, color=INK, bold=False, font="mn", algn="l", spc=0, italic=False,
          alpha=None, line=100000, bullet=False, bullet_color=None, bullet_char=None,
+         bullet_auto=False,
          indent=0, marL=None, space_before=0, space_after=0, lvl=0):
     lv = ' lvl="%d"' % lvl if lvl else ''
     run = ('<a:r>%s<a:t>%s</a:t></a:r>'
@@ -120,7 +128,8 @@ def para(text, sz=T_BODY, color=INK, bold=False, font="mn", algn="l", spc=0, ita
         else '<a:endParaRPr lang="th-TH" sz="%d"/>' % sz
     return ('<a:p><a:pPr%s%s>%s</a:pPr>%s</a:p>'
             % (_ppr_attrs(algn, indent, marL), lv,
-               _ppr_inner(line, space_before, space_after, bullet, bullet_color, bullet_char),
+               _ppr_inner(line, space_before, space_after, bullet, bullet_color,
+                          bullet_char, bullet_auto),
                run))
 
 

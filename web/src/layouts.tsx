@@ -172,7 +172,9 @@ export function SlideKeyFigures({ title, figures, footnote, ...chrome }: SlideKe
   return (
     <Slide {...chrome}>
       <SlideTitle>{title}</SlideTitle>
-      <div className="nct-body" style={{ top: 268.8 }}>
+      {/* the body box starts 91.2px lower here, so it has to end 91.2px earlier
+          too - inheriting --nct-body-h ran it to 724.8 and past the canvas */}
+      <div className="nct-body" style={{ top: 268.8, height: 364.8 }}>
         <div className="nct-figures">
           {figures.map((f, i) => (
             <div className="nct-figure" key={i}>
@@ -259,7 +261,9 @@ export function SlideFullImage({
 }
 
 /* ---------------------------------------------------------------- 09 */
-export interface SlideTableProps extends Base, Pick<DataTableProps, "columns" | "rows" | "widths"> {
+export interface SlideTableProps
+  extends Base,
+    Pick<DataTableProps, "columns" | "rows" | "widths" | "recommended"> {
   title: ReactNode;
   /** One-line lead-in above the table. */
   intro?: ReactNode;
@@ -272,13 +276,21 @@ export interface SlideTableProps extends Base, Pick<DataTableProps, "columns" | 
   takeaway: ReactNode;
 }
 
-/** 09 · Table / Comparison. Package or spec comparison at 14pt. */
+/**
+ * 09 · Table / Comparison. Package or spec comparison at 14pt.
+ *
+ * This is also the deck's price slide: put the investment in as its own bold row
+ * at the foot of the grid and set `recommended` to the column you are arguing
+ * for. A proposal that compares packages without pricing them, or prices them
+ * without naming a choice, has left the decision to the client's guesswork.
+ */
 export function SlideTable({
   title,
   intro,
   columns,
   rows,
   widths,
+  recommended,
   takeawayLabel = "สรุป",
   takeaway,
   ...chrome
@@ -288,7 +300,13 @@ export function SlideTable({
       <SlideTitle>{title}</SlideTitle>
       <div className="nct-body">
         {intro && <p className="nct-caption nct-caption--lead">{intro}</p>}
-        <DataTable columns={columns} rows={rows} widths={widths} size="roomy" />
+        <DataTable
+          columns={columns}
+          rows={rows}
+          widths={widths}
+          recommended={recommended}
+          size="roomy"
+        />
         <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
       </div>
     </Slide>
@@ -298,6 +316,17 @@ export function SlideTable({
 /* ---------------------------------------------------------------- 10 */
 export interface SlideClosingProps extends Base {
   title?: ReactNode;
+  /**
+   * What happens next, in order — two to four lines, each one an action with an
+   * owner. This is the slide's real content: a proposal that ends on a
+   * thank-you has asked the room for nothing, and the peak-end rule weights the
+   * last slide hardest. The thank-you stays as the title above it.
+   */
+  nextSteps?: ReactNode[];
+  /** Label over `nextSteps`. */
+  nextStepsLabel?: string;
+  /** The date the decision is needed by. One line, no hedging. */
+  decisionBy?: ReactNode;
   /** Contact lines — phone, email, site. */
   contact?: ReactNode[];
   /** Photograph for the right 40%. It takes the place of the top-right diamond. */
@@ -313,12 +342,24 @@ export interface SlideClosingProps extends Base {
 
 /** 10 · Closing / Contact. Teal→navy, the bookend to layout 01. Use once. */
 export function SlideClosing({
-  title = "ขอบคุณครับ", contact = [], image, imageAlt = "", imageMode = "band", ...chrome
+  title = "ขอบคุณครับ",
+  nextSteps = [],
+  nextStepsLabel = "ขั้นตอนถัดไป",
+  decisionBy,
+  contact = [],
+  image,
+  imageAlt = "",
+  imageMode = "band",
+  ...chrome
 }: SlideClosingProps) {
   const full = Boolean(image) && imageMode === "full";
   const band = Boolean(image) && !full;
+  const ask = nextSteps.length > 0;
+  // the ask owns the left column from 336 to 632; with a photograph on the slide
+  // there is nowhere left for the lockup, and the corner mark already signs it
+  const showLogo = !(ask && image);
   return (
-    <Slide tone="close" {...chrome}>
+    <Slide tone="close" className={ask ? "nct-closing--ask" : undefined} {...chrome}>
       {full ? (
         <>
           <img className="nct-closing__photo" src={image} alt={imageAlt} />
@@ -337,16 +378,29 @@ export function SlideClosing({
         {title}
       </h2>
       <div className="nct-closing__rule" />
+      {ask && (
+        <>
+          <div className="nct-closing__ask-label">{nextStepsLabel}</div>
+          <ol className="nct-closing__ask">
+            {nextSteps.map((step, i) => (
+              <li key={i}>{step}</li>
+            ))}
+          </ol>
+        </>
+      )}
+      {decisionBy && <div className="nct-closing__decision">{decisionBy}</div>}
       <div className={full ? "nct-closing__contact nct-closing__contact--full" : "nct-closing__contact"}>
         {contact.map((line, i) => (
           <div key={i}>{line}</div>
         ))}
       </div>
-      <NctLogo
-        variant="white"
-        className={image ? "nct-closing__logo nct-closing__logo--photo" : "nct-closing__logo"}
-        width={269}
-      />
+      {showLogo && (
+        <NctLogo
+          variant="white"
+          className={image ? "nct-closing__logo nct-closing__logo--photo" : "nct-closing__logo"}
+          width={269}
+        />
+      )}
     </Slide>
   );
 }
@@ -458,11 +512,21 @@ export interface FlowStep {
   body?: ReactNode;
 }
 
+/**
+ * Three to five, as a tuple union rather than a sentence: `.nct-flow__step` is a
+ * fixed `--nct-fifth` wide, so a sixth step is 202px the 1088px box does not
+ * have and an eighth ends at x=1798, clipped away with no warning.
+ */
+export type FlowSteps =
+  | [FlowStep, FlowStep, FlowStep]
+  | [FlowStep, FlowStep, FlowStep, FlowStep]
+  | [FlowStep, FlowStep, FlowStep, FlowStep, FlowStep];
+
 export interface SlideProcessFlowProps extends Base {
   title: ReactNode;
   subtitle?: ReactNode;
   /** Three to five steps — a time sequence. Not a sequence? Use layout 12. */
-  steps: FlowStep[];
+  steps: FlowSteps;
   resultLabel?: string;
   result?: ReactNode;
   note?: ReactNode;
@@ -551,11 +615,21 @@ export function SlideDiagram({
 }
 
 /* ---------------------------------------------------------------- 15 */
+/**
+ * Four to six, checked rather than narrated: at seven the list runs to 719.5px
+ * on a 720px canvas, and at six under the old `top: 451.2px` it crossed the
+ * footer rule by 24.5px in silence.
+ */
+export type AgendaItems =
+  | [ReactNode, ReactNode, ReactNode, ReactNode]
+  | [ReactNode, ReactNode, ReactNode, ReactNode, ReactNode]
+  | [ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode];
+
 export interface SlideAgendaProps extends Base {
   number?: string;
   title: ReactNode;
   /** Four to six lines. More than six means the chapter is doing too much. */
-  items: ReactNode[];
+  items: AgendaItems;
   /** Photograph for the right 40%, same band as layout 02. */
   image?: string;
   imageAlt?: string;
@@ -586,6 +660,12 @@ export interface SlideDenseTableProps
     Pick<DataTableProps, "columns" | "rows" | "widths"> {
   title: ReactNode;
   intro?: ReactNode;
+  /**
+   * The key for any `category` coding in the grid — a `CategoryKey`. Required in
+   * practice, not in the type: a coded column with no key on the same slide asks
+   * the reader to decode four navies that sit 1.31:1 apart from memory.
+   */
+  legend?: ReactNode;
   footnote?: ReactNode;
   takeawayLabel?: string;
   /**
@@ -602,6 +682,7 @@ export function SlideDenseTable({
   columns,
   rows,
   widths,
+  legend,
   footnote,
   takeawayLabel = "สรุป",
   takeaway,
@@ -613,7 +694,12 @@ export function SlideDenseTable({
       <div className="nct-body">
         {intro && <p className="nct-dense nct-dense--lead">{intro}</p>}
         <DataTable columns={columns} rows={rows} widths={widths} />
-        {footnote && <p className="nct-note">{footnote}</p>}
+        {(legend || footnote) && (
+          <p className="nct-note">
+            <span>{legend}</span>
+            <span className="nct-note__source">{footnote}</span>
+          </p>
+        )}
         <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
       </div>
     </Slide>

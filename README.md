@@ -30,7 +30,10 @@ python scripts/build.py          # เขียนทับ .potx และ .ppt
 
 - `NCT-Slide-Template.potx` — 1 slide master + 16 custom layouts + NCT theme
 - `NCT-Slide-Template-Demo.pptx` — เดโม 16 สไลด์ layout ละ 1
-- `preview/` — ภาพ render จาก PowerPoint จริง
+- `preview/` — ภาพ render จาก PowerPoint **ของ build ก่อนหน้า** ยังไม่ได้อัปเดต
+  หลังรอบแก้ contrast / takeaway / closing (เครื่องที่ build ไม่มี PowerPoint หรือ
+  LibreOffice ให้ render ใหม่) ของจริงล่าสุดอยู่ที่ `NCT-Slide-Template-Demo.pptx`
+  หรือ `npm run demo && npm run serve`
 
 **ติดตั้งฟอนต์ก่อนเปิด** — Noto Sans Thai อยู่ใน `fonts/` (คลิกขวา → Install),
 Kanit โหลดจาก [Google Fonts](https://fonts.google.com/specimen/Kanit)

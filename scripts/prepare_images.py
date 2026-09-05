@@ -20,16 +20,21 @@ OUT = os.path.join(ROOT, "assets")
 # section divider: the photo fills the right 44% of a 1280x720 canvas
 SECTION_RATIO = 0.44 * 1280 / 720
 
-# (source, target, width, aspect to crop to or None, vertical anchor 0=top 1=bottom)
-# Three frames for the three chapter-opener slots, none repeating: corp-image2
-# gives the sky-and-corners X and the facade lower down, corp-image5 the tower
-# front. Every one is architecture - the people-at-work sources stay unused.
+# (source, target, width, aspect to crop to or None, vertical anchor 0=top 1=bottom,
+#  zoom = fraction of the source kept before that crop, x anchor for the zoom)
+#
+# Three chapter-opener slots, two architecture sources: corp-image1 is people at
+# a desk and corp-image3 is stacked hands, both banned by the photography rule,
+# so corp-image2 has to fill two slots. Two anchors alone were not enough - the
+# crops sat 748px apart in a 4592px frame and slides 3 and 7 read as the same
+# photograph. photo-facade now zooms into the facade grid instead, so the two
+# frames share a building without sharing a picture.
 PHOTOS = [
-    ("corp-image2.png", "photo-section.jpg", 1040, SECTION_RATIO, 0.42),
-    ("corp-image2.png", "photo-facade.jpg",  1040, SECTION_RATIO, 1.0),
-    ("corp-image5.png", "photo-tower.jpg",   1040, SECTION_RATIO, 0.5),
+    ("corp-image2.png", "photo-section.jpg", 1040, SECTION_RATIO, 0.42, 1.0, 0.5),
+    ("corp-image2.png", "photo-facade.jpg",  1040, SECTION_RATIO, 0.88, 0.42, 0.72),
+    ("corp-image5.png", "photo-tower.jpg",   1040, SECTION_RATIO, 0.5, 1.0, 0.5),
     # full-bleed closing variant: anchored on the hands, not the centre of the frame
-    ("corp-image4.png", "photo-handshake.jpg", 1600, 16 / 9,      0.33),
+    ("corp-image4.png", "photo-handshake.jpg", 1600, 16 / 9,      0.33, 1.0, 0.5),
 ]
 MASCOTS = [
     ("icon2.png", "mascot.png", 256),
@@ -55,8 +60,14 @@ def main():
     if not os.path.isdir(RAW):
         raise SystemExit("no raw folder at %s" % RAW)
 
-    for src, dst, width, ratio, anchor in PHOTOS:
+    for src, dst, width, ratio, anchor, zoom, xanchor in PHOTOS:
         im = Image.open(os.path.join(RAW, src)).convert("RGB")
+        if zoom < 1.0:
+            w, h = im.size
+            zw, zh = round(w * zoom), round(h * zoom)
+            x = round((w - zw) * xanchor)
+            y = round((h - zh) * anchor)
+            im = im.crop((x, y, x + zw, y + zh))
         if ratio:
             im = crop_to(im, ratio, anchor)
         if im.width > width:

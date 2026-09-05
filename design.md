@@ -88,6 +88,10 @@ flows, status columns). These extend the system — they don't replace anything 
   --color-mid:      #1E5473;  /* named gradient midpoint, was already used inline */
   --color-teal-b:   #1A8D92;  /* true logo end-stop — GRADIENT STOP ONLY, never fill/line/text (3.4:1 on white) */
   --color-teal-up:  #8FBACE;  /* accent-2 lifted for text ON NAVY (4.8:1). Never on white (2.1:1) */
+  /* both gradients end on teal-b, web and .potx alike. The web ones used to end on
+     accent-2 instead - a silent divergence, and the reason --color-mid was declared
+     and never used. Chrome over the light end needs a scrim, not a lighter ink:
+     white at full opacity is 4.0:1 on teal-b. */
   /* text/tint pairs — always move them together. The tints must beat the dense-table
      zebra: the old #E6F4EE ok-tint was 1.02:1 on --color-paper-2, the same mint, so
      the fill vanished on even rows. All three now sit ~1.25:1 against it. */
