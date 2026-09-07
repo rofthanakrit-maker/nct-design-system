@@ -1033,3 +1033,85 @@
 /* a merged cell keeps the grid's hairline on its own bottom edge only - the
    rows it swallows must not draw one through it */
 .nct-table tbody td[rowspan] { border-bottom: 1px solid var(--nct-rule); }
+
+/* ------------------------------------------------- v3 corp cover (L01) */
+/* The one layout where the two brands are different slides, not the same slide
+   in different furniture: paper ground, centred, watermarked. The foot bar is
+   dropped here — the source draws none on the one page whose job is to be
+   quiet — so the date takes the left slot on its own. */
+.nct-cover--corp { background: var(--nct-paper); }
+/* the lockup card signs every other slide; here the lockup IS the slide, and a
+   second copy in the corner would be the same mark twice */
+.nct-cover--corp .nct-corp-lock { display: none; }
+.nct-cover--corp .nct-corp-bar { display: none; }
+.nct-cover--corp .nct-corp-foot { padding-left: 24px; }
+.nct-cover--corp .nct-corp-foot__date { flex: 1; }
+
+/* the mark watermarked behind everything. The source does the same rather than
+   inventing a pattern that means nothing — and at 4% it stays under the 3:1 the
+   lockup over it needs. */
+.nct-cover__wm {
+  position: absolute;
+  width: 780px;
+  height: auto;
+  opacity: 0.035;
+  pointer-events: none;
+}
+.nct-cover__wm--a { left: 180px; top: -230px; }
+.nct-cover__wm--b { left: 470px; top: 250px; }
+
+/* the decorative column down the right edge: one generated SVG of squares, all
+   --nct-mid at different alphas, stretched to the column. See
+   tokens.COVER_SCATTER — it is read out of the source artwork, not invented. */
+.nct-cover__scatter {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: var(--nct-cover-scat-w);
+  height: 100%;
+  pointer-events: none;
+}
+
+.nct-cover__logo--corp {
+  position: absolute;
+  left: 50%;
+  top: var(--nct-cover-logo-y);
+  width: var(--nct-cover-logo-w);
+  transform: translateX(-50%);
+}
+.nct-cover__rule--corp {
+  position: absolute;
+  left: 50%;
+  top: var(--nct-cover-rule-y);
+  width: var(--nct-cover-rule-w);
+  height: var(--nct-cover-rule-h);
+  transform: translateX(-50%);
+  background: var(--nct-accent);
+}
+.nct-cover__title--corp {
+  position: absolute;
+  left: var(--nct-mx);
+  top: var(--nct-cover-title-y);
+  width: var(--nct-cw);
+  height: var(--nct-cover-title-h);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--nct-font-display);
+  font-weight: 700;
+  font-size: var(--nct-fs-display);
+  line-height: 1.15;
+  color: var(--nct-ink);
+}
+.nct-cover__sub--corp {
+  position: absolute;
+  left: var(--nct-mx);
+  top: calc(var(--nct-cover-title-y) + var(--nct-cover-title-h) + 14.4px);
+  width: var(--nct-cw);
+  margin: 0;
+  text-align: center;
+  font-size: var(--nct-fs-lead);
+  color: var(--nct-ink-2);
+}

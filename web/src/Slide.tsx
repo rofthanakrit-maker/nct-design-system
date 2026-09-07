@@ -152,6 +152,10 @@ export function Slide({
             <div className="nct-corp-bar" aria-hidden="true">
               <i /><i /><i />
             </div>
+            {/* the corp template has no date slot on a content slide, but its
+                cover carries an "Updated date" line bottom-left. Same slot,
+                empty until a deck fills it. */}
+            {date && <span className="nct-corp-foot__date">{date}</span>}
             <span className="nct-corp-foot__text">{footer}</span>
             <span className="nct-corp-foot__page">{pageNumber}</span>
           </div>

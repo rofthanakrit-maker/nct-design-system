@@ -61,6 +61,14 @@ export const space = {
   phase_tab_h: 43.2,
   phase_num_w: 52.8,
   evidence_h: 172.8,
+  cover_logo_w: 420,
+  cover_logo_y: 72,
+  cover_rule_y: 360,
+  cover_rule_w: 662.4,
+  cover_rule_h: 3,
+  cover_title_y: 390.05,
+  cover_title_h: 216,
+  cover_scat_w: 312,
 } as const;
 
 export const fontSize = {

@@ -163,6 +163,21 @@ and a taxonomy that changes colour with the letterhead is not one.
 - **Title** · `--nct-ink`, not navy. The source sets it in near-black; that is
   chrome, so it moves with the mode.
 
+### Layout 01 — two covers
+The one layout where the brands are different slides, not the same slide in
+different furniture. `web` opens on the navy→teal gradient and reads left,
+bookending the `close` gradient on layout 10. `corp` is paper, centred, with the
+mark watermarked at 3.5% behind it, the lockup at 4.375in as the hero, a 6.9in
+accent rule above the title rather than a 0.6in stub below it, and a column of
+squares down the right edge. It drops the foot bar and the corner lockup — the
+source draws neither on the one page whose job is to be quiet.
+
+The square column was raster artwork in the source (`image2.png`, 472×1080). It
+scanned as a single hue at many alphas — `#1E5876`, which is `--nct-mid` within
+rounding — so it is 28 rows of data in `tokens.COVER_SCATTER` feeding an SVG on
+the web and 28 shapes in the `.potx`. Same artwork, 2.4 KB instead of 40, and it
+recolours with the token.
+
 ### Layouts 17–18
 - **17 Phase Card** — a stage of the implementation plan: the Key Activity /
   Participant pair on top, then an outlined canvas tabbed with the phase number.

@@ -128,6 +128,38 @@ PHASE_NUM_W  = 502920                 # 0.55in - the number cell inside the tab
 # across CW land at 350x148 - a readable screenshot. A fifth would be 199x84.
 EVIDENCE_H = 1645920                  # 1.80in
 
+# ---- v3: corp cover (L01 under BRAND="corp") ----
+# The corporate cover is light, centred and watermarked - the opposite of the
+# house cover's dark gradient and left-biased stack. It is not chrome, it is a
+# different slide, and it is the one the company puts in front of a client.
+COVER_LOGO_W  = 4000500               # 4.375in - the lockup is the hero here
+COVER_LOGO_Y  = 685800                # 0.750in
+COVER_RULE_Y  = 3429000               # 3.750in
+COVER_RULE_W  = 6309360               # 6.900in - narrower than the title block
+COVER_RULE_H  = 28575                 # 2.25pt, the weight the source draws
+COVER_TITLE_Y = 3715200               # 4.063in
+COVER_TITLE_H = 2057400               # 2.250in - three lines of T_DISPLAY at 1.15
+COVER_SCAT_W  = 2971800               # 3.250in - the decorative column, right edge
+
+# The scatter down that column, read out of the source deck's own artwork
+# (`image2.png`, 472x1080) rather than re-invented: every square is one hue at a
+# different alpha, and the hue measured #1E5876 - MID within rounding. Kept as
+# source pixels on a 472x1080 box so both consumers scale it themselves.
+# (x, y, w, h, alpha%) - alpha is the source's 0-255 divided out.
+COVER_SCAT_BOX = (472, 1080)
+COVER_SCATTER = [
+    (170, 47, 78, 68, 10), (206, 29, 42, 86, 33), (360, 63, 60, 88, 75),
+    (102, 91, 26, 28, 15), (332, 91, 28, 60, 5), (136, 153, 66, 48, 5),
+    (244, 167, 56, 40, 60), (202, 265, 82, 62, 50), (376, 351, 44, 50, 60),
+    (108, 355, 50, 38, 5), (206, 405, 78, 72, 5), (288, 455, 38, 40, 20),
+    (330, 491, 94, 72, 10), (290, 529, 20, 18, 50), (228, 559, 36, 36, 5),
+    (320, 601, 50, 58, 20), (380, 687, 28, 42, 50), (128, 697, 40, 32, 5),
+    (202, 741, 50, 46, 40), (0, 749, 42, 46, 5), (324, 803, 66, 52, 5),
+    (156, 825, 88, 78, 10), (276, 855, 48, 70, 50), (50, 869, 14, 12, 40),
+    (98, 937, 36, 38, 20), (332, 955, 26, 32, 60), (202, 965, 32, 26, 20),
+    (370, 987, 48, 50, 75),
+]
+
 # ---- type scale (hundredths of a pt) ----
 T_DISPLAY = 4400   # 44pt  title slide
 T_SECTION = 4000   # 40pt  section divider

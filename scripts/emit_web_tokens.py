@@ -69,6 +69,11 @@ SPACE = [
     ("corp-bar-seg", T.CORP_BAR_SEG), ("corp-bar-h", T.CORP_BAR_H),
     ("phase-meta-h", T.PHASE_META_H), ("phase-tab-h", T.PHASE_TAB_H),
     ("phase-num-w", T.PHASE_NUM_W), ("evidence-h", T.EVIDENCE_H),
+    # v3 corp cover (L01 under brand="corp")
+    ("cover-logo-w", T.COVER_LOGO_W), ("cover-logo-y", T.COVER_LOGO_Y),
+    ("cover-rule-y", T.COVER_RULE_Y), ("cover-rule-w", T.COVER_RULE_W),
+    ("cover-rule-h", T.COVER_RULE_H), ("cover-title-y", T.COVER_TITLE_Y),
+    ("cover-title-h", T.COVER_TITLE_H), ("cover-scat-w", T.COVER_SCAT_W),
 ]
 
 TYPE = [

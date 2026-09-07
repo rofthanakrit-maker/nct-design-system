@@ -23,8 +23,19 @@ IMG = {
 }
 
 # per-layout: (builder, [image files in rId2, rId3 ... order])
-LAYOUTS = [
-    (lambda: PL.l01_title("rId2", "rId3"), ["logo-white.png", "mark-white.png"]),
+#
+# A function, not a constant: layout 01 is a different slide in each brand - the
+# corp cover is paper with a colour lockup and a colour mark watermark, the house
+# cover is a gradient with the knockout pair - so its images depend on PM.BRAND,
+# which build() sets before it walks this list.
+def layouts():
+    l01 = ((lambda: PL.l01_title("rId2", "rId3"), ["logo-color.png", "mark-color.png"])
+           if PM.BRAND == "corp" else
+           (lambda: PL.l01_title("rId2", "rId3"), ["logo-white.png", "mark-white.png"]))
+    return [l01] + _LAYOUTS_02_18
+
+
+_LAYOUTS_02_18 = [
     (lambda: PL.l02_section("rId2", "rId3"), ["mark-white.png", "photo-section.jpg"]),
     (lambda: PL.l03_content("rId2"),       ["mark-color.png"]),
     (lambda: PL.l04_two("rId2"),           ["mark-color.png"]),
@@ -218,7 +229,7 @@ def content_types(n_slides, is_template):
           'package.core-properties+xml"/>',
           '<Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-'
           'officedocument.extended-properties+xml"/>']
-    for i in range(1, len(LAYOUTS) + 1):
+    for i in range(1, len(layouts()) + 1):
         ov.append('<Override PartName="/ppt/slideLayouts/slideLayout%d.xml" ContentType='
                   '"application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml"/>' % i)
     for i in range(1, n_slides + 1):
@@ -592,6 +603,7 @@ def demo_slides():
 
 # ------------------------------------------------------------------ package
 def build(path, with_slides, title):
+    LAY = layouts()
     slides = demo_slides() if with_slides else []
     z = zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED)
 
@@ -626,15 +638,15 @@ def build(path, with_slides, title):
 
     # master
     w("ppt/slideMasters/slideMaster1.xml",
-      PM.slide_master("rId%d" % (len(LAYOUTS) + 2), len(LAYOUTS)))
+      PM.slide_master("rId%d" % (len(LAY) + 2), len(LAY)))
     m_rels = [("rId%d" % (i + 1), "slideLayout", "../slideLayouts/slideLayout%d.xml" % (i + 1))
-              for i in range(len(LAYOUTS))]
-    m_rels.append(("rId%d" % (len(LAYOUTS) + 1), "theme", "../theme/theme1.xml"))
-    m_rels.append(("rId%d" % (len(LAYOUTS) + 2), "image", "../media/mark-color.png"))
+              for i in range(len(LAY))]
+    m_rels.append(("rId%d" % (len(LAY) + 1), "theme", "../theme/theme1.xml"))
+    m_rels.append(("rId%d" % (len(LAY) + 2), "image", "../media/mark-color.png"))
     w("ppt/slideMasters/_rels/slideMaster1.xml.rels", rels(m_rels))
 
     # layouts
-    for i, (fn, imgs) in enumerate(LAYOUTS, 1):
+    for i, (fn, imgs) in enumerate(LAY, 1):
         w("ppt/slideLayouts/slideLayout%d.xml" % i, fn())
         lr = [("rId1", "slideMaster", "../slideMasters/slideMaster1.xml")]
         for j, img in enumerate(imgs):

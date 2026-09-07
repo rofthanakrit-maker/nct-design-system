@@ -119,7 +119,56 @@ def _wrap(name, typ, shapes, bgfill=None):
 
 
 # ---------------------------------------------------------------- 01 Title
-def l01_title(rid_logo_white, rid_mark_white):
+def l01_corp_cover(rid_logo_color, rid_mark_color):
+    """The corporate cover: paper, centred, the mark watermarked behind it.
+
+    The one layout where the two brands are different slides rather than the
+    same slide in different furniture - the house cover opens on the navy->teal
+    gradient and reads left, this one is the page the company puts in front of a
+    client. It also drops the corp foot bar and the corner lockup: the source
+    draws neither on the one slide whose job is to be quiet, and the lockup IS
+    the slide here, so a second copy in the corner would be the same mark twice.
+    """
+    logo_h = int(COVER_LOGO_W * LOGO_AR)
+    wm = 7315200                                  # 8.00in - the watermark, twice
+    scat_x = SW - COVER_SCAT_W
+    sx, sy = COVER_SCAT_W / COVER_SCAT_BOX[0], SH / COVER_SCAT_BOX[1]
+    s = [pic(10, "Watermark A", rid_mark_color, 1371600, -2103120, wm,
+             int(wm * MARK_AR), alpha=3.5),
+         pic(11, "Watermark B", rid_mark_color, 4114800, 2286000, wm,
+             int(wm * MARK_AR), alpha=3.5)]
+    sid = 12
+    # the decorative column, read out of the source deck's own artwork
+    for i, (x, y, w, h, a) in enumerate(COVER_SCATTER):
+        s.append(shape(sid, "Scatter %d" % (i + 1), scat_x + round(x * sx),
+                       round(y * sy), round(w * sx), round(h * sy),
+                       solid(MID, a)))
+        sid += 1
+    s += [pic(sid, "NCT Logo", rid_logo_color, (SW - COVER_LOGO_W) // 2,
+              COVER_LOGO_Y, COVER_LOGO_W, logo_h),
+          shape(sid + 1, "Accent Rule", (SW - COVER_RULE_W) // 2, COVER_RULE_Y,
+                COVER_RULE_W, COVER_RULE_H, solid(CORP)),
+          placeholder(sid + 2, "Title Placeholder", "ctrTitle", MX, COVER_TITLE_Y,
+                      CW, COVER_TITLE_H,
+                      [S("PROPOSAL", sz=T_DISPLAY, color=INK, bold=True, font="mj",
+                         algn="ctr", line=115000)], anchor="ctr"),
+          placeholder(sid + 3, "Subtitle", "subTitle", MX,
+                      COVER_TITLE_Y + COVER_TITLE_H + 137160, CW, 457200,
+                      [S("คำโปรย / ชื่อลูกค้า", sz=T_LEAD, color=INK2, algn="ctr",
+                         line=130000)], idx=1, anchor="t"),
+          # the cover's own foot: the source's "Updated date" line, left, and the
+          # page number. No bar, so the date starts at the edge like the source's
+          placeholder(sid + 4, "Date Placeholder", "dt", 228600, SH - 457200,
+                      4572000, 274320,
+                      [S("", sz=T_FOOT, color=INK2)], idx=10, anchor="ctr"),
+          PM.sldnum_sp(sid + 5, False, x=SW - 228600 - 1371600, y=SH - 457200)]
+    return _wrap("01 Title Slide", "title", s, bgfill=solid(PAPER))
+
+
+def l01_title(rid_logo, rid_mark):
+    if PM.BRAND == "corp":
+        return l01_corp_cover(rid_logo, rid_mark)
+    rid_logo_white, rid_mark_white = rid_logo, rid_mark
     s = [_diamond(10, SW - 3657600, -914400, 4572000, 9),
          _diamond(11, SW - 2286000, 2743200, 2743200, 7),
          _logo(12, rid_logo_white, MX, 868680, 2560320),

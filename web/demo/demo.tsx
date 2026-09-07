@@ -267,7 +267,18 @@ function WebDeck() {
    the corp chrome with no edit of its own. */
 function CorpDeck() {
   return (
-    <Deck brand="corp" footer="NCT · ข้อเสนอโครงการ (แบบฟอร์มบริษัท)">
+    <Deck brand="corp" date="Updated date: 2026.09.07">
+      {/* 01 · the corp cover — a different slide from the house cover, not the
+          same one in different furniture */}
+      <SlideCover
+        title={
+          <>
+            <span>{en("PROPOSAL")}</span>
+            <span>{en("For")}</span>
+            <span>{en("“AGE — Finance and Accounting”")}</span>
+          </>
+        }
+      />
       {/* 03 under corp chrome: not one line of this slide changed */}
       <SlideContent
         title={en("5. Implementation Stage")}

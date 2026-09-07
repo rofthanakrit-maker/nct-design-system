@@ -112,6 +112,13 @@ does not keep.
   All three pin the strip to the foot of the body box, so the conclusion lands
   at the same y whether the grid runs four rows or ten.
 - `SlideCover` and `SlideClosing` appear once each, as the deck's bookends.
+- **`SlideCover` is the one layout where the brands are different slides.** Every
+  other layout is the same slide in different furniture; the cover is not. `web`
+  opens on the navy→teal gradient and reads left, bookending `SlideClosing`;
+  `corp` is paper, centred, with the mark watermarked behind it and the lockup as
+  the hero — and it drops both the foot bar and the corner lockup, because the
+  source draws neither on the one page whose job is to be quiet. `date` renders
+  bottom-left there; pass the whole string, the layout does not build it.
 - **`SlidePhaseCard` is a stage of a plan, not a section divider.** `meta` carries
   the activity/participant pair the proposal template opens every phase with, one
   or two rows and no more; `number` is typed, not counted, because phases merge

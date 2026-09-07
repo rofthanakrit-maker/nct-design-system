@@ -166,12 +166,17 @@ def shape(sid, name, x, y, w, h, fill, body="", prst="rect",
             % (sid, name, xfrm(x, y, w, h, rot), prst, adj, fill, line, body))
 
 
-def pic(sid, name, rid, x, y, w, h):
+def pic(sid, name, rid, x, y, w, h, alpha=None):
+    """alpha is a percentage; it becomes an alphaModFix on the blip, which is how
+    a picture is watermarked in OOXML - a shape's solidFill alpha does not reach
+    picture content."""
+    a = ('<a:alphaModFix amt="%d"/>' % round(alpha * 1000)) if alpha is not None else ''
     return ('<p:pic><p:nvPicPr><p:cNvPr id="%d" name="%s"/>'
             '<p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr>'
-            '<p:blipFill><a:blip r:embed="%s"/><a:stretch><a:fillRect/></a:stretch></p:blipFill>'
+            '<p:blipFill><a:blip r:embed="%s">%s</a:blip>'
+            '<a:stretch><a:fillRect/></a:stretch></p:blipFill>'
             '<p:spPr>%s<a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr></p:pic>'
-            % (sid, name, rid, xfrm(x, y, w, h)))
+            % (sid, name, rid, a, xfrm(x, y, w, h)))
 
 
 def placeholder(sid, name, phtype, x, y, w, h, specs, idx=None, anchor="t",

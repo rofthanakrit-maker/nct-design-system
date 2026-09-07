@@ -98,6 +98,7 @@ export {
   photoTower,
   photoHandshake,
   mascot,
+  coverScatter,
 } from "./assets";
 export { color, canvas, space, fontSize } from "./tokens";
 export type { NctColor } from "./tokens";

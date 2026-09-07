@@ -10,7 +10,7 @@ any of those happen:
 
 Checks, per layout: XML parses, shape ids are unique, placeholder idx values are
 unique, every shape's box overlaps the canvas, and the layout count matches
-build.LAYOUTS. Deliberate bleeds (the corp corner lockup starts above y=0) pass
+build.layouts(). Deliberate bleeds (the corp corner lockup starts above y=0) pass
 - only a shape entirely outside the canvas is an error.
 
 Per slide in the demo deck: every placeholder idx it fills exists on the layout
@@ -61,9 +61,10 @@ def check(path):
     z = zipfile.ZipFile(path)
     names = [n for n in z.namelist() if n.endswith(".xml") or n.endswith(".rels")]
     layouts = sorted(n for n in names if n.startswith("ppt/slideLayouts/slideLayout"))
-    if len(layouts) != len(B.LAYOUTS):
-        errs.append("layout count %d, build.LAYOUTS has %d"
-                    % (len(layouts), len(B.LAYOUTS)))
+    n_expected = len(B.layouts())
+    if len(layouts) != n_expected:
+        errs.append("layout count %d, build.layouts() has %d"
+                    % (len(layouts), n_expected))
     for n in names:
         try:
             root = ET.fromstring(z.read(n))

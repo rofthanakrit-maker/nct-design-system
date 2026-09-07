@@ -44,7 +44,9 @@ def body_specs(prompts):
     return [S(p, **BODY_LEVELS[i]) for i, p in enumerate(prompts)]
 
 
-def _sldnum_sp(sid, dark, x=None, y=None, w=1371600):
+def sldnum_sp(sid, dark, x=None, y=None, w=1371600):
+    """The page-number field. Public because the corp cover builds its own foot
+    - no bar, no lockup - and still needs this one piece of it."""
     c = PAPER if dark else INK2
     alpha = '<a:alpha val="60000"/>' if dark else ''
     x = (SW - MX - w) if x is None else x
@@ -91,7 +93,7 @@ def _corp_chrome(dark, mark_rid, first_id):
                            3 * CORP_BAR_SEG + 228600, SH - 457200, 4572000, 274320,
                            [S("", sz=T_FOOT, color=c, alpha=alpha)], idx=11,
                            anchor="ctr"))
-    out.append(_sldnum_sp(first_id + 4, dark, x=SW - 228600 - 1371600, y=SH - 457200))
+    out.append(sldnum_sp(first_id + 4, dark, x=SW - 228600 - 1371600, y=SH - 457200))
     # white card on an accent outline - it only reads on a light ground, and the
     # source's own dark slides carry the bare mark instead
     if mark_rid and not dark:
@@ -133,7 +135,7 @@ def chrome(dark=False, mark_rid=None, first_id=90):
                            MX + 3657600, FOOT_Y, 3657600, 274320,
                            [S("", sz=T_FOOT, color=c, algn="ctr", alpha=alpha)],
                            idx=11, anchor="ctr"))
-    out.append(_sldnum_sp(first_id + 3, dark))
+    out.append(sldnum_sp(first_id + 3, dark))
     if mark_rid:
         out.append(pic(first_id + 4, "NCT Mark", mark_rid,
                        SW - MX - MARK_W - 1508760, FOOT_Y - 20000, MARK_W, MARK_H))

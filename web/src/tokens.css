@@ -69,6 +69,14 @@
   --nct-phase-tab-h: 43.2px;
   --nct-phase-num-w: 52.8px;
   --nct-evidence-h:  172.8px;
+  --nct-cover-logo-w: 420px;
+  --nct-cover-logo-y: 72px;
+  --nct-cover-rule-y: 360px;
+  --nct-cover-rule-w: 662.4px;
+  --nct-cover-rule-h: 3px;
+  --nct-cover-title-y: 390.05px;
+  --nct-cover-title-h: 216px;
+  --nct-cover-scat-w: 312px;
 
   /* ---- type scale (pt in the deck, px here) ---- */
   --nct-fs-display:   58.67px;  /* 44pt - title slide */
