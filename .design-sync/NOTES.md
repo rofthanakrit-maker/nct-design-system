@@ -16,17 +16,26 @@ Repo-specific gotchas. Read before re-syncing.
   nothing installed on the machine. The `.potx` is a different story: PowerPoint
   reads fonts from the OS, so install `fonts/*.ttf` before opening the template or
   every layout silently substitutes.
-- **The Python scripts are invoked as `python`, not `py`.** The npm scripts and
-  `.claude/launch.json` used the python.org launcher, which is absent on installs
-  that only put `python` on PATH.
+- **The npm scripts try `python`, then `py -3`.** Neither name is portable on
+  Windows on its own: the python.org launcher is absent on installs that only put
+  `python` on PATH, and `python` is the Microsoft Store stub (exit 9009, "Python
+  was not found") on installs that went through the launcher. Both are real
+  machines in this project, so the scripts run `python X || py -3 X` and stop
+  caring. `.claude/launch.json` still names `python` — the preview server only has
+  to start on the machine that opens the browser.
 - **Noto Sans Thai must be the `googlefonts/ttf` build.** The `hinted/` and
   `unhinted/` builds in the same upstream zip are Thai-only: no Latin glyphs, no
   `·`. Installing the wrong one turns every English word into empty boxes.
 - **`Slide` measures itself.** `fit` scaling uses a `ResizeObserver`, not CSS —
   `scale()` needs a unitless number and `calc(100cqw / 1280)` resolves to a length.
   Preview cards that render a slide in a zero-width box will show it at scale 1.
+- **`preview/` is generated, not hand-made.** `python scripts/render_previews.py`
+  renders both demo decks through PowerPoint COM (Windows only, read-only, never
+  saves back) and writes `layout-01..18.png` plus the two contact sheets. It went
+  stale across a whole release when it was a manual pass; run it after any change
+  that moves geometry.
 - **No Storybook.** Preview cards are authored from `web/demo/demo.tsx`, which
-  renders all 16 layouts with real proposal copy. It is the reference usage example.
+  renders all 18 layouts with real proposal copy, in both brand modes. It is the reference usage example.
 - The PowerPoint side (`scripts/build.py` → `.potx`) shares `scripts/tokens.py` with
   the web package but nothing else. A token change must be rebuilt on both sides.
 - **The visual loop is `web/demo/`.** `npm run demo` bundles `demo.tsx` to the
@@ -39,7 +48,7 @@ Repo-specific gotchas. Read before re-syncing.
   a hard reload - a regenerated `tokens.css` keeps rendering the old palette and
   the edit loop lies to you. `scripts/serve.py` sends `no-store`.
 - **Photographs come from `scripts/prepare_images.py`, not from the raw drop.**
-  `icons and images/` holds untouched sources (tens of MB, gitignored); the script
+  `icon and images/` holds untouched sources (tens of MB, gitignored); the script
   centre-crops each one to the aspect the layout places it at and writes
   `assets/photo-*.jpg` + `assets/mascot*.png`. Cropping there rather than in CSS is
   what keeps the web and the .potx framing identical - PowerPoint stretches a

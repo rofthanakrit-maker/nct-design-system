@@ -7,11 +7,11 @@
   "scripts": {
     "build": "npm run build --workspace @nct/slides",
     "demo": "npm run demo --workspace @nct/slides",
-    "serve": "python scripts/serve.py",
+    "serve": "python scripts/serve.py || py -3 scripts/serve.py",
     "demo:watch": "npm run demo:watch --workspace @nct/slides",
-    "build:potx": "python scripts/build.py",
-    "tokens": "python scripts/emit_web_tokens.py",
-    "fonts": "python scripts/build_webfonts.py",
-    "assets": "python scripts/emit_web_assets.py"
+    "build:potx": "python scripts/build.py || py -3 scripts/build.py",
+    "tokens": "python scripts/emit_web_tokens.py || py -3 scripts/emit_web_tokens.py",
+    "fonts": "python scripts/build_webfonts.py || py -3 scripts/build_webfonts.py",
+    "assets": "python scripts/emit_web_assets.py || py -3 scripts/emit_web_assets.py"
   }
 }

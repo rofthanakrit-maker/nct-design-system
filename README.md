@@ -16,10 +16,10 @@ scripts/tokens.py            ← single source of truth
 
 | ไฟล์ | เนื้อหา |
 |---|---|
-| [`design.md`](design.md) | brand token ต้นทาง (studied จาก nctthai.com) + ส่วนขยาย v2 |
+| [`design.md`](design.md) | brand token ต้นทาง (studied จาก nctthai.com) + ส่วนขยาย v2 / v3 |
 | [`slide-design-system.md`](slide-design-system.md) | v1 — canvas, grid, type scale, layout 01–10, กติกาการทำเด็ค |
 | [`slide-design-system-v2.md`](slide-design-system-v2.md) | v2 — token dense, status/category, layout 11–16 |
-| [`design.md` § v3](design.md) | v3 — brand mode `corp`, token ชุดที่สอง, layout 17–18 (แกะจาก `NCT Template.pptx` สไลด์ 33–43) |
+| [`slide-design-system-v3.md`](slide-design-system-v3.md) | v3 — brand mode `corp`, chrome geometry, layout 17–18 (แกะจาก `NCT Template.pptx` สไลด์ 33–43) |
 | [`.design-sync/conventions.md`](.design-sync/conventions.md) | กติกาที่ design agent ต้องอ่านก่อนสร้างสไลด์ |
 | [`.design-sync/NOTES.md`](.design-sync/NOTES.md) | กับดักเฉพาะ repo นี้ อ่านก่อน re-sync |
 
@@ -38,10 +38,12 @@ python scripts/build.py          # เขียนทับ .potx และ .ppt
 
 ```bash
 python scripts/check_template.py   # ตรวจไฟล์ที่ build แล้ว (XML, id/idx ซ้ำ, หลุดขอบ)
+python scripts/render_previews.py  # → preview/ (ต้องมี PowerPoint บน Windows)
 ```
-- `preview/` — ภาพ render **เก่า ครอบคลุมแค่ layout 01–16 ของ v1/v2** ยังไม่ได้
-  อัปเดตหลังรอบ v3 ของจริงล่าสุดอยู่ที่ `NCT-Slide-Template-Demo.pptx` /
-  `NCT-Slide-Template-Corp-Demo.pptx` หรือ `npm run demo && npm run serve`
+
+- `preview/` — `layout-01..18.png` เรียงตามเบอร์ layout + contact sheet สองใบ
+  (`all-layouts.png` = web, `corp-all-layouts.png` = corp) render จาก PowerPoint
+  จริงด้วย `scripts/render_previews.py` **รันใหม่ทุกครั้งที่ geometry ขยับ**
 
 **ติดตั้งฟอนต์ก่อนเปิด** — Noto Sans Thai อยู่ใน `fonts/` (คลิกขวา → Install),
 Kanit โหลดจาก [Google Fonts](https://fonts.google.com/specimen/Kanit)
@@ -90,9 +92,10 @@ scripts/                                generator ทั้งหมด (Python,
   tokens.py                             ← แก้ที่นี่
   build.py ooxml.py parts_*.py          OOXML → .potx
   check_template.py                     ตรวจ .potx/.pptx ที่ build แล้ว
+  render_previews.py                    .pptx → preview/ ผ่าน PowerPoint
   emit_web_tokens.py build_webfonts.py emit_web_assets.py
 web/                                    @nct/slides
   src/  Slide.tsx primitives.tsx layouts.tsx  + ไฟล์ที่ generate
   demo/ demo.tsx                        ตัวอย่างใช้งานครบ 18 layout ทั้งสอง brand
-assets/  fonts/  preview/               โลโก้ · ฟอนต์ต้นฉบับ · ภาพ render
+assets/  fonts/  preview/               โลโก้ · ฟอนต์ต้นฉบับ · ภาพ render (generate)
 ```

@@ -23,8 +23,8 @@
     "*.css"
   ],
   "scripts": {
-    "tokens": "python ../scripts/emit_web_tokens.py",
-    "fonts": "python ../scripts/build_webfonts.py",
+    "tokens": "python ../scripts/emit_web_tokens.py || py -3 ../scripts/emit_web_tokens.py",
+    "fonts": "python ../scripts/build_webfonts.py || py -3 ../scripts/build_webfonts.py",
     "build": "npm run tokens && tsup",
     "demo": "esbuild demo/demo.tsx --bundle --format=esm --jsx=automatic --outfile=demo/demo.js --loader:.tsx=tsx",
     "demo:watch": "esbuild demo/demo.tsx --bundle --format=esm --jsx=automatic --outfile=demo/demo.js --loader:.tsx=tsx --watch=forever",

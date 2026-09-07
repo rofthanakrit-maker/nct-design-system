@@ -194,7 +194,7 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 | Card number PH | +0.350 | 2.350 | 1.983 | 0.450 | 24 pt Kanit Bold · สีหมวด |
 | Card heading PH | +0.350 | 2.850 | 1.983 | 0.600 | 16 pt Kanit Bold `NAVY` |
 | Card body PH | +0.350 | 3.550 | 1.983 | 1.700 | 12 pt dense `INK` |
-| ~~Card callout PH~~ | — | — | — | — | ยังไม่ได้ทำใน `parts_layouts.py` — การ์ดมี number / heading / body อย่างละหนึ่ง (idx `i×3+1..3`) |
+| ~~Card callout PH~~ | — | — | — | — | ยังไม่ได้ทำใน `parts_layouts.py` — การ์ดมี number / heading / body อย่างละหนึ่ง (idx `PH_FREE + i×3 .. +2`, `PH_FREE = 20` — เดิมเป็น `i×3+1..3` ซึ่งชนกับ idx 10/11/12 ที่ `chrome()` จองไว้ ดู v3 §6) |
 | Band | 1.000 | 6.000 | 11.333 | 0.600 | fill `NAVY` |
 | Band label PH | 1.250 | 6.130 | 2.200 | 0.340 | 12 pt Bold `spc 120` · `PAPER` 70% |
 | Band copy PH | 3.550 | 6.120 | 8.583 | 0.360 | 14 pt `PAPER` |
