@@ -105,3 +105,91 @@ flows, status columns). These extend the system — they don't replace anything 
 - Dense type floor is **10pt** — never go lower; split content across slides instead.
 - See `slide-design-system-v2.md` (in the slide-template project) for full layout specs 11–16 and the dense type scale.
 
+
+## v3 — corporate proposal chrome (studied from `NCT Template.pptx`, slides 33–43)
+The second brand set. Everything above dresses narrative decks, studied from the
+website. The template the company requires on every bid is a different animal:
+anchored on a different teal, with its own furniture. Both are real, and both now
+ship — chosen per deck, never mixed on one slide.
+
+Studied 2026-09-07 from the company's own `NCT Template.pptx` (OOXML read
+directly, plus the PDF rendered per page, so both the exact values and the
+rhythm are observed rather than estimated).
+
+```css
+:root {
+  --nct-corp:          #006666;  /* anchor: full-bleed rule, phase tab, card outline.
+                                    6.8:1 on paper both ways — safe as fill and as text */
+  --nct-corp-up:       #8CC2C2;  /* the same teal lifted to read ON DARK: 5.1:1 on navy,
+                                    6.2:1 on corp-deep. 2.0:1 on paper — never there.
+                                    --nct-corp itself is 1.5:1 on navy and unusable */
+  --nct-corp-deep:     #193B36;  /* deep companion: second header band, on-dark panel */
+  --nct-corp-dim:      #E1E1E1;  /* foot-bar spent segment — DECORATION ONLY, 1.2:1 */
+  --nct-corp-bar-mid:  #A9C2C2;  /* foot-bar middle segment — decoration only */
+
+  /* the one pair that moves between modes; slides.css reads these everywhere it
+     used to name --nct-teal, so repointing them carries the whole deck */
+  --nct-accent:    var(--nct-teal);      /* .nct-slide--corp → var(--nct-corp)    */
+  --nct-accent-up: var(--nct-teal-up);   /* .nct-slide--corp → var(--nct-corp-up) */
+}
+```
+
+**No corp tint.** The source used `#C9D9D4` as a card and zebra fill, but `INK2`
+reads 4.37:1 on it and `OK_T` sits 1.05:1 against it — the exact
+status-fill-vanishes bug the v2 note above exists to prevent. Corp surfaces are
+`--nct-paper-2`, same as v1.
+
+**What does not follow the mode.** Paper, ink, tints, status and the four
+category colours are shared, so a table means the same thing in either brand.
+Category colours are literal hex on purpose: four coded columns are a taxonomy,
+and a taxonomy that changes colour with the letterhead is not one.
+
+### Chrome
+- **Rule** · full bleed, edge to edge, 0.075in, at the same `RULE_Y` as the 0.6in
+  stub it replaces. Keeping the y is what lets every layout switch modes without
+  re-flowing. (The source draws it at 2.29cm under a 28pt title; the system's
+  title sits lower, and moving the whole rhythm to match would have been a second
+  geometry, not a chrome layer.)
+- **Corner lockup** · 1.80 × 0.60in card, white on a `--nct-corp` hairline, two
+  bottom corners rounded at 0.10in, bled off the top edge so the top border is
+  clipped. Light tones only — on the navy bookends a white card is a hole, and
+  the source's own dark slides carry the bare mark. `partnerMark` fills the second
+  slot with the client's badge, which is what the source puts beside the NCT mark.
+- **Foot bar** · three 0.90 × 0.15in segments hard against the bottom-left corner:
+  accent, `--nct-corp-bar-mid`, `--nct-corp-dim`. The source draws it with two
+  shapes — an accent bar under a 75%-alpha grey bar offset by one segment — and
+  `--nct-corp-bar-mid` is that mix, precomputed. No hairline above the foot: the
+  corporate template draws none, and the bar is already the horizontal.
+- **Title** · `--nct-ink`, not navy. The source sets it in near-black; that is
+  chrome, so it moves with the mode.
+
+### Layouts 17–18
+- **17 Phase Card** — a stage of the implementation plan: the Key Activity /
+  Participant pair on top, then an outlined canvas tabbed with the phase number.
+  Five of the eleven source slides are this shape. The tab is centred on the
+  card's top border and flush at the margin; the source protrudes it left by 0,
+  0.32, 0.42 and 0.69cm across its five slides, which is copy-paste jitter, not a
+  decision, and on three of five it starts outside the margin.
+- **18 Evidence Strip** — a claim, a one-line finding, and two to four frames of
+  proof. The band above the strip is the takeaway, not a section label: the
+  source puts "SAMPLE OF TRAINING SETUP" there, which names the photographs
+  without saying what they prove.
+
+### What did not need a layout
+- Concept explainers (source 33, 34) are `SlideDiagram` — lede, figure, stated
+  conclusion, the same shape with the closing paragraph promoted to a band.
+- The deliverables matrix (40) is `SlideDenseTable` with the `rowSpan` and
+  `groupColumn` this version added to `DataTable`.
+- The support model (41) is `SlideSplitPanel` or `SlideProcessFlow`. **Its
+  diagonal photo band was deliberately not adopted** — the frame behind it is a
+  headset-and-smiles stock shot, the exact people-at-work photograph the notes
+  above already ban, and a layout would have enshrined it.
+- The thank-you (43) is `SlideClosing`, which asks for something.
+
+### Drift found in the source, not carried over
+Title x at 1.01 / 0.99 / 0.88cm · the rule at two different weights and offsets ·
+ten distinct left margins between 1.0 and 2.71cm · phase-tab y unlocked across
+five slides · 8pt table type, under the 10pt floor · `#FF0000` at 4.0:1 on white ·
+`Calibri`, `Tahoma`, `NissanAG-Medium` and Japanese faces left in from other
+decks · the theme's `clrScheme` never set, so every colour is inline hex. None of
+it survives the port; all of it is why the port was worth doing.

@@ -41,6 +41,9 @@ LAYOUTS = [
     (lambda: PL.l14_diagram("rId2"),       ["mark-color.png"]),
     (lambda: PL.l15_agenda("rId2", "rId3"), ["mark-white.png", "photo-tower.jpg"]),
     (lambda: PL.l16_dense_table("rId2"),   ["mark-color.png"]),
+    # --- v3: the two layouts studied from the corporate proposal template ---
+    (lambda: PL.l17_phase("rId2"),         ["mark-color.png"]),
+    (lambda: PL.l18_evidence("rId2"),      ["mark-color.png"]),
 ]
 
 REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -383,11 +386,11 @@ def demo_slides():
     sh12 = [sp_text(2, "Title", "title", None, ["สี่ผลลัพธ์ที่ข้อเสนอนี้ให้"])]
     sid = 3
     for i, (h, b) in enumerate(cards12):
-        sh12.append(sp_text(sid, "N%d" % i, "body", i*3 + 1, ["0%d" % (i + 1)])); sid += 1
-        sh12.append(sp_text(sid, "H%d" % i, "body", i*3 + 2, [h])); sid += 1
-        sh12.append(sp_text(sid, "B%d" % i, "body", i*3 + 3, [b])); sid += 1
-    sh12.append(sp_text(sid, "BL", "body", 13, ["สรุป"])); sid += 1
-    sh12.append(sp_text(sid, "BC", "body", 14,
+        sh12.append(sp_text(sid, "N%d" % i, "body", PL.PH_FREE + i*3, ["0%d" % (i + 1)])); sid += 1
+        sh12.append(sp_text(sid, "H%d" % i, "body", PL.PH_FREE + i*3 + 1, [h])); sid += 1
+        sh12.append(sp_text(sid, "B%d" % i, "body", PL.PH_FREE + i*3 + 2, [b])); sid += 1
+    sh12.append(sp_text(sid, "BL", "body", PL.PH_FREE + 12, ["สรุป"])); sid += 1
+    sh12.append(sp_text(sid, "BC", "body", PL.PH_FREE + 13,
                         ["ทั้งสี่ข้อมาจากการแก้จุดเดียวกัน คือรวมจุดรับเอกสาร"]))
     S.append((12, sh12))
     # ---------------------------------------------------------------- 7 · chapter 02 (L08)
@@ -404,11 +407,11 @@ def demo_slides():
             sp_text(3, "Sub", "body", 1, ["ห้าขั้นตอน ทำงานต่อเนื่องโดยไม่ต้องคีย์ซ้ำ"])]
     sid = 4
     for i, (h, b) in enumerate(steps13):
-        sh13.append(sp_text(sid, "C%d" % i, "body", i*3 + 2, [str(i + 1)])); sid += 1
-        sh13.append(sp_text(sid, "H%d" % i, "body", i*3 + 3, [h])); sid += 1
-        sh13.append(sp_text(sid, "B%d" % i, "body", i*3 + 4, [b])); sid += 1
-    sh13.append(sp_text(sid, "RL", "body", 17, ["ผลลัพธ์"])); sid += 1
-    sh13.append(sp_text(sid, "RC", "body", 18,
+        sh13.append(sp_text(sid, "C%d" % i, "body", PL.PH_FREE + i*3, [str(i + 1)])); sid += 1
+        sh13.append(sp_text(sid, "H%d" % i, "body", PL.PH_FREE + i*3 + 1, [h])); sid += 1
+        sh13.append(sp_text(sid, "B%d" % i, "body", PL.PH_FREE + i*3 + 2, [b])); sid += 1
+    sh13.append(sp_text(sid, "RL", "body", PL.PH_FREE + 15, ["ผลลัพธ์"])); sid += 1
+    sh13.append(sp_text(sid, "RC", "body", PL.PH_FREE + 16,
                         ["เอกสารหนึ่งใบผ่านครบห้าขั้นโดยไม่มีการคีย์ซ้ำเลย"]))
     S.append((13, sh13))
     # ---------------------------------------------------------------- 9 · architecture (L14)
@@ -527,7 +530,51 @@ def demo_slides():
                   sp_text(6, "TC", "body", 4,
                           ["องค์กร 50-200 ที่นั่งเลือก Business เป็นค่าเริ่มต้น "
                            "ตอบกลับ 4 ชั่วโมงครอบคลุมงานปิดงบรายเดือน"])]))
-    # ---------------------------------------------------------------- 16 · the ask (L10)
+    # ------------------------------------------------- 16 · a phase of the plan (L17)
+    S.append((17, [sp_text(2, "Title", "title", None, ["5. Implementation Stage"]),
+                   sp_text(3, "KAL", "body", 1, ["Key Activity :"]),
+                   sp_text(4, "KAV", "body", 2,
+                           ["ตั้งค่าสภาพแวดล้อม ติดตั้งฮาร์ดแวร์และซอฟต์แวร์"]),
+                   sp_text(5, "PL", "body", 3, ["Participant :"]),
+                   sp_text(6, "PV", "body", 4,
+                           ["NCT Infra Engineer, ทีมไอทีลูกค้า, Business Analyst"]),
+                   sp_text(7, "PN", "body", 5, ["01"]),
+                   sp_text(8, "PP", "body", 6, ["Preparation Phase"]),
+                   sp_text(9, "PI", "body", 7,
+                           ["สรุปสเปกเครื่องและบริการคลาวด์ที่ต้องเตรียมให้พร้อมก่อนเริ่มงานพัฒนา"]),
+                   sp_text(10, "PB", "body", 8,
+                           ["PRD · 4 คอร์ / 16GB / SSD 300GB",
+                            "QA · 4 คอร์ / 16GB / SSD 150GB",
+                            "Windows Server 2022 ทั้งสองเครื่อง",
+                            "Lambda, EC2 และ Cognito เปิดทั้งสองสภาพแวดล้อม"])]))
+    # --------------------------------------------------- 17 · training evidence (L18)
+    w18 = [1600200, 3200400, 1188720, 2103120]
+    head18 = ["หลักสูตร", "วัตถุประสงค์", "ระยะเวลา", "เงื่อนไขการจัด"]
+    body18 = [("1. การใช้งานสำหรับผู้ใช้", "เข้าใจการใช้งานระบบในงานประจำวัน",
+               "4 ชั่วโมง", "จัดครั้งเดียว ที่สำนักงานหรือออนไลน์"),
+              ("2. การดูแลสำหรับผู้ดูแลระบบ", "เข้าใจการบำรุงรักษาและแก้ปัญหาเบื้องต้น",
+               "4 ชั่วโมง", "จัดครั้งเดียว ที่สำนักงานหรือออนไลน์")]
+    rows18 = [(ROW_HEAD, [_cell(t, T_TBLHEAD, PAPER, bold=True, spc=60,
+                                algn="ctr" if i == 2 else "l")
+                          for i, t in enumerate(head18)])]
+    for course, aim, hrs, cond in body18:
+        rows18.append((ROW_BODY, [_cell(course, T_DENSECELL, INK, bold=True),
+                                  _cell(aim, T_DENSECELL, INK),
+                                  _cell(hrs, T_DENSECELL, INK, algn="ctr"),
+                                  _cell(cond, T_DENSECELL, INK)]))
+    S.append((18, [sp_text(2, "Title", "title", None, ["8. Project Training"]),
+                   sp_text(3, "K", "body", 1, ["วัตถุประสงค์ของการอบรม"]),
+                   table(4, "Training Table", 2, MX, 2240280, w18, rows18),
+                   sp_text(5, "TL", "body", 3, ["สรุป"]),
+                   sp_text(6, "TC", "body", 4,
+                           ["อบรมสองหลักสูตร รวม 8 ชั่วโมง "
+                            "จบภายในสัปดาห์เดียวก่อนวันขึ้นระบบ"]),
+                   sp_text(7, "C1", "body", PL.PH_FREE, ["อบรมที่สำนักงานลูกค้า 20-50 คน"]),
+                   sp_text(8, "C2", "body", PL.PH_FREE + 2,
+                           ["อบรมกลุ่มย่อยในห้องประชุม 2-20 คน"]),
+                   sp_text(9, "C3", "body", PL.PH_FREE + 4,
+                           ["อบรมออนไลน์ผ่าน MS Teams"])]))
+    # ---------------------------------------------------------------- 18 · the ask (L10)
     S.append((10, [sp_text(2, "Title", "title", None, ["ขอบคุณครับ"]),
                    sp_text(3, "NSL", "body", 1, ["ขั้นตอนถัดไป"]),
                    sp_text(4, "NS", "body", 2,
@@ -611,3 +658,13 @@ def build(path, with_slides, title):
 if __name__ == "__main__":
     build(os.path.join(OUT, "NCT-Slide-Template.potx"), False, "NCT Slide Template")
     build(os.path.join(OUT, "NCT-Slide-Template-Demo.pptx"), True, "NCT Slide Template — ตัวอย่าง")
+    # v3: the same eighteen layouts wearing the chrome the corporate proposal
+    # template requires. A PowerPoint layout cannot toggle its own chrome the
+    # way the React <Deck> can - it is baked in - so the corp deck is a second
+    # file built from the same source, not a second set of layouts inside one.
+    PM.BRAND = "corp"
+    build(os.path.join(OUT, "NCT-Slide-Template-Corp.potx"), False,
+          "NCT Slide Template — แบบฟอร์มบริษัท")
+    build(os.path.join(OUT, "NCT-Slide-Template-Corp-Demo.pptx"), True,
+          "NCT Slide Template — แบบฟอร์มบริษัท ตัวอย่าง")
+    PM.BRAND = "web"

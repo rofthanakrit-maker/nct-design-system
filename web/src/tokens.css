@@ -24,6 +24,22 @@
   --nct-cat-2:       #216B7F;  /* category coding 2 of 4 - reuses teal */
   --nct-cat-3:       #4E8FA8;  /* category coding 3 of 4 - reuses teal-l */
   --nct-cat-4:       #16324F;  /* category coding 4 of 4 - reuses deep */
+  --nct-corp:        #006666;  /* v3 corp chrome anchor - rule, phase tab, card outline */
+  --nct-corp-deep:   #193B36;  /* v3 corp deep - second header band, on-dark panel */
+  --nct-corp-up:     #8CC2C2;  /* v3 corp accent lifted to read ON DARK - never on paper */
+  --nct-corp-dim:    #E1E1E1;  /* v3 corp foot-bar spent segment - DECORATION ONLY */
+  --nct-corp-bar-mid: #A9C2C2;  /* v3 corp foot-bar middle segment - decoration only */
+
+  /* The accent pair, and the only thing that moves between the two brand
+     modes. slides.css reads these everywhere it used to name --nct-teal /
+     --nct-teal-up, so .nct-slide--corp repointing them carries the whole
+     deck - rule, bullets, band labels, card tabs, recommended column. The
+     -up half exists for the same reason its default does: the accent is
+     1.5:1 on navy and has to be lifted to survive a dark panel. Category
+     colours are literal hex and deliberately do NOT follow - four coded
+     columns are a taxonomy, and it has to mean the same thing in both modes. */
+  --nct-accent:    var(--nct-teal);
+  --nct-accent-up: var(--nct-teal-up);
 
   /* ---- canvas & grid (px at 96dpi; 1px = 9525 EMU) ---- */
   --nct-slide-w:     1280px;
@@ -43,6 +59,16 @@
   --nct-body-h:      456px;
   --nct-take-h:      43.2px;
   --nct-note-up:     52.8px;
+  --nct-corp-rule-h: 7.2px;
+  --nct-corp-lock-w: 172.8px;
+  --nct-corp-lock-h: 57.6px;
+  --nct-corp-lock-r: 9.6px;
+  --nct-corp-bar-seg: 86.4px;
+  --nct-corp-bar-h:  14.4px;
+  --nct-phase-meta-h: 28.8px;
+  --nct-phase-tab-h: 43.2px;
+  --nct-phase-num-w: 52.8px;
+  --nct-evidence-h:  172.8px;
 
   /* ---- type scale (pt in the deck, px here) ---- */
   --nct-fs-display:   58.67px;  /* 44pt - title slide */

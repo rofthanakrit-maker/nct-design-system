@@ -5,7 +5,7 @@ Design system ของ New Computer Technology Consulting Co., Ltd. — token �
 
 ```
 scripts/tokens.py            ← single source of truth
-   ├── scripts/build.py            → NCT-Slide-Template.potx   (16 layouts)
+   ├── scripts/build.py            → NCT-Slide-Template.potx   (18 layouts x 2 brands)
    └── scripts/emit_web_tokens.py  → web/src/tokens.{css,ts}   (@nct/slides)
 ```
 
@@ -19,6 +19,7 @@ scripts/tokens.py            ← single source of truth
 | [`design.md`](design.md) | brand token ต้นทาง (studied จาก nctthai.com) + ส่วนขยาย v2 |
 | [`slide-design-system.md`](slide-design-system.md) | v1 — canvas, grid, type scale, layout 01–10, กติกาการทำเด็ค |
 | [`slide-design-system-v2.md`](slide-design-system-v2.md) | v2 — token dense, status/category, layout 11–16 |
+| [`design.md` § v3](design.md) | v3 — brand mode `corp`, token ชุดที่สอง, layout 17–18 (แกะจาก `NCT Template.pptx` สไลด์ 33–43) |
 | [`.design-sync/conventions.md`](.design-sync/conventions.md) | กติกาที่ design agent ต้องอ่านก่อนสร้างสไลด์ |
 | [`.design-sync/NOTES.md`](.design-sync/NOTES.md) | กับดักเฉพาะ repo นี้ อ่านก่อน re-sync |
 
@@ -28,12 +29,19 @@ scripts/tokens.py            ← single source of truth
 python scripts/build.py          # เขียนทับ .potx และ .pptx ที่ root
 ```
 
-- `NCT-Slide-Template.potx` — 1 slide master + 16 custom layouts + NCT theme
-- `NCT-Slide-Template-Demo.pptx` — เดโม 16 สไลด์ layout ละ 1
-- `preview/` — ภาพ render จาก PowerPoint **ของ build ก่อนหน้า** ยังไม่ได้อัปเดต
-  หลังรอบแก้ contrast / takeaway / closing (เครื่องที่ build ไม่มี PowerPoint หรือ
-  LibreOffice ให้ render ใหม่) ของจริงล่าสุดอยู่ที่ `NCT-Slide-Template-Demo.pptx`
-  หรือ `npm run demo && npm run serve`
+- `NCT-Slide-Template.potx` — 1 slide master + 18 custom layouts + NCT theme
+- `NCT-Slide-Template-Demo.pptx` — เดโม 18 สไลด์ layout ละ 1
+- `NCT-Slide-Template-Corp.potx` — 18 layout เดิม แต่ใส่ chrome แบบฟอร์มบริษัท
+  (เส้นเต็มความกว้าง, การ์ดโลโก้มุมขวาบน, แถบสามช่วงที่ก้นสไลด์)
+  แยกไฟล์เพราะ layout ใน PowerPoint สลับ chrome ของตัวเองไม่ได้
+- `NCT-Slide-Template-Corp-Demo.pptx` — เดโมฝั่ง corp
+
+```bash
+python scripts/check_template.py   # ตรวจไฟล์ที่ build แล้ว (XML, id/idx ซ้ำ, หลุดขอบ)
+```
+- `preview/` — ภาพ render **เก่า ครอบคลุมแค่ layout 01–16 ของ v1/v2** ยังไม่ได้
+  อัปเดตหลังรอบ v3 ของจริงล่าสุดอยู่ที่ `NCT-Slide-Template-Demo.pptx` /
+  `NCT-Slide-Template-Corp-Demo.pptx` หรือ `npm run demo && npm run serve`
 
 **ติดตั้งฟอนต์ก่อนเปิด** — Noto Sans Thai อยู่ใน `fonts/` (คลิกขวา → Install),
 Kanit โหลดจาก [Google Fonts](https://fonts.google.com/specimen/Kanit)
@@ -48,8 +56,11 @@ npm run fonts                # woff2 (ต้องมี Kanit ติดตั�
 npm run assets               # โลโก้เป็น data URI
 ```
 
-16 component ตรงกับ 16 layout ใน `.potx` เลขเดียวกัน ออกแบบฝั่งเว็บแล้วมาทำต่อ
+18 component ตรงกับ 18 layout ใน `.potx` เลขเดียวกัน ออกแบบฝั่งเว็บแล้วมาทำต่อ
 ใน PowerPoint ได้โดยหยิบ layout เบอร์เดิม
+
+`<Deck brand="corp">` เปลี่ยนเป็น chrome แบบฟอร์มบริษัท — ฝั่งเว็บสลับได้ใน deck
+เดียว ฝั่ง PowerPoint ต้องหยิบไฟล์ `-Corp.potx`
 
 ดูของจริง:
 
@@ -78,9 +89,10 @@ design.md  slide-design-system*.md      เอกสารระบบ
 scripts/                                generator ทั้งหมด (Python, ไม่ต้องลง library)
   tokens.py                             ← แก้ที่นี่
   build.py ooxml.py parts_*.py          OOXML → .potx
+  check_template.py                     ตรวจ .potx/.pptx ที่ build แล้ว
   emit_web_tokens.py build_webfonts.py emit_web_assets.py
 web/                                    @nct/slides
   src/  Slide.tsx primitives.tsx layouts.tsx  + ไฟล์ที่ generate
-  demo/ demo.tsx                        ตัวอย่างใช้งานครบ 16 layout
+  demo/ demo.tsx                        ตัวอย่างใช้งานครบ 18 layout ทั้งสอง brand
 assets/  fonts/  preview/               โลโก้ · ฟอนต์ต้นฉบับ · ภาพ render
 ```

@@ -146,18 +146,24 @@ def txbody(paras, anchor="t", wrap=True, ins=(0, 0, 0, 0), autofit="", lst="<a:l
 
 
 # ---------------------------------------------------------------- shapes
-def xfrm(x, y, w, h):
-    return ('<a:xfrm><a:off x="%d" y="%d"/><a:ext cx="%d" cy="%d"/></a:xfrm>' % (x, y, w, h))
+def xfrm(x, y, w, h, rot=0):
+    """rot is in 60000ths of a degree, PowerPoint's unit: 10800000 is a half turn.
+    It spins the shape about its own centre, so the bounding box is unchanged -
+    which is how a two-corners-rounded preset gets its corners on the other side
+    without moving."""
+    r = ' rot="%d"' % rot if rot else ''
+    return ('<a:xfrm%s><a:off x="%d" y="%d"/><a:ext cx="%d" cy="%d"/></a:xfrm>'
+            % (r, x, y, w, h))
 
 
 def shape(sid, name, x, y, w, h, fill, body="", prst="rect",
-          line='<a:ln><a:noFill/></a:ln>', adj=""):
+          line='<a:ln><a:noFill/></a:ln>', adj="", rot=0):
     if not body:
         body = ('<p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang="th-TH"/>'
                 '</a:p></p:txBody>')
     return ('<p:sp><p:nvSpPr><p:cNvPr id="%d" name="%s"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>'
             '<p:spPr>%s<a:prstGeom prst="%s"><a:avLst>%s</a:avLst></a:prstGeom>%s%s</p:spPr>%s</p:sp>'
-            % (sid, name, xfrm(x, y, w, h), prst, adj, fill, line, body))
+            % (sid, name, xfrm(x, y, w, h, rot), prst, adj, fill, line, body))
 
 
 def pic(sid, name, rid, x, y, w, h):

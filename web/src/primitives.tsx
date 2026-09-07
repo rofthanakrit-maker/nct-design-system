@@ -126,9 +126,16 @@ export interface TableCell {
    */
   category?: 1 | 2 | 3 | 4;
   bold?: boolean;
+  /**
+   * Merge this cell down over `rowSpan` rows. Every row it swallows must carry
+   * an explicit `null` in the same position — the grid is fixed-layout, so a
+   * short row would silently shift every cell after it one column left.
+   */
+  rowSpan?: number;
 }
 
-export type TableRow = (TableCell | string | number)[];
+/** `null` means "covered by a `rowSpan` above". It renders nothing. */
+export type TableRow = (TableCell | string | number | null)[];
 
 export interface DataTableProps {
   /** Header labels. The header row is navy with white 11pt type. */
@@ -148,6 +155,16 @@ export interface DataTableProps {
    * three columns of identical weight are not a recommendation.
    */
   recommended?: number;
+  /**
+   * Index of a column that names the group each row belongs to — the
+   * "Implementation Stage" spine on the deliverables matrix. It takes the
+   * accent header and a tinted body so the grid reads as banded sections, and
+   * its cells are normally merged with `rowSpan`.
+   *
+   * Not the same thing as `recommended`: that argues for a column, this one
+   * only labels rows. Setting both on the same index is a contradiction.
+   */
+  groupColumn?: number;
 }
 
 const CAT_VAR = ["--nct-cat-1", "--nct-cat-2", "--nct-cat-3", "--nct-cat-4"];
@@ -163,6 +180,7 @@ export function DataTable({
   widths,
   size = "dense",
   recommended,
+  groupColumn,
 }: DataTableProps) {
   const total = widths?.reduce((a, b) => a + b, 0);
   return (
@@ -180,7 +198,13 @@ export function DataTable({
             const label = typeof c === "string" ? c : c.label;
             const align = typeof c === "string" ? undefined : c.align;
             return (
-              <th key={i} scope="col" data-align={align} data-rec={i === recommended || undefined}>
+              <th
+                key={i}
+                scope="col"
+                data-align={align}
+                data-rec={i === recommended || undefined}
+                data-group={i === groupColumn || undefined}
+              >
                 {label}
               </th>
             );
@@ -191,8 +215,11 @@ export function DataTable({
         {rows.map((row, r) => (
           <tr key={r}>
             {row.map((raw, c) => {
+              // null = swallowed by a rowSpan above. Render nothing at all;
+              // an empty <td> would push the merged column back open.
+              if (raw === null) return null;
               const cell: TableCell =
-                typeof raw === "object" && raw !== null && "value" in raw
+                typeof raw === "object" && "value" in raw
                   ? raw
                   : { value: raw as ReactNode };
               const cls = [
@@ -207,6 +234,8 @@ export function DataTable({
                   className={cls || undefined}
                   data-align={cell.align}
                   data-rec={c === recommended || undefined}
+                  data-group={c === groupColumn || undefined}
+                  rowSpan={cell.rowSpan}
                   style={
                     {
                       fontWeight: cell.bold ? 700 : undefined,

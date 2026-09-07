@@ -41,6 +41,11 @@ COLORS = [
     ("cat-2", T.CAT_2, "category coding 2 of 4 - reuses teal"),
     ("cat-3", T.CAT_3, "category coding 3 of 4 - reuses teal-l"),
     ("cat-4", T.CAT_4, "category coding 4 of 4 - reuses deep"),
+    ("corp", T.CORP, "v3 corp chrome anchor - rule, phase tab, card outline"),
+    ("corp-deep", T.CORP_DEEP, "v3 corp deep - second header band, on-dark panel"),
+    ("corp-up", T.CORP_UP, "v3 corp accent lifted to read ON DARK - never on paper"),
+    ("corp-dim", T.CORP_DIM, "v3 corp foot-bar spent segment - DECORATION ONLY"),
+    ("corp-bar-mid", T.CORP_BAR_MID, "v3 corp foot-bar middle segment - decoration only"),
 ]
 
 # Only what something actually consumes. A token nobody reads is a promise the
@@ -57,6 +62,13 @@ SPACE = [
     ("take-h", T.TAKE_H),
     # distance from the foot of the body box, so the CSS can pin both from bottom
     ("note-up", T.BODY_Y + T.BODY_H - T.NOTE_Y - T.NOTE_H),
+    # v3 corp chrome + phase card (L17)
+    ("corp-rule-h", T.CORP_RULE_H),
+    ("corp-lock-w", T.CORP_LOCK_W), ("corp-lock-h", T.CORP_LOCK_H),
+    ("corp-lock-r", T.CORP_LOCK_R),
+    ("corp-bar-seg", T.CORP_BAR_SEG), ("corp-bar-h", T.CORP_BAR_H),
+    ("phase-meta-h", T.PHASE_META_H), ("phase-tab-h", T.PHASE_TAB_H),
+    ("phase-num-w", T.PHASE_NUM_W), ("evidence-h", T.EVIDENCE_H),
 ]
 
 TYPE = [
@@ -87,6 +99,17 @@ def css():
     out.append("  /* ---- colour ---- */")
     for name, hexv, note in COLORS:
         out.append("  --nct-%-12s #%s;%s" % (name + ":", hexv, "  /* %s */" % note))
+    out.append("")
+    out.append("  /* The accent pair, and the only thing that moves between the two brand")
+    out.append("     modes. slides.css reads these everywhere it used to name --nct-teal /")
+    out.append("     --nct-teal-up, so .nct-slide--corp repointing them carries the whole")
+    out.append("     deck - rule, bullets, band labels, card tabs, recommended column. The")
+    out.append("     -up half exists for the same reason its default does: the accent is")
+    out.append("     1.5:1 on navy and has to be lifted to survive a dark panel. Category")
+    out.append("     colours are literal hex and deliberately do NOT follow - four coded")
+    out.append("     columns are a taxonomy, and it has to mean the same thing in both modes. */")
+    out.append("  --nct-accent:    var(--nct-teal);")
+    out.append("  --nct-accent-up: var(--nct-teal-up);")
     out.append("")
     out.append("  /* ---- canvas & grid (px at 96dpi; 1px = 9525 EMU) ---- */")
     for name, emu in SPACE:

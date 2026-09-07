@@ -59,7 +59,7 @@
   top: var(--nct-rule-y);
   width: var(--nct-rule-w);
   height: var(--nct-rule-h);
-  background: var(--nct-teal);
+  background: var(--nct-accent);
 }
 .nct-body {
   position: absolute;
@@ -141,7 +141,7 @@
   position: absolute;
   left: 0;
   content: "\2022";
-  color: var(--nct-teal);
+  color: var(--nct-accent);
 }
 .nct-list__item--2 {
   margin-left: 48px;
@@ -159,11 +159,11 @@
 .nct-list--dense .nct-list__item { padding-left: 19.2px; font-size: var(--nct-fs-densebody); }
 .nct-list--dense .nct-list__item + .nct-list__item { margin-top: 6px; }
 .nct-list--on-dark { color: rgb(255 255 255 / 0.88); }
-.nct-list--on-dark .nct-list__item::before { color: var(--nct-teal-up); }
+.nct-list--on-dark .nct-list__item::before { color: var(--nct-accent-up); }
 /* --nct-ink-2 is a colour for white grounds; on navy it is near-invisible, so
    the lower levels take paper at alpha instead - same rule the .potx follows */
 .nct-list--on-dark .nct-list__item--2::before,
-.nct-list--on-dark .nct-list__item--3::before { color: var(--nct-teal-up); }
+.nct-list--on-dark .nct-list__item--3::before { color: var(--nct-accent-up); }
 .nct-list--on-dark .nct-list__item--3 { color: rgb(255 255 255 / 0.72); }
 
 /* ---------------------------------------------------------------- 01 / 10 */
@@ -230,7 +230,7 @@
   font-size: var(--nct-fs-label);
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: var(--nct-teal-up);
+  color: var(--nct-accent-up);
 }
 .nct-closing__ask {
   position: absolute;
@@ -257,7 +257,7 @@
   left: 0;
   font-family: var(--nct-font-display);
   font-weight: 700;
-  color: var(--nct-teal-up);
+  color: var(--nct-accent-up);
 }
 .nct-closing__decision {
   position: absolute;
@@ -266,7 +266,7 @@
   width: 576px;
   font-size: var(--nct-fs-body-3);
   font-weight: 700;
-  color: var(--nct-teal-up);
+  color: var(--nct-accent-up);
 }
 /* with an ask on the slide the contact block steps down and back: it is where
    the reader looks after they have accepted, not before */
@@ -318,7 +318,7 @@
   top: 0;
   width: 336px;
   height: 100%;
-  background: var(--nct-teal);
+  background: var(--nct-accent);
   opacity: 0.2;
   clip-path: polygon(100% 0, 100% 100%, 0 100%);
 }
@@ -369,7 +369,7 @@
   font-weight: 700;
   font-size: 80px;
   line-height: 1;
-  color: var(--nct-teal-up);
+  color: var(--nct-accent-up);
 }
 .nct-section__rule {
   position: absolute;
@@ -377,7 +377,7 @@
   top: 297.6px;
   width: var(--nct-rule-w);
   height: var(--nct-rule-h);
-  background: var(--nct-teal-up);
+  background: var(--nct-accent-up);
 }
 .nct-section__title,
 .nct-closing__title {
@@ -450,8 +450,8 @@
   font-weight: 700;
   letter-spacing: 0.12em;
 }
-.nct-band--tint .nct-band__label { color: var(--nct-teal); }
-.nct-band--dark .nct-band__label { color: var(--nct-teal-up); }
+.nct-band--tint .nct-band__label { color: var(--nct-accent); }
+.nct-band--dark .nct-band__label { color: var(--nct-accent-up); }
 .nct-band__copy { font-size: var(--nct-fs-body-3); }
 /* 09 / 14 / 16 pin the strip to the foot of the body box: the conclusion lands
    at the same y whether the table above it runs four rows or ten */
@@ -500,7 +500,7 @@
   height: 336px;
 }
 .nct-card--square { border-radius: 0; height: 364.8px; }
-.nct-card__tab { width: 28.8px; height: 4.8px; background: var(--nct-teal); }
+.nct-card__tab { width: 28.8px; height: 4.8px; background: var(--nct-accent); }
 .nct-card__num {
   margin: 14.4px 0 0;
   font-family: var(--nct-font-display);
@@ -548,7 +548,7 @@
   top: 0;
   width: 14.4px;
   height: 100%;
-  background: linear-gradient(to bottom, var(--nct-navy), var(--nct-teal));
+  background: linear-gradient(to bottom, var(--nct-navy), var(--nct-accent));
 }
 .nct-quote__mark {
   position: absolute;
@@ -558,7 +558,7 @@
   font-weight: 700;
   font-size: 160px;
   line-height: 1;
-  color: var(--nct-teal);
+  color: var(--nct-accent);
   opacity: 0.25;
 }
 .nct-quote__text {
@@ -578,7 +578,7 @@
   top: 460.8px;
   width: var(--nct-rule-w);
   height: var(--nct-rule-h);
-  background: var(--nct-teal);
+  background: var(--nct-accent);
 }
 .nct-quote__by {
   position: absolute;
@@ -652,7 +652,7 @@
   top: 393.6px;
   width: var(--nct-rule-w);
   height: var(--nct-rule-h);
-  background: var(--nct-teal);
+  background: var(--nct-accent);
 }
 .nct-image__caption--fade { top: 432px; width: 576px; }
 /* ---------------------------------------------------------------- 13 flow */
@@ -662,7 +662,7 @@
   width: 32.7px;
   height: 32.7px;
   border-radius: 50%;
-  background: var(--nct-teal);
+  background: var(--nct-accent);
   color: var(--nct-paper);
   font-family: var(--nct-font-display);
   font-weight: 700;
@@ -678,7 +678,7 @@
   align-self: center;
   display: flex;
   justify-content: center;
-  color: var(--nct-teal);
+  color: var(--nct-accent);
 }
 
 /* ---------------------------------------------------------------- 14 diagram */
@@ -720,7 +720,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--nct-teal);
+  color: var(--nct-accent);
 }
 /* a labelled edge is a wider edge. Without this the label kept `nowrap` in a
    48px slot - "ส่งเข้าระบบบัญชีอัตโนมัติ" measured 130.8px and hung 41.4px over
@@ -755,7 +755,7 @@
   font-size: var(--nct-fs-densebody);
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: var(--nct-teal);
+  color: var(--nct-accent);
 }
 
 /* ---------------------------------------------------------------- tables */
@@ -792,7 +792,7 @@
    plus a sentence underneath is not a recommendation - this marks the one the
    takeaway is arguing for, in the rule vocabulary the title already uses. The
    wash keeps the zebra step inside the column so the rows still track. */
-.nct-table th[data-rec] { position: relative; background: var(--nct-teal); }
+.nct-table th[data-rec] { position: relative; background: var(--nct-accent); }
 .nct-table th[data-rec]::before {
   content: "";
   position: absolute;
@@ -800,15 +800,15 @@
   right: 0;
   top: calc(-1 * var(--nct-rule-h));
   height: var(--nct-rule-h);
-  background: var(--nct-teal);
+  background: var(--nct-accent);
 }
 /* :not() so a status or category cell keeps the fill that carries its meaning -
    the wash is for the column's plain cells only */
 .nct-table tbody td[data-rec]:not(.nct-status):not(.nct-table__chip) {
-  background: color-mix(in srgb, var(--nct-teal) 8%, var(--nct-paper));
+  background: color-mix(in srgb, var(--nct-accent) 8%, var(--nct-paper));
 }
 .nct-table tbody tr:nth-child(even) td[data-rec]:not(.nct-status):not(.nct-table__chip) {
-  background: color-mix(in srgb, var(--nct-teal) 8%, var(--nct-paper-2));
+  background: color-mix(in srgb, var(--nct-accent) 8%, var(--nct-paper-2));
 }
 .nct-status { font-weight: 700; text-align: center; }
 .nct-status--ok { background: var(--nct-ok-tint); color: var(--nct-ok); }
@@ -817,3 +817,219 @@
 
 /* ---------------------------------------------------------------- deck */
 .nct-deck { display: flex; flex-direction: column; gap: 24px; }
+
+/* ================================================================ v3 corp chrome
+   The second brand mode. `brand="corp"` on the Deck swaps the furniture the
+   company requires on every bid - full-bleed rule, outlined corner lockup,
+   three-segment foot bar - and repoints --nct-accent. Nothing about the grid
+   moves: the rule stays at --nct-rule-y and the body box keeps its top, so a
+   deck can switch modes without a single layout re-flowing. */
+.nct-slide--corp {
+  --nct-accent: var(--nct-corp);
+  --nct-accent-up: var(--nct-corp-up);
+}
+/* the source sets its title in near-black, not the house navy; that is chrome,
+   so it moves with the mode. --nct-ink, not a new token. */
+.nct-slide--corp .nct-title { color: var(--nct-ink); }
+.nct-slide--corp .nct-rule {
+  left: 0;
+  width: 100%;
+  height: var(--nct-corp-rule-h);
+  background: var(--nct-accent);
+}
+
+/* The corner lockup: white card, accent outline, two bottom corners rounded,
+   bled off the top edge so only the lower half shows. Light tones only - a
+   white card on the navy bookends would be a hole, and the source's own dark
+   slides carry the bare mark instead. */
+.nct-corp-lock {
+  position: absolute;
+  right: 0;
+  top: calc(var(--nct-corp-lock-h) * -0.5);
+  width: var(--nct-corp-lock-w);
+  height: calc(var(--nct-corp-lock-h) * 1.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 14.4px;
+  padding: 0 14.4px 9.6px;
+  background: var(--nct-paper);
+  border: 1px solid var(--nct-accent);
+  border-top: 0;
+  border-radius: 0 0 var(--nct-corp-lock-r) var(--nct-corp-lock-r);
+}
+.nct-corp-lock__mark,
+.nct-corp-lock__partner { height: 28.8px; width: auto; }
+
+/* The foot: bar hard against the bottom-left corner, page number right, and the
+   footer line - if the deck sets one - between them. No hairline: the corporate
+   template does not draw one, and the bar is already the horizontal it would be. */
+.nct-corp-foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 33.6px;
+  display: flex;
+  align-items: center;
+  gap: 19.2px;
+  padding-right: 24px;
+  font-size: var(--nct-fs-foot);
+  color: var(--nct-ink-2);
+}
+.nct-corp-bar { display: flex; align-self: flex-end; margin-bottom: 4.8px; }
+.nct-corp-bar i {
+  display: block;
+  width: var(--nct-corp-bar-seg);
+  height: var(--nct-corp-bar-h);
+}
+.nct-corp-bar i:nth-child(1) { background: var(--nct-accent); }
+.nct-corp-bar i:nth-child(2) { background: var(--nct-corp-bar-mid); }
+.nct-corp-bar i:nth-child(3) { background: var(--nct-corp-dim); }
+.nct-corp-foot__text { flex: 1; }
+.nct-corp-foot__page { min-width: 40px; text-align: right; }
+.nct-slide--dark .nct-corp-foot,
+.nct-slide--open .nct-corp-foot,
+.nct-slide--close .nct-corp-foot,
+.nct-slide--deep .nct-corp-foot { color: rgb(255 255 255 / 0.72); }
+
+/* ---------------------------------------------------------------- 17 phase card */
+.nct-body--phase { display: flex; flex-direction: column; }
+.nct-phase-meta { margin: 0 0 19.2px; }
+.nct-phase-meta__row {
+  display: flex;
+  align-items: baseline;
+  gap: 9.6px;
+  min-height: var(--nct-phase-meta-h);
+  font-size: var(--nct-fs-body-3);
+  line-height: 1.3;
+}
+.nct-phase-meta__label {
+  flex: none;
+  font-family: var(--nct-font-display);
+  font-weight: 700;
+  color: var(--nct-ink);
+}
+.nct-phase-meta__value { margin: 0; color: var(--nct-ink); }
+
+/* the tab is centred on the card's top border, so .nct-phase reserves half its
+   height above itself - without that margin the tab clips the meta rows */
+.nct-phase {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin-top: calc(var(--nct-phase-tab-h) / 2);
+}
+.nct-phase__tab {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateY(-50%);
+  height: var(--nct-phase-tab-h);
+  display: flex;
+  align-items: stretch;
+  background: var(--nct-accent);
+  color: var(--nct-paper);
+  /* a pill end-cap, not a third card radius: .nct-card stays 16px and
+     .nct-card--square stays 0. The left edge is square because it sits flush
+     on the card's own left border. */
+  border-radius: 0 999px 999px 0;
+  padding-right: 24px;
+}
+.nct-phase__num,
+.nct-phase__label { display: flex; align-items: center; }
+.nct-phase__num {
+  width: var(--nct-phase-num-w);
+  justify-content: center;
+  font-family: var(--nct-font-display);
+  font-weight: 700;
+  font-size: var(--nct-fs-densehead);
+  border-right: 1px solid rgb(255 255 255 / 0.32);
+}
+.nct-phase__label {
+  padding-left: 16px;
+  font-family: var(--nct-font-display);
+  font-weight: 700;
+  font-size: var(--nct-fs-body-3);
+}
+.nct-phase__card {
+  height: 100%;
+  border: 1px solid var(--nct-accent);
+  padding: 38.4px 24px 24px;
+  overflow: hidden;
+}
+.nct-phase__intro {
+  margin: 0 0 14.4px;
+  font-size: var(--nct-fs-densebody);
+  line-height: 1.32;
+  color: var(--nct-ink-2);
+}
+
+/* ---------------------------------------------------------------- 18 evidence */
+.nct-body--evidence { display: flex; flex-direction: column; }
+.nct-kicker-pill {
+  align-self: flex-start;
+  height: var(--nct-phase-tab-h);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  margin-bottom: 14.4px;
+  background: var(--nct-accent);
+  color: var(--nct-paper);
+  border-radius: 999px;
+  font-family: var(--nct-font-display);
+  font-weight: 700;
+  font-size: var(--nct-fs-body-3);
+}
+/* the claim gives way, the proof does not: the strip is a fixed height and the
+   table above it takes whatever is left */
+.nct-evidence__claim { flex: 1; min-height: 0; overflow: hidden; }
+.nct-body--evidence .nct-band { margin: 14.4px 0; }
+.nct-evidence {
+  flex: none;
+  height: var(--nct-evidence-h);
+  display: grid;
+  /* the implicit row is `auto` and sizes to the tallest photograph, not to the
+     strip - without this the frames grow to their intrinsic height, walk out of
+     the body box and land on top of the foot chrome */
+  grid-template-rows: minmax(0, 1fr);
+  gap: var(--nct-gut);
+}
+.nct-evidence[data-count="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.nct-evidence[data-count="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.nct-evidence[data-count="4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.nct-evidence__figure {
+  margin: 0;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.nct-evidence__caption {
+  margin-bottom: 6px;
+  font-size: var(--nct-fs-densebody);
+  line-height: 1.3;
+  color: var(--nct-ink-2);
+}
+.nct-evidence__media {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: cover;
+  border: 1px solid var(--nct-rule);
+}
+
+/* ------------------------------------------------- v3 table: grouped rows */
+/* The row-group spine on a deliverables matrix. It labels rows; `data-rec`
+   argues for a column. Never set both on the same index. */
+.nct-table th[data-group] { background: var(--nct-accent); }
+.nct-table tbody td[data-group] {
+  background: var(--nct-paper-2);
+  color: var(--nct-navy);
+  font-weight: 700;
+  vertical-align: top;
+  padding-top: 12px;
+}
+/* a merged cell keeps the grid's hairline on its own bottom edge only - the
+   rows it swallows must not draw one through it */
+.nct-table tbody td[rowspan] { border-bottom: 1px solid var(--nct-rule); }

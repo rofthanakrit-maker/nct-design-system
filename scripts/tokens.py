@@ -35,6 +35,29 @@ OK      = "1A6647";  OK_T   = "BFE3CA"   # ready, quick win, passed| 5.0:1 on ti
 # ---- v2: category coding - reuses existing accents, adds no new hues ----
 CAT_1, CAT_2, CAT_3, CAT_4 = NAVY, TEAL, TEAL_L, DEEP
 
+# ---- v3: corporate proposal chrome (studied from NCT Template.pptx sl. 33-43) ----
+# The second brand set. The website palette above dresses narrative decks; the
+# proposal template the company requires on every bid is anchored on a different
+# teal, and both are real. They are chosen per deck and never mix on one slide:
+# corp mode swaps the CHROME (rule, corner lockup, foot bar) and repoints the
+# --nct-accent pair, which slides.css reads everywhere it used to name TEAL, so
+# the whole deck follows. What does NOT follow is the content palette - paper,
+# ink, tints, status and the four category colours are shared by both modes, so
+# a table means the same thing whichever brand is on the slide.
+CORP      = "006666"   # the anchor: full-bleed rule, phase tab, card outline
+                        # 6.8:1 on PAPER both ways - safe as fill and as text
+CORP_DEEP = "193B36"   # the deep companion: second header band, on-dark panel
+                        # 12.2:1 on PAPER both ways
+CORP_UP   = "8CC2C2"   # the same corp teal lifted until it reads on a dark
+                        # ground: 5.1:1 on NAVY, 6.2:1 on CORP_DEEP. ON DARK
+                        # ONLY - it is 2.0:1 on PAPER. Same trap, same rule as
+                        # TEAL_UP; CORP itself is 1.5:1 on NAVY and unusable there.
+CORP_DIM  = "E1E1E1"   # foot-bar spent segment. DECORATION ONLY - 1.2:1 on
+                        # PAPER, it can never carry text or a border
+# No corp tint. The source used C9D9D4 as a card/zebra fill, but INK2 reads
+# 4.37:1 on it and OK_T sits 1.05:1 against it - the exact status-fill-vanishes
+# bug the v2 note above exists to prevent. Corp surfaces are PAPER2, same as v1.
+
 # ---- canvas ----
 SW, SH  = 12192000, 6858000          # 16:9, 13.333in x 7.5in
 
@@ -74,6 +97,36 @@ TAKE_H  = 411480                      # 0.45in - matches .nct-band min-height
 TAKE_Y  = BODY_Y + BODY_H - TAKE_H    # 5623560
 NOTE_H  = 274320                      # legend / source note - one line
 NOTE_Y  = TAKE_Y - 91440 - NOTE_H     # sits just above the strip
+
+# ---- v3: corp chrome geometry ----
+# The corporate rule is full-bleed and heavier than the 0.6in stub; it sits at
+# the same RULE_Y, so nothing downstream of the title moves and every layout
+# keeps its rhythm in either mode. That was the whole point of putting the corp
+# look in a chrome layer instead of a second geometry.
+CORP_RULE_H = 68580                   # 0.075in - the band, edge to edge
+CORP_LOCK_W = 1645920                 # 1.80in - corner lockup card
+CORP_LOCK_H = 548640                  # 0.60in
+CORP_LOCK_R = 91440                   # 0.10in - its two bottom corners
+CORP_BAR_SEG = 822960                 # 0.90in - one foot-bar segment, x3
+CORP_BAR_H  = 137160                  # 0.15in
+# The source draws three foot segments with two shapes: a CORP bar under a
+# 75%-alpha CORP_DIM bar offset by one segment, so the overlap mixes the middle
+# one. Three explicit segments say the same thing without the alpha trick.
+CORP_BAR_MID = "A9C2C2"               # = CORP under CORP_DIM at 75%, precomputed
+
+# ---- v3: phase card (L17) ----
+# The numbered tab straddles the card's top border. The source protrudes it left
+# of the card by 0 / 0.32 / 0.42 / 0.69cm across its five slides - copy-paste
+# jitter, not a decision, so it is flush at MX here and only the vertical
+# overlap is kept.
+PHASE_META_H = 274320                 # 0.30in - one "Key Activity :" row
+PHASE_TAB_H  = TAKE_H                 # 0.45in - same strip height as a band
+PHASE_NUM_W  = 502920                 # 0.55in - the number cell inside the tab
+
+# ---- v3: evidence strip (L18) ----
+# Fixed, so the claim above it shrinks and the proof never does. Three frames
+# across CW land at 350x148 - a readable screenshot. A fifth would be 199x84.
+EVIDENCE_H = 1645920                  # 1.80in
 
 # ---- type scale (hundredths of a pt) ----
 T_DISPLAY = 4400   # 44pt  title slide

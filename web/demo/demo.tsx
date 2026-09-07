@@ -1,6 +1,8 @@
 import { createRoot } from "react-dom/client";
 import {
+  BulletList,
   CategoryKey,
+  DataTable,
   Deck,
   DiagramBox,
   DiagramGroup,
@@ -11,9 +13,11 @@ import {
   SlideCover,
   SlideDenseTable,
   SlideDiagram,
+  SlideEvidence,
   SlideFourCards,
   SlideFullImage,
   SlideKeyFigures,
+  SlidePhaseCard,
   SlideProcessFlow,
   SlideQuote,
   SlideSection,
@@ -38,6 +42,16 @@ import {
 const en = (s: string) => <span lang="en">{s}</span>;
 
 function App() {
+  return (
+    <>
+      <WebDeck />
+      <CorpDeck />
+    </>
+  );
+}
+
+/** The house deck: sixteen layouts, web brand. */
+function WebDeck() {
   return (
     <Deck footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569">
       {/* 01 · cover. Unnumbered: a cover is not page 1 of anything. */}
@@ -242,6 +256,167 @@ function App() {
           <>เว็บไซต์ · {en("nctthai.com")}</>,
         ]}
       />
+    </Deck>
+  );
+}
+
+/* The corporate deck: the same components under `brand="corp"`, which is the
+   whole claim of v3 — the furniture changes, the grid does not. Layouts 17 and
+   18 live here because this is the deck they were studied from, but both render
+   in either mode; layout 03 is included unchanged to show a v1 layout wearing
+   the corp chrome with no edit of its own. */
+function CorpDeck() {
+  return (
+    <Deck brand="corp" footer="NCT · ข้อเสนอโครงการ (แบบฟอร์มบริษัท)">
+      {/* 03 under corp chrome: not one line of this slide changed */}
+      <SlideContent
+        title={en("5. Implementation Stage")}
+        items={[
+          "แบ่งงานเป็นสองส่วน คือการบริหารโครงการและการส่งมอบระบบ",
+          { text: "การบริหารโครงการดูแลขอบเขต เวลา และค่าใช้จ่าย", level: 2 },
+          { text: "การส่งมอบระบบครอบคลุมวิเคราะห์ ออกแบบ พัฒนา ทดสอบ และขึ้นระบบ", level: 2 },
+          "ทุกเฟสปิดด้วยเอกสารส่งมอบและการลงนามรับ",
+        ]}
+      />
+      {/* 17 · phase card */}
+      <SlidePhaseCard
+        title={en("5. Implementation Stage")}
+        meta={[
+          { label: en("Key Activity"), value: "ตั้งค่าสภาพแวดล้อม ติดตั้งฮาร์ดแวร์และซอฟต์แวร์" },
+          {
+            label: en("Participant"),
+            value: <>{en("NCT Infra Engineer")}, ทีมไอทีลูกค้า, {en("Business Analyst")}</>,
+          },
+        ]}
+        number="01"
+        phase={en("Preparation Phase")}
+        intro="สรุปสเปกเครื่องและบริการคลาวด์ที่ต้องเตรียมให้พร้อมก่อนเริ่มงานพัฒนา"
+      >
+        <div className="nct-cols">
+          <div>
+            <h3 className="nct-densehead">เครื่องและระบบปฏิบัติการ</h3>
+            <BulletList
+              dense
+              items={[
+                { text: <>{en("PRD")} · 4 คอร์ / 16GB / {en("SSD")} 300GB</> },
+                { text: <>{en("QA")} · 4 คอร์ / 16GB / {en("SSD")} 150GB</> },
+                { text: <>{en("Windows Server 2022")} ทั้งสองเครื่อง</> },
+              ]}
+            />
+          </div>
+          <div>
+            <h3 className="nct-densehead">บริการคลาวด์ที่ต้องเปิด</h3>
+            <BulletList
+              dense
+              items={[
+                { text: <>{en("Lambda")} · {en("PRD")} และ {en("QA")}</> },
+                { text: <>{en("EC2")} · แยกกลุ่มความปลอดภัยแอปกับฐานข้อมูล</> },
+                { text: <>{en("Cognito")} · เข้าสู่ระบบด้วยบัญชีองค์กร</> },
+              ]}
+            />
+          </div>
+        </div>
+      </SlidePhaseCard>
+      {/* 16 with rowSpan + groupColumn: the deliverables matrix, no new layout */}
+      <SlideDenseTable
+        title={en("5. Implementation Stage")}
+        intro="เอกสารส่งมอบรายเฟส และจุดที่ต้องลงนามรับก่อนเดินหน้าต่อ"
+        groupColumn={0}
+        widths={[2.2, 5.2, 1.4, 1.8]}
+        columns={[
+          { label: en("IMPLEMENTATION STAGE") },
+          { label: en("DELIVERABLES") },
+          { label: en("FORMAT"), align: "center" },
+          { label: en("SIGN-OFF"), align: "center" },
+        ]}
+        rows={[
+          [
+            { value: "1. เตรียมโครงการ" },
+            { value: "เอกสารเปิดโครงการ" },
+            { value: en("PDF"), align: "center" },
+            { value: "ไม่ต้องลงนาม", align: "center" },
+          ],
+          [
+            { value: "2. วิเคราะห์และออกแบบ", rowSpan: 2 },
+            { value: <>{en("Software Requirement Specification (SRS)")}</> },
+            { value: en("Word"), align: "center" },
+            { value: "ต้องลงนาม", align: "center", status: "ok" },
+          ],
+          [
+            null,
+            { value: <>{en("Business Process Flow (BPF)")}</> },
+            { value: en("Word"), align: "center" },
+            { value: "ต้องลงนาม", align: "center", status: "ok" },
+          ],
+          [
+            { value: "3. พัฒนา", rowSpan: 2 },
+            { value: "ซอร์สโค้ดและไฟล์โซลูชัน" },
+            { value: en("Solution"), align: "center" },
+            { value: "ไม่ต้องลงนาม", align: "center" },
+          ],
+          [
+            null,
+            { value: "พจนานุกรมข้อมูลและโครงสร้างตาราง" },
+            { value: en("Excel"), align: "center" },
+            { value: "ไม่ต้องลงนาม", align: "center" },
+          ],
+          [
+            { value: "4. ทดสอบ" },
+            { value: <>สถานการณ์ทดสอบ หลักฐาน และผล {en("UAT")}</> },
+            { value: en("Excel"), align: "center" },
+            { value: "ต้องลงนาม", align: "center", status: "ok" },
+          ],
+          [
+            { value: "5. ขึ้นระบบและรับประกัน", rowSpan: 2 },
+            { value: "คู่มือผู้ใช้และผู้ดูแลระบบ" },
+            { value: en("Word"), align: "center" },
+            { value: "ไม่ต้องลงนาม", align: "center" },
+          ],
+          [
+            null,
+            { value: "เอกสารอบรมและแผนถ่ายทอดความรู้" },
+            { value: en("Excel"), align: "center" },
+            { value: "ไม่ต้องลงนาม", align: "center" },
+          ],
+        ]}
+        takeaway="สามจุดที่ต้องลงนามคือ SRS, BPF และผล UAT — ทั้งสามอยู่ก่อนวันขึ้นระบบ"
+      />
+      {/* 18 · evidence strip. Real decks put screenshots of the real system
+          here; the demo only has the three house architecture frames. */}
+      <SlideEvidence
+        title={en("8. Project Training")}
+        kicker="วัตถุประสงค์ของการอบรม"
+        takeaway="อบรมสองหลักสูตร รวม 8 ชั่วโมง จบภายในสัปดาห์เดียวก่อนวันขึ้นระบบ"
+        figures={[
+          { src: photoSection, alt: "", caption: "อบรมที่สำนักงานลูกค้า 20–50 คน" },
+          { src: photoFacade, alt: "", caption: "อบรมกลุ่มย่อยในห้องประชุม 2–20 คน" },
+          { src: photoTower, alt: "", caption: <>อบรมออนไลน์ผ่าน {en("MS Teams")}</> },
+        ]}
+      >
+        <DataTable
+          widths={[2.2, 3.4, 1.2, 2.4]}
+          columns={[
+            "หลักสูตร",
+            "วัตถุประสงค์",
+            { label: "ระยะเวลา", align: "center" },
+            "เงื่อนไขการจัด",
+          ]}
+          rows={[
+            [
+              { value: "1. การใช้งานสำหรับผู้ใช้", bold: true },
+              { value: "เข้าใจการใช้งานระบบในงานประจำวัน" },
+              { value: "4 ชั่วโมง", align: "center" },
+              { value: "จัดครั้งเดียว ที่สำนักงานหรือออนไลน์" },
+            ],
+            [
+              { value: "2. การดูแลสำหรับผู้ดูแลระบบ", bold: true },
+              { value: "เข้าใจการบำรุงรักษาและแก้ปัญหาเบื้องต้น" },
+              { value: "4 ชั่วโมง", align: "center" },
+              { value: "จัดครั้งเดียว ที่สำนักงานหรือออนไลน์" },
+            ],
+          ]}
+        />
+      </SlideEvidence>
     </Deck>
   );
 }

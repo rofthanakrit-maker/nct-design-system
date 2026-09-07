@@ -19,15 +19,38 @@ No provider, no theme object. Two things only:
 Slides scale themselves to their container by default (`fit`, measured with a
 `ResizeObserver`). Pass `fit={false}` for a fixed 1280×720 board.
 
-## The 16 layouts
+## The 18 layouts
 
 `SlideCover` 01 · `SlideSection` 02 · `SlideContent` 03 · `SlideTwoColumn` 04 ·
 `SlideThreeCards` 05 · `SlideKeyFigures` 06 · `SlideQuote` 07 · `SlideFullImage` 08 ·
 `SlideTable` 09 · `SlideClosing` 10 · `SlideSplitPanel` 11 · `SlideFourCards` 12 ·
-`SlideProcessFlow` 13 · `SlideDiagram` 14 · `SlideAgenda` 15 · `SlideDenseTable` 16
+`SlideProcessFlow` 13 · `SlideDiagram` 14 · `SlideAgenda` 15 · `SlideDenseTable` 16 ·
+`SlidePhaseCard` 17 · `SlideEvidence` 18
 
 Compose with `Deck`. Building blocks: `BulletList`, `DataTable`, `TakeawayBand`,
 `DiagramBox`, `DiagramLink`, `DiagramGroup`, `NctLogo`, `NctMark`.
+
+## Two brand modes
+
+`<Deck brand="corp">` wears the chrome the company requires on every bid, studied
+from `NCT Template.pptx` — a full-bleed rule edge to edge instead of the 0.6in
+stub, the outlined lockup card bled off the top-right corner, and a
+three-segment bar at the foot instead of the hairline. It also repoints
+`--nct-accent` / `--nct-accent-up`, which every layout reads, so the whole deck
+follows.
+
+What does **not** move is the content palette: paper, ink, tints, status and the
+four category colours are shared, so a table means the same thing in either
+brand. Pick a mode per deck; the two never mix on one slide.
+
+`partnerMark` fills the second slot in the corp lockup with the client's or
+product's own badge — that is what the source template puts beside the NCT mark.
+On dark tones the lockup is dropped and the corner mark stands in: it is a white
+card with an accent outline, and on the navy bookends it would be a hole.
+
+PowerPoint gets the corp mode as a **separate file**,
+`NCT-Slide-Template-Corp.potx`, because a `.potx` layout cannot toggle its own
+chrome — the chrome is baked in. Same eighteen layouts, same numbering.
 
 ## The styling idiom
 
@@ -38,11 +61,13 @@ your own layout glue, use the CSS variables:
 | Family | Real names |
 |---|---|
 | Colour | `--nct-paper` `--nct-paper-2` `--nct-ink` `--nct-ink-2` `--nct-rule` `--nct-navy` `--nct-teal` `--nct-teal-up` `--nct-deep` `--nct-mid` `--nct-teal-b` |
+| Accent (brand-switched) | `--nct-accent` `--nct-accent-up` — read these, not `--nct-teal`, in anything new |
+| Corp brand | `--nct-corp` `--nct-corp-up` `--nct-corp-deep` `--nct-corp-dim` `--nct-corp-bar-mid` |
 | Status (data cells only) | `--nct-ok` `--nct-ok-tint` `--nct-warn` `--nct-warn-tint` `--nct-risk` `--nct-risk-tint` |
 | Category (max 4) | `--nct-cat-1` … `--nct-cat-4` |
 | Type | `--nct-fs-display` `--nct-fs-section` `--nct-fs-h1` `--nct-fs-stat` `--nct-fs-quote` `--nct-fs-lead` `--nct-fs-body` `--nct-fs-body-2` `--nct-fs-body-3` `--nct-fs-label` `--nct-fs-foot` `--nct-fs-densehead` `--nct-fs-densebody` `--nct-fs-tblhead` `--nct-fs-densecell` |
 | Family | `--nct-font-display` (Kanit, headings) `--nct-font-body` (Noto Sans Thai, copy) |
-| Grid | `--nct-mx` `--nct-cw` `--nct-gut` `--nct-fifth` |
+| Grid | `--nct-mx` `--nct-cw` `--nct-gut` `--nct-fifth` `--nct-evidence-h` `--nct-phase-tab-h` |
 
 Tokens are also importable as values: `import { color, space, fontSize, canvas } from '@nct/slides'`.
 
@@ -58,9 +83,9 @@ does not keep.
 - **Kanit is the heading voice, Noto Sans Thai the body voice.** Never swap them,
   never add a third family. Never italic — Thai italics are synthesised obliques.
 - **`--nct-fs-densecell` (10pt) is the floor.** Content that will not fit is a
-  second slide, never smaller type. The dense sizes are legal on layouts 11–14 and
-  16 only; 03/04/05 stay at 18/16/14pt. `SlideDenseTable` holds 8–9 rows at that
-  size once the takeaway strip has taken its 0.4in.
+  second slide, never smaller type. The dense sizes are legal on layouts 11–14,
+  16, 17 and 18 only; 03/04/05 stay at 18/16/14pt. `SlideDenseTable` holds 8–9
+  rows at that size once the takeaway strip has taken its 0.4in.
 - **On dark slides text is `--nct-paper`, dimmed with alpha — never grey.**
   Dark tones: `SlideCover`, `SlideSection`, `SlideAgenda`, `SlideClosing`,
   `SlideFullImage`, and the left panel of `SlideSplitPanel`.
@@ -87,6 +112,20 @@ does not keep.
   All three pin the strip to the foot of the body box, so the conclusion lands
   at the same y whether the grid runs four rows or ten.
 - `SlideCover` and `SlideClosing` appear once each, as the deck's bookends.
+- **`SlidePhaseCard` is a stage of a plan, not a section divider.** `meta` carries
+  the activity/participant pair the proposal template opens every phase with, one
+  or two rows and no more; `number` is typed, not counted, because phases merge
+  ("03–04" is a real value in the source). The tab is centred on the card's top
+  border and flush at the margin — the source protrudes it left by 0, 0.32, 0.42
+  and 0.69cm across its five slides, which is copy-paste jitter, not a rule.
+- **`SlideEvidence` needs real receipts.** Its two-to-four frames are screenshots
+  of the real system or photographs of the real room. Stock imagery in an evidence
+  strip is worse than no strip. The strip is a fixed height and the claim above it
+  shrinks, so the proof never gets cropped to make room for the table.
+- **`groupColumn` labels rows; `recommended` argues for a column.** Never set both
+  on the same index. A grouped column is normally merged with `rowSpan`, and every
+  row a merge swallows needs an explicit `null` in that position — the table is
+  `table-layout: fixed`, so a short row shifts every cell after it one column left.
 - **`SlideClosing` is the ask, not a thank-you.** Pass `nextSteps` (two to four
   actions, each with an owner) and `decisionBy`. `ขอบคุณครับ` is the title above
   them. A proposal whose last slide asks for nothing has spent the peak-end slot
@@ -110,7 +149,10 @@ does not keep.
 - **Rounded corners exist once, on L05.** `.nct-card` is 16px, `.nct-card--square`
   (L12) is 0, and the `.potx` draws the same split (`roundRect` on 05, `rect` on
   12). Three parallel points are a set and read softer; four category-coded ones
-  are a taxonomy and read as a grid. No third radius.
+  are a taxonomy and read as a grid. No third radius. The L17 tab, the L18 kicker
+  and the corp lockup's two bottom corners are **end-caps**, not card radii — a
+  full pill and a 0.1in corner, both drawn from the source and neither available
+  as a card style.
 - Card heights are fixed. Trim the copy; never stretch a card.
 - **Photographs: architecture and abstract only, never people at work.** Smiling
   meetings, handshakes and stacked hands are the templated-AI tell this system
@@ -134,7 +176,7 @@ does not keep.
   canvas) and `--nct-band-text-w` are tokens; layouts 02, 15, 10 and
   `SlideFullImage variant="fade"` all sit on them. Never retype the pixel values,
   and never introduce a fifth width.
-- **`.potx` parity is 16↔16 by count, and by rendering everywhere but two.**
+- **`.potx` parity is 18↔18 by count, and by rendering everywhere but two.**
   `SlideFullImage variant="fade"` and `SlideClosing imageMode="full"` are web-only
   treatments; PowerPoint layout 08 stays full-bleed and layout 10 keeps the 40%
   band. Every other layout renders the same on both sides. State it that way —
@@ -150,8 +192,8 @@ does not keep.
 import { CategoryKey, Deck, SlideSplitPanel, SlideDenseTable, SlideClosing } from '@nct/slides';
 import '@nct/slides/styles.css';
 
-// chrome and page numbers live on Deck, once
-<Deck footer="NCT · ข้อเสนอโครงการ" date="2569">
+// chrome and page numbers live on Deck, once - and so does the brand
+<Deck footer="NCT · ข้อเสนอโครงการ" date="2569">   {/* brand="corp" for a bid */}
   <SlideSplitPanel
     title="สภาพระบบบัญชีปัจจุบัน"
     context={['คีย์เอกสารซ้ำสามระบบ', { text: 'เฉลี่ย 1,200 ใบต่อเดือน', level: 2 }]}

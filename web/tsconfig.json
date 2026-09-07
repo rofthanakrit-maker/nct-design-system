@@ -12,5 +12,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["src"]
+  "//": "demo is in scope on purpose. It is the file everyone copies, and while it sat outside `include` a raw <>fragment</> passed as a BulletItem type-checked clean and rendered as an empty bullet.",
+  "include": ["src", "demo"]
 }

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""The 16 NCT slide layouts (10 core + 6 dense/proposal variants, v2)."""
+"""The 18 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3)."""
+import parts_master as PM
 from tokens import *
 from ooxml import *
 from parts_master import chrome, body_specs, FOOT_Y
@@ -9,6 +10,13 @@ MARK_AR = 229 / 360
 R16 = '<a:gd name="adj" fmla="val 4200"/>'      # ~16px corner on a 3.5in card
 LQUOTE = "&#8220;"
 PAD = 320040                                     # card inner padding (0.35in)
+# parts_master.chrome() owns placeholder idx 10 (date), 11 (footer) and 12 (page
+# number) on every layout, and OOXML wants idx unique across a shape tree. A
+# layout with more than nine content placeholders has to start above them, not
+# count up from 1 into them - L12 and L13 both did, and shipped four card and
+# five step placeholders sharing an idx with the chrome. scripts/check_template.py
+# is what catches it now.
+PH_FREE = 20
 
 
 def _logo(sid, rid, x, y, w):
@@ -32,13 +40,43 @@ def _diamond(sid, x, y, s, alpha=8):
 
 
 def _title(sid, prompt="ชื่อสไลด์"):
+    # the corporate template sets its title in near-black, not the house navy;
+    # that is chrome, so it moves with the brand
+    c = INK if PM.BRAND == "corp" else NAVY
     return placeholder(sid, "Title Placeholder", "title", MX, TITLE_Y, CW, TITLE_H,
-                       [S(prompt, sz=T_H1, color=NAVY, bold=True, font="mj", line=108000)],
+                       [S(prompt, sz=T_H1, color=c, bold=True, font="mj", line=108000)],
                        anchor="b")
 
 
-def _rule(sid, x=MX, y=RULE_Y, color=TEAL, alpha=None):
+def _rule(sid, x=MX, y=RULE_Y, color=None, alpha=None):
+    """The rule under the title.
+
+    In corp mode it is a full-bleed band at the same y rather than a 0.6in stub -
+    the one piece of geometry the two brands do not share, and the reason the
+    band sits at RULE_Y instead of the source's own 2.29cm: nothing downstream
+    moves, so every layout keeps its rhythm in either brand.
+
+    A caller that names its own colour (L15's TEAL_UP divider on a dark slide)
+    is not the title rule and is left alone.
+    """
+    if color is None:
+        if PM.BRAND == "corp":
+            return shape(sid, "Accent Rule", 0, y, SW, CORP_RULE_H, solid(CORP))
+        color = TEAL
     return shape(sid, "Accent Rule", x, y, RULE_W, RULE_H, solid(color, alpha))
+
+
+def accent():
+    """The brand's accent. Layouts 17-18 read this instead of naming TEAL, the
+    same way slides.css reads --nct-accent."""
+    return CORP if PM.BRAND == "corp" else TEAL
+
+
+def accent_up():
+    """The accent lifted until it reads on a dark panel. Both brands' anchors
+    fail there - TEAL is 2.8:1 on NAVY and CORP is 1.5:1 - so both keep a
+    lifted twin, and both are unusable on paper."""
+    return CORP_UP if PM.BRAND == "corp" else TEAL_UP
 
 
 def _foot_scrim(sid):
@@ -318,26 +356,26 @@ def l12_cards_band(rid_mark_color):
         s.append(placeholder(sid, "Card %d Number" % (i + 1), "body",
                              x + PAD, CARD_Y + PAD + 137160, QUARTER - 2 * PAD, 411480,
                              [S("0%d" % (i + 1), sz=T_STEPNUM, color=CATS[i], bold=True,
-                                font="mj", line=100000)], idx=i * 3 + 1, anchor="t")); sid += 1
+                                font="mj", line=100000)], idx=PH_FREE + i * 3, anchor="t")); sid += 1
         s.append(placeholder(sid, "Card %d Heading" % (i + 1), "body",
                              x + PAD, CARD_Y + PAD + 640080, QUARTER - 2 * PAD, 548640,
                              [S("หัวข้อ %d" % (i + 1), sz=T_DENSEHEAD, color=NAVY, bold=True,
-                                font="mj", line=118000)], idx=i * 3 + 2, anchor="t")); sid += 1
+                                font="mj", line=118000)], idx=PH_FREE + i * 3 + 1, anchor="t")); sid += 1
         s.append(placeholder(sid, "Card %d Body" % (i + 1), "body",
                              x + PAD, CARD_Y + PAD + 1280160, QUARTER - 2 * PAD,
                              CARD_H - 2 * PAD - 1280160,
                              [S("คำอธิบายสั้น ๆ", sz=T_DENSEBODY, color=INK, line=132000,
-                                space_before=200)], idx=i * 3 + 3, anchor="t")); sid += 1
+                                space_before=200)], idx=PH_FREE + i * 3 + 2, anchor="t")); sid += 1
     s.append(shape(sid, "Band", MX, CARD_Y + CARD_H + 137160, CW, 548640, solid(NAVY)))
     sid += 1
     s.append(placeholder(sid, "Band Label", "body", MX + 228600,
                          CARD_Y + CARD_H + 137160 + 91440, 2011680, 365760,
                          [S("สรุป", sz=T_LABEL, color=TEAL_UP, bold=True, spc=120,
-                            line=100000)], idx=13, anchor="ctr")); sid += 1
+                            line=100000)], idx=PH_FREE + 12, anchor="ctr")); sid += 1
     s.append(placeholder(sid, "Band Copy", "body", MX + 2240280,
                          CARD_Y + CARD_H + 137160 + 91440, CW - 2240280 - 228600, 365760,
                          [S("ประเด็นสรุปรวมสี่การ์ด", sz=T_BODY3, color=PAPER, line=130000)],
-                         idx=14, anchor="ctr"))
+                         idx=PH_FREE + 13, anchor="ctr"))
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("12 Four Cards + Band", "obj", s, bgfill=solid(PAPER))
 
@@ -359,15 +397,15 @@ def l13_process(rid_mark_color):
         s.append(placeholder(sid, "Step %d Chip Num" % (i + 1), "body",
                              x + 228600, STEP_Y + 228600, 311280, 311280,
                              [S(str(i + 1), sz=1400, color=PAPER, bold=True, font="mj",
-                                algn="ctr", line=100000)], idx=i * 3 + 2, anchor="ctr")); sid += 1
+                                algn="ctr", line=100000)], idx=PH_FREE + i * 3, anchor="ctr")); sid += 1
         s.append(placeholder(sid, "Step %d Head" % (i + 1), "body",
                              x + 228600, STEP_Y + 731520, FIFTH - 457200, 411480,
                              [S("ขั้นตอน %d" % (i + 1), sz=T_DENSEHEAD, color=NAVY, bold=True,
-                                font="mj", line=115000)], idx=i * 3 + 3, anchor="t")); sid += 1
+                                font="mj", line=115000)], idx=PH_FREE + i * 3 + 1, anchor="t")); sid += 1
         s.append(placeholder(sid, "Step %d Body" % (i + 1), "body",
                              x + 228600, STEP_Y + 1143000, FIFTH - 457200, 640080,
                              [S("คำอธิบายสั้น", sz=T_DENSEBODY, color=INK, line=128000)],
-                             idx=i * 3 + 4, anchor="t")); sid += 1
+                             idx=PH_FREE + i * 3 + 2, anchor="t")); sid += 1
         if i < n - 1:
             cx = x + FIFTH + GUT // 2 - 45720
             s.append(shape(sid, "Connector %d" % (i + 1), cx, STEP_Y + STEP_H // 2 - 45720,
@@ -377,11 +415,11 @@ def l13_process(rid_mark_color):
     s.append(placeholder(sid, "Result Label", "body", MX + 228600,
                          STEP_Y + STEP_H + 137160 + 91440, 2011680, 365760,
                          [S("ผลลัพธ์", sz=T_LABEL, color=TEAL, bold=True, spc=120,
-                            line=100000)], idx=17, anchor="ctr")); sid += 1
+                            line=100000)], idx=PH_FREE + 15, anchor="ctr")); sid += 1
     s.append(placeholder(sid, "Result Copy", "body", MX + 2240280,
                          STEP_Y + STEP_H + 137160 + 91440, CW - 2240280 - 228600, 365760,
                          [S("ผลลัพธ์รวมของกระบวนการ", sz=T_BODY3, color=INK, line=130000)],
-                         idx=18, anchor="ctr"))
+                         idx=PH_FREE + 16, anchor="ctr"))
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("13 Process Flow", "obj", s, bgfill=solid(PAPER))
 
@@ -452,3 +490,135 @@ def l16_dense_table(rid_mark_color):
     s += _takeaway(15, 5)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("16 Dense Table", "tbl", s, bgfill=solid(PAPER))
+
+
+# ---------------------------------------------------------------- 17 Phase Card
+def l17_phase(rid_mark_color):
+    """A stage of the implementation plan: the activity/participant pair on top,
+    then an outlined canvas tabbed with the phase number.
+
+    The tab is centred on the card's top border. The source protrudes it left of
+    the card by 0, 0.32, 0.42 and 0.69cm across its five slides - copy-paste
+    jitter, not a decision, and on three of the five it starts outside the
+    margin. Flush at MX here; only the vertical overlap is kept.
+    """
+    A = accent()
+    LAB_W = 1500000                       # "Key Activity :" - fits the longer of the two
+    PAD_S = 228600                        # 0.25in, inside the card
+    meta_h = 2 * PHASE_META_H
+    card_y = BODY_Y + meta_h + GUT + PHASE_TAB_H // 2
+    card_h = BODY_Y + BODY_H - card_y
+    s = [_title(10), _rule(11)]
+    sid = 12
+    for i, (lab, val) in enumerate((("Key Activity", "กิจกรรมหลักของเฟสนี้"),
+                                    ("Participant", "ผู้เกี่ยวข้องในเฟสนี้"))):
+        y = BODY_Y + i * PHASE_META_H
+        s.append(placeholder(sid, "%s Label" % lab, "body", MX, y, LAB_W, PHASE_META_H,
+                             [S("%s :" % lab, sz=T_BODY3, color=INK, bold=True,
+                                font="mj", line=130000)], idx=i * 2 + 1, anchor="ctr"))
+        sid += 1
+        s.append(placeholder(sid, "%s Value" % lab, "body", MX + LAB_W, y,
+                             CW - LAB_W, PHASE_META_H,
+                             [S(val, sz=T_BODY3, color=INK, line=130000)],
+                             idx=i * 2 + 2, anchor="ctr"))
+        sid += 1
+    s.append(shape(sid, "Phase Card", MX, card_y, CW, card_h, nofill(),
+                   line='<a:ln w="12700">%s</a:ln>' % solid(A)))
+    sid += 1
+    # the tab: one pill, number cell then label. adj 50000 gives a full end-cap,
+    # which is what the source draws on both ends - not a third card radius.
+    tab_w = PHASE_NUM_W + 2926080
+    s.append(shape(sid, "Phase Tab", MX, card_y - PHASE_TAB_H // 2, tab_w,
+                   PHASE_TAB_H, solid(A), prst="roundRect",
+                   adj='<a:gd name="adj" fmla="val 50000"/>'))
+    sid += 1
+    s.append(placeholder(sid, "Phase Number", "body", MX + 91440,
+                         card_y - PHASE_TAB_H // 2, PHASE_NUM_W, PHASE_TAB_H,
+                         [S("01", sz=T_DENSEHEAD, color=PAPER, bold=True, font="mj",
+                            algn="ctr", line=100000)], idx=5, anchor="ctr"))
+    sid += 1
+    lab_x = 91440 + PHASE_NUM_W + 137160
+    # the hairline between the number cell and the label, same as .nct-phase__num
+    s.append(shape(sid, "Phase Tab Divider", MX + lab_x - 137160,
+                   card_y - PHASE_TAB_H // 2 + 68580, 12700, PHASE_TAB_H - 137160,
+                   solid(PAPER, 32)))
+    sid += 1
+    s.append(placeholder(sid, "Phase Label", "body", MX + lab_x,
+                         card_y - PHASE_TAB_H // 2, tab_w - lab_x - 137160, PHASE_TAB_H,
+                         [S("ชื่อเฟส", sz=T_BODY3, color=PAPER, bold=True, font="mj",
+                            line=100000)], idx=6, anchor="ctr"))
+    sid += 1
+    s.append(placeholder(sid, "Phase Intro", "body", MX + PAD_S,
+                         card_y + PHASE_TAB_H // 2 + 91440, CW - 2 * PAD_S, 274320,
+                         [S("ประโยคนำหนึ่งบรรทัด", sz=T_DENSEBODY, color=INK2,
+                            line=132000)], idx=7))
+    sid += 1
+    body_top = card_y + PHASE_TAB_H // 2 + 91440 + 274320 + 91440
+    s.append(placeholder(sid, "Phase Body", "body", MX + PAD_S, body_top,
+                         CW - 2 * PAD_S, card_y + card_h - PAD_S - body_top,
+                         dense_specs(["เนื้อหาของเฟส", "ระดับที่สอง"],
+                                     bullet_color=A), idx=8))
+    s += chrome(dark=False, mark_rid=rid_mark_color)
+    return _wrap("17 Phase Card", "obj", s, bgfill=solid(PAPER))
+
+
+# ---------------------------------------------------------------- 18 Evidence Strip
+def l18_evidence(rid_mark_color):
+    """A claim, a one-line finding, and three frames of proof underneath it.
+
+    The band above the strip is the takeaway, not a section label. The source
+    puts "SAMPLE OF TRAINING SETUP" there, which names the photographs without
+    saying what they prove - the slide ends on evidence with no finding.
+
+    The frames are the deck's receipts: screenshots of the real system, photos
+    of the real room. Stock imagery here is worse than no strip at all.
+    """
+    A = accent()
+    CAP_H, CAP_GAP = 228600, 57150
+    kick_h = PHASE_TAB_H
+    claim_y = BODY_Y + kick_h + 137160
+    strip_y = BODY_Y + BODY_H - EVIDENCE_H
+    band_y = strip_y - 137160 - TAKE_H
+    s = [_title(10), _rule(11),
+         shape(12, "Kicker Pill", MX, BODY_Y, 3200400, kick_h, solid(A),
+               prst="roundRect", adj='<a:gd name="adj" fmla="val 50000"/>'),
+         placeholder(13, "Kicker", "body", MX + 182880, BODY_Y, 3200400 - 365760,
+                     kick_h, [S("หัวข้อของหลักฐาน", sz=T_BODY3, color=PAPER, bold=True,
+                                font="mj", algn="ctr", line=100000)], idx=1,
+                     anchor="ctr"),
+         tbl_placeholder(14, "Claim Placeholder", MX, claim_y, CW,
+                         band_y - 137160 - claim_y, 2),
+         # the takeaway on this layout is dark, not tinted: it is the strip's
+         # header as well as the finding, and it has to hold the two apart
+         shape(15, "Takeaway Band", MX, band_y, CW, TAKE_H, solid(NAVY)),
+         placeholder(16, "Takeaway Label", "body", MX + 182880,
+                     band_y + (TAKE_H - 289560) // 2, 1828800, 289560,
+                     [S("สรุป", sz=T_LABEL, color=accent_up(), bold=True, spc=120,
+                        line=100000)], idx=3, anchor="ctr"),
+         placeholder(17, "Takeaway Copy", "body", MX + 2011680,
+                     band_y + (TAKE_H - 289560) // 2, CW - 2011680 - 182880, 289560,
+                     [S("ข้อสรุปหนึ่งบรรทัด", sz=T_BODY3, color=PAPER, line=100000)],
+                     idx=4, anchor="ctr")]
+    sid, idx = 18, PH_FREE
+    for i in range(3):
+        x = MX + i * (THIRD + GUT)
+        s.append(placeholder(sid, "Caption %d" % (i + 1), "body", x, strip_y, THIRD,
+                             CAP_H, [S("สิ่งที่เห็นในภาพ", sz=T_DENSEBODY, color=INK2,
+                                       line=130000)], idx=idx, anchor="ctr"))
+        sid += 1
+        idx += 1
+        # the hairline .nct-evidence__media draws on the web. It is also what
+        # makes an unfilled strip read as three frames waiting for a screenshot
+        # rather than as blank space.
+        s.append(shape(sid, "Evidence %d Frame" % (i + 1), x,
+                       strip_y + CAP_H + CAP_GAP, THIRD,
+                       EVIDENCE_H - CAP_H - CAP_GAP, nofill(),
+                       line='<a:ln w="12700">%s</a:ln>' % solid(RULE)))
+        sid += 1
+        s.append(pic_placeholder(sid, "Evidence %d" % (i + 1), x,
+                                 strip_y + CAP_H + CAP_GAP, THIRD,
+                                 EVIDENCE_H - CAP_H - CAP_GAP, idx))
+        sid += 1
+        idx += 1
+    s += chrome(dark=False, mark_rid=rid_mark_color)
+    return _wrap("18 Evidence Strip", "picTx", s, bgfill=solid(PAPER))

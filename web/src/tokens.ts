@@ -23,6 +23,11 @@ export const color = {
   cat_2: '#216B7F',
   cat_3: '#4E8FA8',
   cat_4: '#16324F',
+  corp: '#006666',
+  corp_deep: '#193B36',
+  corp_up: '#8CC2C2',
+  corp_dim: '#E1E1E1',
+  corp_bar_mid: '#A9C2C2',
 } as const;
 
 /** slide canvas in px at 96dpi - the .potx is 13.333in x 7.5in */
@@ -46,6 +51,16 @@ export const space = {
   body_h: 456,
   take_h: 43.2,
   note_up: 52.8,
+  corp_rule_h: 7.2,
+  corp_lock_w: 172.8,
+  corp_lock_h: 57.6,
+  corp_lock_r: 9.6,
+  corp_bar_seg: 86.4,
+  corp_bar_h: 14.4,
+  phase_meta_h: 28.8,
+  phase_tab_h: 43.2,
+  phase_num_w: 52.8,
+  evidence_h: 172.8,
 } as const;
 
 export const fontSize = {

@@ -28,7 +28,8 @@ BODY_LEVELS = [
 
 def txstyles():
     title = ('<p:titleStyle>%s</p:titleStyle>'
-             % lvl_ppr(1, sz=T_H1, color=NAVY, bold=True, font="mj", line=108000))
+             % lvl_ppr(1, sz=T_H1, color=INK if BRAND == "corp" else NAVY,
+                       bold=True, font="mj", line=108000))
     body = ('<p:bodyStyle>'
             + "".join(lvl_ppr(i + 1, **kw) for i, kw in enumerate(BODY_LEVELS))
             + '</p:bodyStyle>')
@@ -43,9 +44,11 @@ def body_specs(prompts):
     return [S(p, **BODY_LEVELS[i]) for i, p in enumerate(prompts)]
 
 
-def _sldnum_sp(sid, dark):
+def _sldnum_sp(sid, dark, x=None, y=None, w=1371600):
     c = PAPER if dark else INK2
     alpha = '<a:alpha val="60000"/>' if dark else ''
+    x = (SW - MX - w) if x is None else x
+    y = FOOT_Y if y is None else y
     return ('<p:sp><p:nvSpPr><p:cNvPr id="%d" name="Slide Number Placeholder"/>'
             '<p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr>'
             '<p:nvPr><p:ph type="sldNum" sz="quarter" idx="12"/></p:nvPr></p:nvSpPr>'
@@ -56,10 +59,58 @@ def _sldnum_sp(sid, dark):
             '<a:rPr lang="th-TH" sz="%d"><a:solidFill><a:srgbClr val="%s">%s</a:srgbClr>'
             '</a:solidFill><a:latin typeface="+mn-lt"/><a:cs typeface="+mn-cs"/></a:rPr>'
             '<a:t>2</a:t></a:fld><a:endParaRPr lang="th-TH" sz="%d"/></a:p></p:txBody></p:sp>'
-            % (sid, xfrm(SW - MX - 1371600, FOOT_Y, 1371600, 274320),
+            % (sid, xfrm(x, y, w, 274320),
                lst_style([dict(sz=T_FOOT, color=c, algn="r",
                                alpha=72 if dark else None)]),
                SLDNUM_GUID, T_FOOT, c, alpha, T_FOOT))
+
+
+# Build-time brand switch, set once by build.py before the layout pass. A
+# PowerPoint layout cannot toggle its own chrome the way the React <Deck> can -
+# the chrome is baked into the layout - so the corp deck is a second .potx built
+# from the same source rather than a second set of layouts inside one file.
+BRAND = "web"
+
+
+def _corp_chrome(dark, mark_rid, first_id):
+    """v3: the chrome NCT Template.pptx requires on every bid - three-segment
+    foot bar hard against the bottom-left corner, page number right, and the
+    outlined lockup card bled off the top-right. No hairline and no date slot:
+    the corporate template draws neither, and the bar is already the horizontal
+    the rule would have been."""
+    out = []
+    c = PAPER if dark else INK2
+    alpha = 72 if dark else None
+    bar_y = SH - CORP_BAR_H - 45720
+    for i, col in enumerate((CORP, CORP_BAR_MID, CORP_DIM)):
+        out.append(shape(first_id + i, "Foot Bar %d" % (i + 1), i * CORP_BAR_SEG,
+                         bar_y, CORP_BAR_SEG, CORP_BAR_H, solid(col)))
+    # the footer slot survives so a deck can still carry a job name; it starts
+    # clear of the bar instead of centring on a rule that no longer exists
+    out.append(placeholder(first_id + 3, "Footer Placeholder", "ftr",
+                           3 * CORP_BAR_SEG + 228600, SH - 457200, 4572000, 274320,
+                           [S("", sz=T_FOOT, color=c, alpha=alpha)], idx=11,
+                           anchor="ctr"))
+    out.append(_sldnum_sp(first_id + 4, dark, x=SW - 228600 - 1371600, y=SH - 457200))
+    # white card on an accent outline - it only reads on a light ground, and the
+    # source's own dark slides carry the bare mark instead
+    if mark_rid and not dark:
+        lx, lh = SW - CORP_LOCK_W, CORP_LOCK_H
+        # the box runs from -lh/2 to +lh; rot=180 puts the two rounded corners at
+        # the bottom, and the top edge sits off-canvas so its outline is clipped
+        out.append(shape(first_id + 5, "Corner Lockup", lx, -lh // 2,
+                         CORP_LOCK_W, lh + lh // 2, solid(PAPER),
+                         prst="round2SameRect", rot=10800000,
+                         adj='<a:gd name="adj1" fmla="val 12000"/>'
+                             '<a:gd name="adj2" fmla="val 0"/>',
+                         line='<a:ln w="12700">%s</a:ln>' % solid(CORP)))
+        # only the lower half of the card is on canvas, so the mark is centred
+        # in CORP_LOCK_H, not in the shape's own box
+        mw = 548640
+        mh = int(mw * MARK_H / MARK_W)
+        out.append(pic(first_id + 6, "NCT Mark", mark_rid,
+                       lx + (CORP_LOCK_W - mw) // 2, (CORP_LOCK_H - mh) // 2, mw, mh))
+    return out
 
 
 def chrome(dark=False, mark_rid=None, first_id=90):
@@ -69,6 +120,8 @@ def chrome(dark=False, mark_rid=None, first_id=90):
     of the two gradients, under the 4.5:1 a 10pt line needs. L01 and L10 also get
     a foot scrim, because no alpha clears AA on TEAL_B.
     """
+    if BRAND == "corp":
+        return _corp_chrome(dark, mark_rid, first_id)
     out = []
     c = PAPER if dark else INK2
     alpha = 72 if dark else None
@@ -89,10 +142,14 @@ def chrome(dark=False, mark_rid=None, first_id=90):
 
 def slide_master(mark_rid, n_layouts=16):
     s = []
+    corp = BRAND == "corp"
     s.append(placeholder(2, "Title Placeholder", "title", MX, TITLE_Y, CW, TITLE_H,
-                         [S("แก้ไขรูปแบบชื่อเรื่องต้นแบบ", sz=T_H1, color=NAVY,
+                         [S("แก้ไขรูปแบบชื่อเรื่องต้นแบบ", sz=T_H1,
+                            color=INK if corp else NAVY,
                             bold=True, font="mj", line=108000)], anchor="b"))
-    s.append(shape(3, "Title Rule", MX, RULE_Y, RULE_W, RULE_H, solid(TEAL)))
+    s.append(shape(3, "Title Rule", 0 if corp else MX, RULE_Y,
+                   SW if corp else RULE_W, CORP_RULE_H if corp else RULE_H,
+                   solid(CORP if corp else TEAL)))
     s.append(placeholder(4, "Text Placeholder", "body", MX, BODY_Y, CW, BODY_H,
                          body_specs(["แก้ไขรูปแบบข้อความต้นแบบ", "ระดับที่สอง", "ระดับที่สาม"]),
                          idx=1))

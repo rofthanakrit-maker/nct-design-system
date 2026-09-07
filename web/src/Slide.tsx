@@ -49,6 +49,20 @@ export function isDarkTone(tone: SlideTone): boolean {
   return DARK_TONES.includes(tone);
 }
 
+/**
+ * Which brand furniture the slide wears.
+ *
+ * `web` is the house system studied from nctthai.com — 0.6in teal rule, footer
+ * hairline with date/footer/mark/page. `corp` is the chrome the company
+ * requires on every bid, studied from `NCT Template.pptx`: a full-bleed rule
+ * edge to edge, the outlined lockup card in the top-right corner, and a
+ * three-segment bar at the foot instead of the hairline.
+ *
+ * Only the chrome and `--nct-accent` change. Paper, ink, tints, status and
+ * category colours are shared, so a table renders identically in either mode.
+ */
+export type SlideBrand = "web" | "corp";
+
 export interface SlideChromeProps {
   /** Footer text, centred on the bottom rule. Set once for the whole deck. */
   footer?: string;
@@ -58,6 +72,17 @@ export interface SlideChromeProps {
   pageNumber?: number | string;
   /** Hide the whole footer band (cover slides sometimes want this). */
   hideFooter?: boolean;
+  /**
+   * `"corp"` swaps in the mandatory proposal chrome. Set it once on `Deck` and
+   * every slide inherits it. Defaults to `"web"`.
+   */
+  brand?: SlideBrand;
+  /**
+   * Client or product badge shown beside the NCT mark in the corp corner
+   * lockup — the slot the source template fills with the project's own logo.
+   * Light tones only; ignored in `web` mode.
+   */
+  partnerMark?: string;
 }
 
 export interface SlideProps extends SlideChromeProps {
@@ -86,31 +111,58 @@ export function Slide({
   date,
   pageNumber,
   hideFooter,
+  brand = "web",
+  partnerMark,
   className,
   style,
   children,
 }: SlideProps) {
   const dark = isDarkTone(tone);
+  const corp = brand === "corp";
   const fitRef = useRef<HTMLDivElement>(null);
   const scale = useFitScale(fitRef, fit);
   const board = (
     <div
-      className={["nct-slide", TONE_CLASS[tone], className].filter(Boolean).join(" ")}
+      className={["nct-slide", TONE_CLASS[tone], corp ? "nct-slide--corp" : "", className]
+        .filter(Boolean)
+        .join(" ")}
       style={style}
     >
+      {/* The corner lockup is a white card with a teal outline, so it only reads
+          on a light ground. On the dark bookends corp mode keeps the plain
+          corner mark the footer already carries — which is what the source
+          template does on its own dark slides. */}
+      {corp && !dark && (
+        <div className="nct-corp-lock">
+          {partnerMark && <img className="nct-corp-lock__partner" src={partnerMark} alt="" />}
+          <img className="nct-corp-lock__mark" src={markColor} alt="" />
+        </div>
+      )}
       {children}
       {/* the gradient tones run their light end into the bottom-right corner,
           under the page number: --nct-teal-b is 4.0:1 against white even at full
           opacity, so the ground is darkened rather than the ink lightened */}
       {(tone === "open" || tone === "close") && <div className="nct-tone-foot" />}
-      {!hideFooter && (
-        <div className="nct-footer">
-          <span>{date}</span>
-          <span className="nct-footer__text">{footer}</span>
-          <img className="nct-footer__mark" src={dark ? markWhite : markColor} alt="" />
-          <span className="nct-footer__page">{pageNumber}</span>
-        </div>
-      )}
+      {!hideFooter &&
+        (corp ? (
+          <div className="nct-corp-foot">
+            {/* three explicit segments; the source draws the middle one by
+                overlapping two bars at 75% alpha and --nct-corp-bar-mid is that
+                mix, precomputed. Decoration only — nothing sits on them. */}
+            <div className="nct-corp-bar" aria-hidden="true">
+              <i /><i /><i />
+            </div>
+            <span className="nct-corp-foot__text">{footer}</span>
+            <span className="nct-corp-foot__page">{pageNumber}</span>
+          </div>
+        ) : (
+          <div className="nct-footer">
+            <span>{date}</span>
+            <span className="nct-footer__text">{footer}</span>
+            <img className="nct-footer__mark" src={dark ? markWhite : markColor} alt="" />
+            <span className="nct-footer__page">{pageNumber}</span>
+          </div>
+        ))}
     </div>
   );
   if (!fit) return board;

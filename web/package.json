@@ -1,7 +1,7 @@
 {
   "name": "@nct/slides",
   "version": "2.0.0",
-  "description": "NCT slide design system as React components - mirrors the 16 layouts in NCT-Slide-Template.potx",
+  "description": "NCT slide design system as React components - mirrors the 18 layouts in NCT-Slide-Template.potx, in both brand modes",
   "license": "UNLICENSED",
   "private": true,
   "type": "module",

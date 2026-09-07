@@ -4,9 +4,15 @@
  * One component per layout in NCT-Slide-Template.potx, same numbering, so a
  * design built here can be rebuilt in PowerPoint by picking the layout with the
  * matching number. Import "@nct/slides/styles.css" once at the app root.
+ *
+ * Eighteen layouts and two brand modes. `<Deck brand="corp">` swaps in the
+ * chrome the company requires on every bid - full-bleed rule, corner lockup,
+ * three-segment foot bar - and repoints the accent; PowerPoint gets that as a
+ * separate NCT-Slide-Template-Corp.potx, because a .potx layout cannot toggle
+ * its own chrome.
  */
 export { Slide, SlideTitle, Deck, isDarkTone } from "./Slide";
-export type { SlideProps, SlideChromeProps, SlideTone, DeckProps } from "./Slide";
+export type { SlideProps, SlideChromeProps, SlideTone, SlideBrand, DeckProps } from "./Slide";
 
 export {
   NctLogo,
@@ -50,6 +56,8 @@ export {
   SlideDiagram,
   SlideAgenda,
   SlideDenseTable,
+  SlidePhaseCard,
+  SlideEvidence,
 } from "./layouts";
 export type {
   SlideCoverProps,
@@ -74,6 +82,12 @@ export type {
   FlowStep,
   FlowSteps,
   AgendaItems,
+  SlidePhaseCardProps,
+  PhaseMeta,
+  PhaseMetaRows,
+  SlideEvidenceProps,
+  EvidenceFigure,
+  EvidenceFigures,
 } from "./layouts";
 
 /* Stock imagery, inlined as data URIs so it survives a CSP that blocks external

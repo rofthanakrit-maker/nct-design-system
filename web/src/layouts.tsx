@@ -657,7 +657,7 @@ export function SlideAgenda({
 /* ---------------------------------------------------------------- 16 */
 export interface SlideDenseTableProps
   extends Base,
-    Pick<DataTableProps, "columns" | "rows" | "widths"> {
+    Pick<DataTableProps, "columns" | "rows" | "widths" | "groupColumn"> {
   title: ReactNode;
   intro?: ReactNode;
   /**
@@ -682,6 +682,7 @@ export function SlideDenseTable({
   columns,
   rows,
   widths,
+  groupColumn,
   legend,
   footnote,
   takeawayLabel = "สรุป",
@@ -693,7 +694,7 @@ export function SlideDenseTable({
       <SlideTitle>{title}</SlideTitle>
       <div className="nct-body">
         {intro && <p className="nct-dense nct-dense--lead">{intro}</p>}
-        <DataTable columns={columns} rows={rows} widths={widths} />
+        <DataTable columns={columns} rows={rows} widths={widths} groupColumn={groupColumn} />
         {(legend || footnote) && (
           <p className="nct-note">
             <span>{legend}</span>
@@ -701,6 +702,172 @@ export function SlideDenseTable({
           </p>
         )}
         <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
+      </div>
+    </Slide>
+  );
+}
+
+/* ================================================================ v3
+   The two layouts studied from NCT Template.pptx slides 33-43 - the deck the
+   company requires on every bid. They wear the corp chrome by default (pass
+   `brand="corp"` on the Deck) but render in either mode: only --nct-accent and
+   the furniture change, never the grid.
+
+   The other nine source slides did not need a layout of their own:
+   - the concept explainers (33, 34) are SlideDiagram - lede, figure, stated
+     conclusion, which is the same shape with the summary paragraph promoted to
+     a labelled band;
+   - the deliverables matrix (40) is SlideDenseTable with the `rowSpan` and
+     `groupColumn` this version added to DataTable;
+   - the support model (41) is SlideSplitPanel or SlideProcessFlow. Its diagonal
+     photo band was deliberately not adopted: the frame behind it is a
+     headset-and-smiles stock shot, the exact people-at-work photograph this
+     system bans, and a layout would have enshrined it;
+   - the thank-you (43) is SlideClosing, which asks for something.
+   ---------------------------------------------------------------- 17 */
+
+export interface PhaseMeta {
+  /** "Key Activity", "Participant" — rendered bold with a colon after it. */
+  label: ReactNode;
+  value: ReactNode;
+}
+
+/**
+ * One or two. The source runs exactly two on all five phase slides and there is
+ * no room for a third: each row is `--nct-phase-meta-h` and the card below has
+ * to keep its 14pt of content height.
+ */
+export type PhaseMetaRows = [PhaseMeta] | [PhaseMeta, PhaseMeta];
+
+export interface SlidePhaseCardProps extends Base {
+  title: ReactNode;
+  /** The "Key Activity : … / Participant : …" pair the template opens with. */
+  meta?: PhaseMetaRows;
+  /** "01", "03–04" — typed, not counted. Phases merge, and the source's do. */
+  number: string;
+  /** "Preparation Phase", "Go-Live & Warranty Phase". */
+  phase: ReactNode;
+  /** One line under the tab, inside the card. */
+  intro?: ReactNode;
+  /** The phase's own content — a flow, a panel pair, a table, a drawing. */
+  children?: ReactNode;
+}
+
+/**
+ * 17 · Phase Card. A stage of the implementation plan: the activity/participant
+ * pair on top, then an outlined canvas tabbed with the phase number.
+ *
+ * The tab is centred on the card's top border rather than hung off its left
+ * edge. The source protrudes it by 0, 0.32, 0.42 and 0.69cm across its five
+ * slides — copy-paste jitter, not a decision, and a tab that starts outside the
+ * margin on three slides out of five is not a rule anyone can follow.
+ */
+export function SlidePhaseCard({
+  title,
+  meta,
+  number,
+  phase,
+  intro,
+  children,
+  ...chrome
+}: SlidePhaseCardProps) {
+  return (
+    <Slide {...chrome}>
+      <SlideTitle>{title}</SlideTitle>
+      <div className="nct-body nct-body--phase">
+        {meta && (
+          <dl className="nct-phase-meta">
+            {meta.map((m, i) => (
+              <div className="nct-phase-meta__row" key={i}>
+                <dt className="nct-phase-meta__label">{m.label} :</dt>
+                <dd className="nct-phase-meta__value">{m.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+        <div className="nct-phase">
+          <div className="nct-phase__tab">
+            <span className="nct-phase__num">{number}</span>
+            <span className="nct-phase__label">{phase}</span>
+          </div>
+          <div className="nct-phase__card">
+            {intro && <p className="nct-phase__intro">{intro}</p>}
+            {children}
+          </div>
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ---------------------------------------------------------------- 18 */
+export interface EvidenceFigure {
+  src: string;
+  alt?: string;
+  /** What the reader is looking at. One line — it sits above the frame. */
+  caption: ReactNode;
+}
+
+/**
+ * Two to four, as a tuple union rather than a sentence. The strip is a fixed
+ * `--nct-evidence-h` tall and the frames divide `--nct-cw` between them: at
+ * five each one is 199px wide holding a 16:9 screenshot 112px tall, which is
+ * not evidence of anything.
+ */
+export type EvidenceFigures =
+  | [EvidenceFigure, EvidenceFigure]
+  | [EvidenceFigure, EvidenceFigure, EvidenceFigure]
+  | [EvidenceFigure, EvidenceFigure, EvidenceFigure, EvidenceFigure];
+
+export interface SlideEvidenceProps extends Base {
+  title: ReactNode;
+  /** The accent pill above the content — "Purpose of the training". */
+  kicker?: ReactNode;
+  /** The claim: usually a `DataTable`, sometimes a `BulletList`. */
+  children?: ReactNode;
+  /** The proof: real screenshots or real site photographs, never stock. */
+  figures: EvidenceFigures;
+  takeawayLabel?: string;
+  /**
+   * Required, and it is the band the strip hangs from. The source puts a
+   * section label there instead ("SAMPLE OF TRAINING SETUP"), which names the
+   * photographs without saying what they prove — the slide ends on evidence
+   * with no finding. This is the same band doing the job it was built for.
+   */
+  takeaway: ReactNode;
+}
+
+/**
+ * 18 · Evidence Strip. A claim, a one-line finding, and two to four frames of
+ * proof underneath it.
+ *
+ * The figures are the deck's receipts: screenshots of the real system, photos
+ * of the real room. Stock imagery here is worse than no strip at all.
+ */
+export function SlideEvidence({
+  title,
+  kicker,
+  children,
+  figures,
+  takeawayLabel = "สรุป",
+  takeaway,
+  ...chrome
+}: SlideEvidenceProps) {
+  return (
+    <Slide {...chrome}>
+      <SlideTitle>{title}</SlideTitle>
+      <div className="nct-body nct-body--evidence">
+        {kicker && <div className="nct-kicker-pill">{kicker}</div>}
+        <div className="nct-evidence__claim">{children}</div>
+        <TakeawayBand label={takeawayLabel} tone="dark">{takeaway}</TakeawayBand>
+        <div className="nct-evidence" data-count={figures.length}>
+          {figures.map((f, i) => (
+            <figure className="nct-evidence__figure" key={i}>
+              <figcaption className="nct-evidence__caption">{f.caption}</figcaption>
+              <img className="nct-evidence__media" src={f.src} alt={f.alt ?? ""} />
+            </figure>
+          ))}
+        </div>
       </div>
     </Slide>
   );
