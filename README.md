@@ -23,6 +23,56 @@ scripts/tokens.py            ← single source of truth
 | [`.design-sync/conventions.md`](.design-sync/conventions.md) | กติกาที่ design agent ต้องอ่านก่อนสร้างสไลด์ |
 | [`.design-sync/NOTES.md`](.design-sync/NOTES.md) | กับดักเฉพาะ repo นี้ อ่านก่อน re-sync |
 
+## Layout ทั้ง 18
+
+Render จาก PowerPoint จริง ไม่ต้อง clone ก็ดูได้ — ภาพในนี้คือไฟล์ใน `preview/`
+ที่ `scripts/render_previews.py` เขียนทับทุกครั้งที่ geometry ขยับ
+
+| web | corp |
+|---|---|
+| <img src="preview/all-layouts.png" alt="contact sheet ของ 18 layout brand web" width="380"> | <img src="preview/corp-all-layouts.png" alt="contact sheet ของ 18 layout brand corp" width="380"> |
+
+<details>
+<summary>ดูทีละ layout (18 ภาพ)</summary>
+
+![layout 01](preview/layout-01.png)
+
+![layout 02](preview/layout-02.png)
+
+![layout 03](preview/layout-03.png)
+
+![layout 04](preview/layout-04.png)
+
+![layout 05](preview/layout-05.png)
+
+![layout 06](preview/layout-06.png)
+
+![layout 07](preview/layout-07.png)
+
+![layout 08](preview/layout-08.png)
+
+![layout 09](preview/layout-09.png)
+
+![layout 10](preview/layout-10.png)
+
+![layout 11](preview/layout-11.png)
+
+![layout 12](preview/layout-12.png)
+
+![layout 13](preview/layout-13.png)
+
+![layout 14](preview/layout-14.png)
+
+![layout 15](preview/layout-15.png)
+
+![layout 16](preview/layout-16.png)
+
+![layout 17](preview/layout-17.png)
+
+![layout 18](preview/layout-18.png)
+
+</details>
+
 ## PowerPoint
 
 ```bash
