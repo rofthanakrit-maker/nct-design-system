@@ -9,3 +9,16 @@ node_modules/
 # raw image drops - 56 MB of PNG; scripts/prepare_images.py writes the
 # committed derivatives into assets/
 icon and images/
+
+# Source decks studied to build this system, not outputs of it. `NCT Template.pptx`
+# is 40 MB on its own and the whole v3 spec - every colour, every box, every drift
+# it was not worth carrying over - is written down in slide-design-system-v3.md,
+# so the file is a reference copy, not a dependency. `NCT Example.pptx` stays
+# tracked: v2 was measured against it and the demo deck still quotes its numbers.
+NCT Template.pptx
+NCT Template.pdf
+AI-Use-Cases-NCT.pptx
+AI-in-daily-work-NCT.pptx
+
+# Office lock files - appear whenever a deck in this folder is open
+~$*
