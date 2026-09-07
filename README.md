@@ -19,7 +19,7 @@ scripts/tokens.py            ← single source of truth
 | [`design.md`](design.md) | brand token ต้นทาง (studied จาก nctthai.com) + ส่วนขยาย v2 / v3 |
 | [`slide-design-system.md`](slide-design-system.md) | v1 — canvas, grid, type scale, layout 01–10, กติกาการทำเด็ค |
 | [`slide-design-system-v2.md`](slide-design-system-v2.md) | v2 — token dense, status/category, layout 11–16 |
-| [`slide-design-system-v3.md`](slide-design-system-v3.md) | v3 — brand mode `corp`, chrome geometry, layout 17–18 (แกะจาก `NCT Template.pptx` สไลด์ 33–43) |
+| [`slide-design-system-v3.md`](slide-design-system-v3.md) | v3 — brand mode `corp`, chrome geometry, cover คนละใบ, layout 17–18 (แกะจาก `NCT Template.pptx`) |
 | [`.design-sync/conventions.md`](.design-sync/conventions.md) | กติกาที่ design agent ต้องอ่านก่อนสร้างสไลด์ |
 | [`.design-sync/NOTES.md`](.design-sync/NOTES.md) | กับดักเฉพาะ repo นี้ อ่านก่อน re-sync |
 
@@ -81,8 +81,9 @@ python scripts/build.py          # เขียนทับ .potx และ .ppt
 
 - `NCT-Slide-Template.potx` — 1 slide master + 18 custom layouts + NCT theme
 - `NCT-Slide-Template-Demo.pptx` — เดโม 18 สไลด์ layout ละ 1
-- `NCT-Slide-Template-Corp.potx` — 18 layout เดิม แต่ใส่ chrome แบบฟอร์มบริษัท
-  (เส้นเต็มความกว้าง, การ์ดโลโก้มุมขวาบน, แถบสามช่วงที่ก้นสไลด์)
+- `NCT-Slide-Template-Corp.potx` — 18 layout เบอร์เดิม ใส่ chrome แบบฟอร์มบริษัท
+  (เส้นเต็มความกว้าง, การ์ดโลโก้มุมขวาบน, แถบสามช่วงที่ก้นสไลด์) **ยกเว้น layout 01
+  ที่เป็นคนละสไลด์** — พื้นขาว จัดกลาง watermark ตามหน้าปกที่บริษัทใช้จริง
   แยกไฟล์เพราะ layout ใน PowerPoint สลับ chrome ของตัวเองไม่ได้
 - `NCT-Slide-Template-Corp-Demo.pptx` — เดโมฝั่ง corp
 
@@ -111,8 +112,21 @@ npm run assets               # โลโก้เป็น data URI
 18 component ตรงกับ 18 layout ใน `.potx` เลขเดียวกัน ออกแบบฝั่งเว็บแล้วมาทำต่อ
 ใน PowerPoint ได้โดยหยิบ layout เบอร์เดิม
 
-`<Deck brand="corp">` เปลี่ยนเป็น chrome แบบฟอร์มบริษัท — ฝั่งเว็บสลับได้ใน deck
-เดียว ฝั่ง PowerPoint ต้องหยิบไฟล์ `-Corp.potx`
+`<Deck brand="corp">` เปลี่ยนเป็นแบบฟอร์มบริษัท — เส้นเต็มความกว้าง, การ์ดโลโก้
+มุมขวาบน, แถบสามช่วงที่ก้น และ `--nct-accent` ย้ายไป `#006666` ทั้งเด็ค
+ฝั่งเว็บสลับได้ใน deck เดียว ฝั่ง PowerPoint ต้องหยิบไฟล์ `-Corp.potx`
+
+`SlideCover` เป็น layout เดียวที่สอง brand เป็น**คนละสไลด์** ไม่ใช่สไลด์เดียวกัน
+เปลี่ยน furniture — `web` เปิดด้วย gradient อ่านชิดซ้าย, `corp` เป็นพื้นขาว จัดกลาง
+โลโก้เป็นพระเอก และตัดแถบก้นกับการ์ดมุมทิ้ง `date` ลงมุมซ้ายล่างเป็นบรรทัด
+"Updated date" ตามต้นฉบับ
+
+```tsx
+<Deck brand="corp" date="Updated date: 2026.09.07">
+  <SlideCover title={<><span>PROPOSAL</span><span>For</span><span>“ลูกค้า”</span></>} />
+  …
+</Deck>
+```
 
 ดูของจริง:
 
