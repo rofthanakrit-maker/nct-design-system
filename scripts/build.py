@@ -137,6 +137,15 @@ TABLE_STYLES = (
        _tc_fill(PAPER2),
        _tc_tx(PAPER, bold=True), _tc_bdr(insideH=False), _tc_fill(NAVY)))
 
+
+def mix(fg, bg, pct):
+    """fg over bg at pct% - color-mix(in srgb, ...) precomputed for OOXML."""
+    f = [int(fg[i:i + 2], 16) for i in (0, 2, 4)]
+    b = [int(bg[i:i + 2], 16) for i in (0, 2, 4)]
+    return "".join("%02X" % round(f[i] * pct / 100.0 + b[i] * (1 - pct / 100.0))
+                   for i in range(3))
+
+
 # ------------------------------------------------------------------ table shapes
 TBL_PAD = 73152          # 0.080in cell padding, all sides (v2 §16)
 ROW_HEAD = 347472        # 0.380in
@@ -151,9 +160,19 @@ def _cell(text, sz, color, bold=False, algn="l", fill=None, spc=0, bar=None):
     either - a coloured stripe down one side of a box is the side-tab tell. The
     colour goes under the value, which stays on paper. Line elements come before
     fill in tcPr.
+
+    A `fill` cell draws its own row hairline, in PAPER. The zebra is what carries
+    the eye across a dense row, and it is PAPER/PAPER2 banding - so a status
+    column, whose every cell is filled, overrides the banding and three
+    consecutive "ready" rows merge into one green block in the column that says
+    whether the work can start. RULE on OK_T is 1.15:1 and does not separate
+    them; PAPER is 1.43:1 and does. It is the same move as TEAL_UP: the same
+    element lifted until it reads on the ground it actually sits on.
     """
-    ln = ('<a:lnB w="34925" cap="flat"><a:solidFill><a:srgbClr val="%s"/></a:solidFill>'
-          '<a:prstDash val="solid"/></a:lnB>' % bar) if bar else ''
+    edge = bar or (PAPER if fill in (RISK_T, WARN_T, OK_T) else None)
+    ln = ('<a:lnB w="%d" cap="flat"><a:solidFill><a:srgbClr val="%s"/></a:solidFill>'
+          '<a:prstDash val="solid"/></a:lnB>' % (34925 if bar else 12700, edge)) \
+        if edge else ''
     f = ('<a:solidFill><a:srgbClr val="%s"/></a:solidFill>' % fill) if fill else ''
     s = ' spc="%d"' % spc if spc else ''
     b = ' b="1"' if bold else ''
@@ -519,14 +538,23 @@ def demo_slides():
         ["รายงานสุขภาพระบบ", "ไตรมาส", "รายเดือน", "รายสัปดาห์"],
         ["ค่าบริการต่อเดือน", "18,000 บาท", "32,000 บาท", "65,000 บาท"],
     ]
+    A9 = PM.accent()
+    # the wash under the recommended column. Marking only the HEADER makes the
+    # argument die one row in - the column the takeaway is arguing for looked
+    # exactly like the two it beat from the first body cell down. Two mixes, not
+    # one, so the zebra step stays inside the column and the rows still track:
+    # the same thing .nct-table td[data-rec] does with two color-mix rules.
+    REC_1, REC_2 = mix(A9, PAPER, 8), mix(A9, PAPER2, 8)
     rows9 = [(ROW_HEAD, [_cell(t, T_TBLHEAD, PAPER, bold=True, spc=60,
                                algn="l" if i == 0 else "ctr",
-                               fill=TEAL if i == REC else None)
+                               fill=A9 if i == REC else None)
                          for i, t in enumerate(head9)])]
     for r_i, r in enumerate(body9):
         price = r_i == len(body9) - 1
         rows9.append((ROW_BODY, [_cell(t, T_DENSECELL, INK, bold=(i == 0 or price),
-                                       algn="l" if i == 0 else "ctr")
+                                       algn="l" if i == 0 else "ctr",
+                                       fill=(REC_1 if r_i % 2 == 0 else REC_2)
+                                       if i == REC else None)
                                  for i, t in enumerate(r)]))
     rec_x = MX + sum(w9[:REC])
     S.append((9, [sp_text(2, "Title", "title", None, ["แพ็กเกจและงบประมาณ"]),
@@ -536,7 +564,7 @@ def demo_slides():
                   # the cap rule over the recommended column, in the same vocabulary
                   # the slide title's rule uses
                   shape(9, "Recommended Cap", rec_x, 2286000 - RULE_H, w9[REC], RULE_H,
-                        solid(TEAL)),
+                        solid(A9)),
                   sp_text(5, "TL", "body", 3, ["สรุป"]),
                   sp_text(6, "TC", "body", 4,
                           ["องค์กร 50-200 ที่นั่งเลือก Business เป็นค่าเริ่มต้น "

@@ -13,7 +13,7 @@ No provider, no theme object. Two things only:
    (every `--nct-*` variable) and `slides.css`. Without it slides render unstyled
    at the wrong size — there is no inline-style fallback.
 2. Put content inside a layout component. `Slide` is the raw 1280×720 canvas
-   (13.333in × 7.5in at 96dpi); the 16 layouts wrap it. Reach for bare `Slide`
+   (13.333in × 7.5in at 96dpi); the 18 layouts wrap it. Reach for bare `Slide`
    only when no layout fits.
 
 Slides scale themselves to their container by default (`fit`, measured with a

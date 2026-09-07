@@ -160,6 +160,29 @@ COVER_SCATTER = [
     (370, 987, 48, 50, 75),
 ]
 
+# ---- leading: the one number that does NOT mean the same thing on both surfaces ----
+# CSS line-height is a multiple of the FONT SIZE. OOXML spcPct is a multiple of
+# the FONT'S LINE BOX, and NotoSansThai-Regular.ttf declares that box at 1.511 em
+# (ascent+descent+gap, read out of the shipped file) to carry Thai vowel and tone
+# stacks. So `line-height: 1.45` and `spcPct 145%` are not the same leading -
+# the .potx one is 1.5x looser.
+#
+# Two layouts shipped broken on exactly that: L10's contact block and L15's
+# agenda list both had their CSS number copied into spcPct, and both ended up
+# with their last line under the footer rule while every box was legally above
+# it. preview/layout-10.png has the hairline through "เว็บไซต์ · nctthai.com".
+#
+# Write leading as the CSS value and convert. The layouts not listed above were
+# left at their own measured values rather than re-flowed sight unseen; anything
+# that overruns is caught per slide by scripts/check_template.py.
+TH_LINE_BOX = 1.511
+
+
+def lnspc(css_line_height):
+    """CSS line-height -> the OOXML spcPct that renders the same leading."""
+    return int(round(css_line_height / TH_LINE_BOX * 100000, -3))
+
+
 # ---- type scale (hundredths of a pt) ----
 T_DISPLAY = 4400   # 44pt  title slide
 T_SECTION = 4000   # 40pt  section divider

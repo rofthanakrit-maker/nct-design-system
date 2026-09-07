@@ -3,7 +3,7 @@
 import parts_master as PM
 from tokens import *
 from ooxml import *
-from parts_master import chrome, body_specs, FOOT_Y
+from parts_master import chrome, body_specs, accent, accent_up, FOOT_Y
 
 LOGO_AR = 373 / 733
 MARK_AR = 229 / 360
@@ -26,7 +26,7 @@ def _logo(sid, rid, x, y, w):
 def dense_specs(prompts, color=INK, alpha=None, bullet_color=None):
     """v2 §4 dense outline levels - legal on L11-L14 / L16 only, floor 10pt"""
     lv = [dict(sz=T_DENSEBODY, color=color, alpha=alpha, bullet=True,
-               bullet_color=bullet_color or TEAL, indent=182880, marL=182880,
+               bullet_color=bullet_color or accent(), indent=182880, marL=182880,
                line=132000, space_before=500),
           dict(sz=T_DENSEBODY, color=color, alpha=(alpha - 15) if alpha else None,
                bullet=True, bullet_char="&#8211;", bullet_color=bullet_color or INK2,
@@ -62,21 +62,8 @@ def _rule(sid, x=MX, y=RULE_Y, color=None, alpha=None):
     if color is None:
         if PM.BRAND == "corp":
             return shape(sid, "Accent Rule", 0, y, SW, CORP_RULE_H, solid(CORP))
-        color = TEAL
+        color = accent()
     return shape(sid, "Accent Rule", x, y, RULE_W, RULE_H, solid(color, alpha))
-
-
-def accent():
-    """The brand's accent. Layouts 17-18 read this instead of naming TEAL, the
-    same way slides.css reads --nct-accent."""
-    return CORP if PM.BRAND == "corp" else TEAL
-
-
-def accent_up():
-    """The accent lifted until it reads on a dark panel. Both brands' anchors
-    fail there - TEAL is 2.8:1 on NAVY and CORP is 1.5:1 - so both keep a
-    lifted twin, and both are unusable on paper."""
-    return CORP_UP if PM.BRAND == "corp" else TEAL_UP
 
 
 def _foot_scrim(sid):
@@ -98,7 +85,7 @@ def _takeaway(sid, idx, label="สรุป", prompt="ประเด็นส�
     return [shape(sid, "Takeaway Band", MX, TAKE_Y, CW, TAKE_H, solid(PAPER2)),
             placeholder(sid + 1, "Takeaway Label", "body", MX + 182880, ly,
                         1828800, 289560,
-                        [S(label, sz=T_LABEL, color=TEAL, bold=True, spc=120,
+                        [S(label, sz=T_LABEL, color=accent(), bold=True, spc=120,
                            line=100000)], idx=idx, anchor="ctr"),
             placeholder(sid + 2, "Takeaway Copy", "body", MX + 2011680, ly,
                         CW - 2011680 - 182880, 289560,
@@ -193,9 +180,9 @@ def l02_section(rid_mark_white, rid_photo):
          shape(15, "Photo Foot Scrim", SEC_PHOTO_X, SH - 2057400, SEC_PHOTO_W, 2057400,
                scrim(NAVY)),
          placeholder(11, "Section Number", "body", MX, 1737360, 2286000, 1005840,
-                     [S("01", sz=6000, color=TEAL_UP, bold=True, font="mj", line=100000)],
+                     [S("01", sz=6000, color=accent_up(), bold=True, font="mj", line=100000)],
                      idx=1, anchor="b"),
-         _rule(12, y=2834640, color=TEAL_UP),
+         _rule(12, y=2834640, color=accent_up()),
          placeholder(13, "Title Placeholder", "title", MX, 2926080, SEC_TEXT_W, 1188720,
                      [S("ชื่อหัวข้อ", sz=T_SECTION, color=PAPER, bold=True,
                         font="mj", line=108000)], anchor="t"),
@@ -236,7 +223,7 @@ def l05_cards(rid_mark_color):
         s.append(shape(sid, "Card %d" % (i + 1), x, CARD_Y, THIRD, CARD_H,
                        solid(PAPER2), prst="roundRect", adj=R16)); sid += 1
         s.append(shape(sid, "Card %d Tab" % (i + 1), x + PAD, CARD_Y + PAD, 274320, 45720,
-                       solid(TEAL))); sid += 1
+                       solid(accent()))); sid += 1
         s.append(placeholder(sid, "Card %d Heading" % (i + 1), "body",
                              x + PAD, CARD_Y + PAD + 182880, THIRD - 2 * PAD, 640080,
                              [S("หัวข้อการ์ด %d" % (i + 1), sz=T_LEAD, color=NAVY,
@@ -278,9 +265,9 @@ def l06_stats(rid_mark_color):
 
 # ---------------------------------------------------------------- 07 Quote
 def l07_quote(rid_mark_color):
-    s = [shape(10, "Quote Bar", 0, 0, 137160, SH, grad(NAVY, TEAL, 90)),
+    s = [shape(10, "Quote Bar", 0, 0, 137160, SH, grad(NAVY, accent(), 90)),
          shape(11, "Quote Mark", MX, 868680, 1371600, 1188720, nofill(),
-               body=txbody([para(LQUOTE, sz=12000, color=TEAL, bold=True, font="mj",
+               body=txbody([para(LQUOTE, sz=12000, color=accent(), bold=True, font="mj",
                                  alpha=25, line=100000)], anchor="t")),
          placeholder(12, "Quote", "body", MX, 1965960, 9144000, 2194560,
                      [S("ข้อความคำพูดที่ต้องการเน้น ยาวได้ประมาณสองถึงสามบรรทัด",
@@ -327,31 +314,62 @@ def l10_closing(rid_mark_white, rid_photo):
     thank-you is now the title over that ask. The full lockup goes with it: with
     the ask holding the left column from 3.5in to 6.6in there is nowhere left for
     it, and the corner mark signs the slide the way it signs every other one.
+
+    Three things about the ask were wrong and are fixed together, because they
+    are one mistake seen from three sides:
+
+    * The gradient is the OPENER MIRRORED, so TEAL_B - the 3.4:1 stop that may
+      never carry text - lands in the top-left corner, which is where the ask
+      lives. `_foot_scrim` was guarding the bottom-right, the corner that is
+      teal on L01 and navy here: the scrim was mirrored with the gradient and
+      the text was not. The left column now carries a flat DEEP veil, which is
+      what L02 and L15 do with a solid panel, and the ground under the ask
+      settles around 7:1 for white at every point of the column.
+    * The label, the numbered bullets and the deadline were TEAL_UP, whose own
+      token says ON NAVY ONLY. On the teal end of this gradient it measures
+      2.63:1. They are PAPER now; the veil is what makes PAPER work.
+    * The deadline was 14pt TEAL_UP under 16pt PAPER steps - the one sentence
+      naming what NCT wants and by when, set quieter than the list above it. It
+      is 20pt PAPER bold now, the loudest line in the block.
+
+    And the contact block ran under the footer rule, because its leading was the
+    web's number and spcPct is not CSS line-height - see tokens.lnspc. At 135%
+    three 14pt lines reserve 1.19in in an 0.80in box, and preview/layout-10.png
+    has the hairline struck through "เว็บไซต์ · nctthai.com". Written as the CSS
+    value and converted, the same three lines take 0.78in and clear the rule by
+    0.17in, with no box moved: the bug was the unit, not the geometry.
     """
+    ASK_X, ASK_W = MX, 5486400
     s = [_diamond(10, -1371600, SH - 2743200, 3657600, 9),
          pic(11, "Section Photo", rid_photo, SEC_PHOTO_X, 0, SEC_PHOTO_W, SH),
          shape(16, "Photo Fade", SEC_PHOTO_X, 0, SEC_PHOTO_W, SH, fade_x(NAVY)),
          shape(17, "Photo Foot Scrim", SEC_PHOTO_X, SH - 2057400, SEC_PHOTO_W, 2057400,
                scrim(NAVY)),
+         # flat, not a fade: the column is teal-side top to bottom, so a scrim
+         # that fades out leaves whichever end it fades toward failing
+         shape(20, "Ask Veil", 0, 0, SEC_PHOTO_X, SH, solid(DEEP, 55)),
          placeholder(12, "Title Placeholder", "title", MX, 1554480, SEC_TEXT_W, 1188720,
                      [S("ขอบคุณครับ", sz=T_SECTION, color=PAPER, bold=True,
                         font="mj", line=108000)], anchor="b"),
          _rule(13, y=2926080, color=PAPER, alpha=70),
-         placeholder(14, "Next Steps Label", "body", MX, 3200400, 2743200, 228600,
-                     [S("ขั้นตอนถัดไป", sz=T_LABEL, color=TEAL_UP, bold=True, spc=120,
-                        line=100000)], idx=1, anchor="ctr"),
-         placeholder(15, "Next Steps", "body", MX, 3474720, 5486400, 1188720,
+         placeholder(14, "Next Steps Label", "body", ASK_X, 3200400, 2743200, 228600,
+                     [S("ขั้นตอนถัดไป", sz=T_LABEL, color=PAPER, alpha=75, bold=True,
+                        spc=120, line=100000)], idx=1, anchor="ctr"),
+         placeholder(15, "Next Steps", "body", ASK_X, 3474720, ASK_W, 1188720,
                      [S("สิ่งที่ต้องเกิดขึ้นต่อ พร้อมผู้รับผิดชอบ", sz=T_BODY2, color=PAPER,
                         alpha=92, bullet=True, bullet_auto=True,
-                        bullet_color=TEAL_UP, indent=320040, marL=320040,
-                        line=140000, space_before=400)], idx=2),
-         placeholder(18, "Decision By", "body", MX, 4709160, 5486400, 228600,
-                     [S("ต้องการคำตอบภายในวันที่ ...", sz=T_BODY3, color=TEAL_UP,
-                        bold=True, line=100000)], idx=3, anchor="ctr"),
-         placeholder(19, "Contact", "body", MX, 5303520, 5486400, 731520,
+                        bullet_color=PAPER, indent=320040, marL=320040,
+                        line=lnspc(1.40), space_before=400)], idx=2),
+         # 20pt Kanit at full PAPER, over 16pt at 92%: this is the one sentence
+         # naming what NCT wants and by when, and it was the quietest line in the
+         # block - 14pt TEAL_UP under the steps it is supposed to close
+         placeholder(18, "Decision By", "body", ASK_X, 4709160, ASK_W, 457200,
+                     [S("ต้องการคำตอบภายในวันที่ ...", sz=T_LEAD, color=PAPER,
+                        bold=True, font="mj", line=115000)], idx=3, anchor="ctr"),
+         placeholder(19, "Contact", "body", ASK_X, 5303520, ASK_W, 731520,
                      [S("โทร · 0X-XXX-XXXX", sz=T_BODY3, color=PAPER, alpha=88,
-                        line=135000)], idx=4),
-         _foot_scrim(20)]
+                        line=lnspc(1.35))], idx=4),
+         _foot_scrim(21)]
     s += chrome(dark=True, mark_rid=rid_mark_white)
     return _wrap("10 Closing / Contact", "obj", s, bgfill=grad(TEAL_B, NAVY, 45, c_mid=MID))
 
@@ -368,7 +386,7 @@ def l11_split(rid_mark_color):
          placeholder(14, "Context Body", "body", MX + PAD, PY + PAD + 548640,
                      HALF - 2 * PAD, PH - PAD - 548640,
                      dense_specs(["บริบทหรือปัญหาที่พบ", "ระดับที่สอง"],
-                                 color=PAPER, alpha=88, bullet_color=TEAL_UP), idx=2),
+                                 color=PAPER, alpha=88, bullet_color=accent_up()), idx=2),
          shape(15, "Outcome Panel", MX + HALF + GUT, PY, HALF, PH, solid(PAPER2)),
          placeholder(16, "Outcome Kicker", "body", MX + HALF + GUT + PAD, PY + PAD,
                      HALF - 2 * PAD, 365760,
@@ -380,7 +398,7 @@ def l11_split(rid_mark_color):
          shape(18, "Takeaway Band", MX, PY + PH + 137160, CW, 411480, solid(PAPER2)),
          placeholder(19, "Takeaway Label", "body", MX + 182880, PY + PH + 137160 + 60960,
                      1828800, 289560,
-                     [S("สรุป", sz=T_LABEL, color=TEAL, bold=True, spc=120,
+                     [S("สรุป", sz=T_LABEL, color=accent(), bold=True, spc=120,
                         line=100000)], idx=5, anchor="ctr"),
          placeholder(20, "Takeaway Copy", "body", MX + 2011680, PY + PH + 137160 + 60960,
                      CW - 2011680 - 182880, 289560,
@@ -419,7 +437,7 @@ def l12_cards_band(rid_mark_color):
     sid += 1
     s.append(placeholder(sid, "Band Label", "body", MX + 228600,
                          CARD_Y + CARD_H + 137160 + 91440, 2011680, 365760,
-                         [S("สรุป", sz=T_LABEL, color=TEAL_UP, bold=True, spc=120,
+                         [S("สรุป", sz=T_LABEL, color=accent_up(), bold=True, spc=120,
                             line=100000)], idx=PH_FREE + 12, anchor="ctr")); sid += 1
     s.append(placeholder(sid, "Band Copy", "body", MX + 2240280,
                          CARD_Y + CARD_H + 137160 + 91440, CW - 2240280 - 228600, 365760,
@@ -442,7 +460,7 @@ def l13_process(rid_mark_color):
         s.append(shape(sid, "Step %d" % (i + 1), x, STEP_Y, FIFTH, STEP_H,
                        solid(PAPER2))); sid += 1
         s.append(shape(sid, "Step %d Chip" % (i + 1), x + 228600, STEP_Y + 228600,
-                       311280, 311280, solid(TEAL), prst="ellipse")); sid += 1
+                       311280, 311280, solid(accent()), prst="ellipse")); sid += 1
         s.append(placeholder(sid, "Step %d Chip Num" % (i + 1), "body",
                              x + 228600, STEP_Y + 228600, 311280, 311280,
                              [S(str(i + 1), sz=1400, color=PAPER, bold=True, font="mj",
@@ -458,12 +476,12 @@ def l13_process(rid_mark_color):
         if i < n - 1:
             cx = x + FIFTH + GUT // 2 - 45720
             s.append(shape(sid, "Connector %d" % (i + 1), cx, STEP_Y + STEP_H // 2 - 45720,
-                           91440, 91440, solid(TEAL), prst="chevron")); sid += 1
+                           91440, 91440, solid(accent()), prst="chevron")); sid += 1
     s.append(shape(sid, "Result Band", MX, STEP_Y + STEP_H + 137160, CW, 548640,
                    solid(PAPER2))); sid += 1
     s.append(placeholder(sid, "Result Label", "body", MX + 228600,
                          STEP_Y + STEP_H + 137160 + 91440, 2011680, 365760,
-                         [S("ผลลัพธ์", sz=T_LABEL, color=TEAL, bold=True, spc=120,
+                         [S("ผลลัพธ์", sz=T_LABEL, color=accent(), bold=True, spc=120,
                             line=100000)], idx=PH_FREE + 15, anchor="ctr")); sid += 1
     s.append(placeholder(sid, "Result Copy", "body", MX + 2240280,
                          STEP_Y + STEP_H + 137160 + 91440, CW - 2240280 - 228600, 365760,
@@ -496,24 +514,28 @@ def l15_agenda(rid_mark_white, rid_photo):
          shape(19, "Photo Foot Scrim", SEC_PHOTO_X, SH - 2057400, SEC_PHOTO_W, 2057400,
                scrim(NAVY)),
          placeholder(11, "Section Number", "body", MX, 1737360, 2286000, 1005840,
-                     [S("01", sz=6000, color=TEAL_UP, bold=True, font="mj", line=100000)],
+                     [S("01", sz=6000, color=accent_up(), bold=True, font="mj", line=100000)],
                      idx=1, anchor="b"),
-         _rule(12, y=2834640, color=TEAL_UP),
+         _rule(12, y=2834640, color=accent_up()),
          placeholder(13, "Title Placeholder", "title", MX, 2926080, SEC_TEXT_W, 1188720,
                      [S("ชื่อบท", sz=T_SECTION, color=PAPER, bold=True, font="mj",
                         line=108000)], anchor="t"),
-         # 3931920, not 4297680: at the documented ceiling of six lines the list
-         # ran past the footer rule. Six now stops 12px short of it.
+         # The same unit bug as L10, on a layout nobody had looked at: 145% was
+         # the web's line-height, and at spcPct it is 1.5x that. The note that
+         # used to sit here said six lines stopped 12px short of the footer rule.
+         # They did not - preview/layout-15.png has the sixth agenda item ending
+         # 29px BELOW it. Converted, six lines clear the rule by 0.07in at the
+         # documented ceiling, with the 18pt type intact.
          placeholder(14, "Agenda List", "body", MX, 3931920, SEC_TEXT_W, 2194560,
                      [S("หัวข้อที่หนึ่ง", sz=T_BODY, color=PAPER, alpha=88, bullet=True,
-                        bullet_color=TEAL_UP, indent=274320, marL=274320,
-                        line=145000, space_before=300),
+                        bullet_color=accent_up(), indent=274320, marL=274320,
+                        line=lnspc(1.45), space_before=300),
                       S("หัวข้อที่สอง", sz=T_BODY, color=PAPER, alpha=88, bullet=True,
-                        bullet_color=TEAL_UP, indent=274320, marL=274320,
-                        line=145000, space_before=300),
+                        bullet_color=accent_up(), indent=274320, marL=274320,
+                        line=lnspc(1.45), space_before=300),
                       S("หัวข้อที่สาม", sz=T_BODY, color=PAPER, alpha=88, bullet=True,
-                        bullet_color=TEAL_UP, indent=274320, marL=274320,
-                        line=145000, space_before=300)], idx=2)]
+                        bullet_color=accent_up(), indent=274320, marL=274320,
+                        line=lnspc(1.45), space_before=300)], idx=2)]
     s += chrome(dark=True, mark_rid=rid_mark_white)
     return _wrap("15 Agenda", "secHead", s, bgfill=solid(NAVY))
 
@@ -530,9 +552,17 @@ def l16_dense_table(rid_mark_color):
          # the note line carries two things: the key for any category coding on
          # the left, the source note on the right. A coded column with no key on
          # the slide asks the reader to decode four navies 1.31:1 apart from memory
+         #
+         # The swatches carry the category colours, the labels stay INK2. One
+         # grey run for the whole line is what shipped before, and a key whose
+         # three squares are the same grey decodes nothing - it is the only
+         # element on the slide whose entire job is to be the colours it names.
          placeholder(14, "Category Key", "body", MX, NOTE_Y, CW // 2, NOTE_H,
-                     [S("■ หมวด 1  ■ หมวด 2  ■ หมวด 3", sz=T_DENSECELL, color=INK2,
-                        line=130000)], idx=3),
+                     [S("", sz=T_DENSECELL, color=INK2, line=130000,
+                        runs=[("■ ", dict(color=CAT_1, bold=True)), ("หมวด 1   ", {}),
+                              ("■ ", dict(color=CAT_2, bold=True)), ("หมวด 2   ", {}),
+                              ("■ ", dict(color=CAT_4, bold=True)), ("หมวด 3", {})])],
+                     idx=3),
          placeholder(19, "Footnote", "body", MX + CW // 2, NOTE_Y, CW // 2, NOTE_H,
                      [S("ที่มาของข้อมูล / หมายเหตุ", sz=T_DENSECELL, color=INK2,
                         algn="r", line=130000)], idx=4)]

@@ -28,6 +28,11 @@ scripts/tokens.py            ← single source of truth
 Render จาก PowerPoint จริง ไม่ต้อง clone ก็ดูได้ — ภาพในนี้คือไฟล์ใน `preview/`
 ที่ `scripts/render_previews.py` เขียนทับทุกครั้งที่ geometry ขยับ
 
+> **ภาพชุดนี้ยังไม่อัปเดต (2026-09-07)** — layout 09, 10, 15, 16, 17 แก้ไปแล้วแต่
+> re-render ไม่ได้เพราะเครื่องที่แก้ไม่มี PowerPoint ติดตั้ง ให้รัน
+> `python scripts/build.py && python scripts/render_previews.py` บนเครื่องที่มี
+> PowerPoint ก่อนเชื่อภาพในโฟลเดอร์นี้
+
 | web | corp |
 |---|---|
 | <img src="preview/all-layouts.png" alt="contact sheet ของ 18 layout brand web" width="380"> | <img src="preview/corp-all-layouts.png" alt="contact sheet ของ 18 layout brand corp" width="380"> |
@@ -88,13 +93,19 @@ python scripts/build.py          # เขียนทับ .potx และ .ppt
 - `NCT-Slide-Template-Corp-Demo.pptx` — เดโมฝั่ง corp
 
 ```bash
-python scripts/check_template.py   # ตรวจไฟล์ที่ build แล้ว (XML, id/idx ซ้ำ, หลุดขอบ)
+python scripts/check_template.py   # ตรวจไฟล์ที่ build แล้ว
 python scripts/render_previews.py  # → preview/ (ต้องมี PowerPoint บน Windows)
 ```
 
-- `preview/` — `layout-01..18.png` เรียงตามเบอร์ layout + contact sheet สองใบ
-  (`all-layouts.png` = web, `corp-all-layouts.png` = corp) render จาก PowerPoint
-  จริงด้วย `scripts/render_previews.py` **รันใหม่ทุกครั้งที่ geometry ขยับ**
+`check_template.py` ตรวจ 5 อย่าง — XML parse, shape id / placeholder idx ซ้ำ,
+shape หลุดขอบ canvas, **ข้อความล้นลงไปทับเส้น footer** (คิดความสูงบรรทัดไทยจริง
+ที่ 1.511 em ไม่ใช่ค่า spcPct ตรง ๆ) และ **สีเทาบ้าน `#216B7F` / `#8FBACE`
+โผล่ในไฟล์ corp** สองข้อหลังคือบั๊กที่เคยหลุดไปแล้วทั้งคู่
+
+- `preview/` — `layout-01..18.png` (web) + `corp-layout-01..18.png` (corp)
+  เรียงตามเบอร์ layout + contact sheet สองใบ (`all-layouts.png` = web,
+  `corp-all-layouts.png` = corp) render จาก PowerPoint จริง
+  **รันใหม่ทุกครั้งที่ geometry ขยับ**
 
 **ติดตั้งฟอนต์ก่อนเปิด** — Noto Sans Thai อยู่ใน `fonts/` (คลิกขวา → Install),
 Kanit โหลดจาก [Google Fonts](https://fonts.google.com/specimen/Kanit)
@@ -115,6 +126,11 @@ npm run assets               # โลโก้เป็น data URI
 `<Deck brand="corp">` เปลี่ยนเป็นแบบฟอร์มบริษัท — เส้นเต็มความกว้าง, การ์ดโลโก้
 มุมขวาบน, แถบสามช่วงที่ก้น และ `--nct-accent` ย้ายไป `#006666` ทั้งเด็ค
 ฝั่งเว็บสลับได้ใน deck เดียว ฝั่ง PowerPoint ต้องหยิบไฟล์ `-Corp.potx`
+
+สองแบรนด์ **เลือกทั้งเด็ค ไม่ผสมในสไลด์เดียว** — ฝั่ง `.potx` บังคับด้วย
+`check_template.py` ที่ fail ถ้าเจอสีเทาบ้านหลุดเข้าไฟล์ corp ข้อยกเว้นเดียวคือ
+สี category 4 สีที่ใช้ร่วมกันทั้งสองแบรนด์โดยตั้งใจ — ตารางต้องแปลว่าเหมือนกัน
+ไม่ว่าอยู่บนหัวจดหมายไหน
 
 `SlideCover` เป็น layout เดียวที่สอง brand เป็น**คนละสไลด์** ไม่ใช่สไลด์เดียวกัน
 เปลี่ยน furniture — `web` เปิดด้วย gradient อ่านชิดซ้าย, `corp` เป็นพื้นขาว จัดกลาง
@@ -160,6 +176,6 @@ scripts/                                generator ทั้งหมด (Python,
   emit_web_tokens.py build_webfonts.py emit_web_assets.py
 web/                                    @nct/slides
   src/  Slide.tsx primitives.tsx layouts.tsx  + ไฟล์ที่ generate
-  demo/ demo.tsx                        ตัวอย่างใช้งานครบ 18 layout ทั้งสอง brand
+  demo/ demo.tsx                        18 layout (web) + 5 สไลด์อ้างอิง corp
 assets/  fonts/  preview/               โลโก้ · ฟอนต์ต้นฉบับ · ภาพ render (generate)
 ```

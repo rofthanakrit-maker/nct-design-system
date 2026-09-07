@@ -223,6 +223,23 @@
 
 /* --- the ask. A proposal's last slide is where the client learns what happens
    next and by when; the thank-you is the title above it, not the content. --- */
+/* --nct-grad-close is --nct-grad-open MIRRORED, so --nct-teal-b - the 3.4:1 stop
+   that may never carry text - lands in the top-left corner, which is exactly
+   where the ask lives. The ask used --nct-accent-up, whose own token says ON
+   NAVY ONLY, and over the teal end it measures 2.63:1 against the 4.5:1 it
+   needs. Darken the ground rather than lighten the ink, the way _foot_scrim
+   already argues and the way layouts 02 and 15 do with a solid panel.
+   Flat, not a fade: the column is teal-side top to bottom, so a scrim that
+   fades out leaves whichever end it fades toward still failing. */
+.nct-closing__veil {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: calc(1280px - var(--nct-band-w));
+  background: color-mix(in srgb, var(--nct-deep) 55%, transparent);
+  pointer-events: none;
+}
 .nct-closing__ask-label {
   position: absolute;
   left: var(--nct-mx);
@@ -230,7 +247,7 @@
   font-size: var(--nct-fs-label);
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: var(--nct-accent-up);
+  color: rgb(255 255 255 / 0.75);
 }
 .nct-closing__ask {
   position: absolute;
@@ -257,16 +274,21 @@
   left: 0;
   font-family: var(--nct-font-display);
   font-weight: 700;
-  color: var(--nct-accent-up);
+  color: var(--nct-paper);
 }
+/* the loudest line in the block, not the quietest. It was 14pt accent-up under
+   16pt paper steps - the one sentence naming what NCT wants and by when, set
+   smaller and dimmer than the list it closes. */
 .nct-closing__decision {
   position: absolute;
   left: var(--nct-mx);
-  top: 494.4px;
+  top: 489.6px;
   width: 576px;
-  font-size: var(--nct-fs-body-3);
+  font-family: var(--nct-font-display);
+  font-size: var(--nct-fs-lead);
   font-weight: 700;
-  color: var(--nct-accent-up);
+  line-height: 1.15;
+  color: var(--nct-paper);
 }
 /* with an ask on the slide the contact block steps down and back: it is where
    the reader looks after they have accepted, not before */
@@ -810,7 +832,12 @@
 .nct-table tbody tr:nth-child(even) td[data-rec]:not(.nct-status):not(.nct-table__chip) {
   background: color-mix(in srgb, var(--nct-accent) 8%, var(--nct-paper-2));
 }
-.nct-status { font-weight: 700; text-align: center; }
+/* every cell in this column is filled, so the PAPER/PAPER2 zebra never reaches
+   it and three consecutive "ready" rows merge into one green block in the column
+   that says whether the work can start. The row rule is --nct-rule, which is
+   1.15:1 on --nct-ok-tint and does not separate them; PAPER is 1.43:1 and does.
+   Mirrors the lnB build._cell draws on the .potx side. */
+.nct-status { font-weight: 700; text-align: center; border-bottom: 1px solid var(--nct-paper); }
 .nct-status--ok { background: var(--nct-ok-tint); color: var(--nct-ok); }
 .nct-status--warn { background: var(--nct-warn-tint); color: var(--nct-warn); }
 .nct-status--risk { background: var(--nct-risk-tint); color: var(--nct-risk); }
@@ -952,8 +979,13 @@
   font-weight: 700;
   font-size: var(--nct-fs-body-3);
 }
+/* min-height, not height: the source's card runs to the bottom of the body box
+   whatever is in it, and preview/layout-17.png is a 1pt outline drawn around 2.5
+   inches of nothing. An outline states "this is the phase" - it should not also
+   state "and it is empty". The floor keeps a one-line phase from collapsing to a
+   strip; a full one still fills the box. */
 .nct-phase__card {
-  height: 100%;
+  min-height: 288px;
   border: 1px solid var(--nct-accent);
   padding: 38.4px 24px 24px;
   overflow: hidden;

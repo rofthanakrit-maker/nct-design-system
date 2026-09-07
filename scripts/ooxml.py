@@ -113,19 +113,35 @@ def lvl_ppr(n, sz=T_BODY, color=INK, bold=False, font="mn", algn="l", spc=0, ita
 
 
 def lst_style(specs):
-    """specs: list of kwargs dicts, one per outline level"""
+    """specs: list of kwargs dicts, one per outline level
+
+    `runs` is a property of the prompt paragraph, not of the level a slide
+    inherits - a level has one defRPr, so it is dropped here rather than at
+    every call site.
+    """
     return '<a:lstStyle>%s</a:lstStyle>' % "".join(
-        lvl_ppr(i + 1, **kw) for i, kw in enumerate(specs))
+        lvl_ppr(i + 1, **{k: v for k, v in kw.items() if k != "runs"})
+        for i, kw in enumerate(specs))
 
 
 def para(text, sz=T_BODY, color=INK, bold=False, font="mn", algn="l", spc=0, italic=False,
          alpha=None, line=100000, bullet=False, bullet_color=None, bullet_char=None,
          bullet_auto=False,
-         indent=0, marL=None, space_before=0, space_after=0, lvl=0):
+         indent=0, marL=None, space_before=0, space_after=0, lvl=0, runs=None):
+    """`runs` overrides `text` with several runs in one paragraph, each carrying
+    its own colour - a legend whose swatches are the colours they decode cannot
+    be one run. Each entry is (text, kwargs-for-_rpr); anything it omits falls
+    back to the paragraph's own sz/color/font."""
     lv = ' lvl="%d"' % lvl if lvl else ''
-    run = ('<a:r>%s<a:t>%s</a:t></a:r>'
-           % (_rpr("rPr", sz, color, bold, font, spc, italic, alpha), text)) if text \
-        else '<a:endParaRPr lang="th-TH" sz="%d"/>' % sz
+    if runs:
+        base = dict(sz=sz, color=color, bold=bold, font=font, spc=spc,
+                    italic=italic, alpha=alpha)
+        run = "".join('<a:r>%s<a:t>%s</a:t></a:r>'
+                      % (_rpr("rPr", **dict(base, **kw)), t) for t, kw in runs)
+    else:
+        run = ('<a:r>%s<a:t>%s</a:t></a:r>'
+               % (_rpr("rPr", sz, color, bold, font, spc, italic, alpha), text)) if text \
+            else '<a:endParaRPr lang="th-TH" sz="%d"/>' % sz
     return ('<a:p><a:pPr%s%s>%s</a:pPr>%s</a:p>'
             % (_ppr_attrs(algn, indent, marL), lv,
                _ppr_inner(line, space_before, space_after, bullet, bullet_color,

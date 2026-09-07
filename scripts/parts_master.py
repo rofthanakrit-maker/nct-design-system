@@ -31,17 +31,49 @@ def txstyles():
              % lvl_ppr(1, sz=T_H1, color=INK if BRAND == "corp" else NAVY,
                        bold=True, font="mj", line=108000))
     body = ('<p:bodyStyle>'
-            + "".join(lvl_ppr(i + 1, **kw) for i, kw in enumerate(BODY_LEVELS))
+            + "".join(lvl_ppr(i + 1, **kw) for i, kw in enumerate(_levels()))
             + '</p:bodyStyle>')
     other = ('<p:otherStyle>%s</p:otherStyle>' % lvl_ppr(1, sz=T_BODY, color=INK))
     return title + body + other
 
 
+def accent():
+    """The brand's accent, resolved at call time because BRAND is set after import.
 
+    Every layout reads this instead of naming TEAL, the same way slides.css reads
+    --nct-accent. It used to be layouts 17-18 only, so a corp deck drew a CORP
+    full-bleed rule over TEAL step chips two inches below it - the one thing
+    design.md says the two brands must never do.
+
+    It lives here rather than in parts_layouts because the master's own body
+    levels need it too: level 1's bullet had no bullet_color, so it fell through
+    to ooxml's house default and every corp deck's outline bullets came out
+    #216B7F under a #006666 rule. parts_layouts re-exports it.
+
+    What does NOT read this: the four category colours on L12. A taxonomy that
+    changes colour with the letterhead is not one. check_template.py fails a corp
+    build on any other stray TEAL, because a rule this easy to break by typing a
+    constant needs a check and not a convention.
+    """
+    return CORP if BRAND == "corp" else TEAL
+
+
+def accent_up():
+    """The accent lifted until it reads on a dark panel. Both brands' anchors
+    fail there - TEAL is 2.8:1 on NAVY and CORP is 1.5:1 - so both keep a
+    lifted twin, and both are unusable on paper."""
+    return CORP_UP if BRAND == "corp" else TEAL_UP
+
+
+def _levels():
+    """BODY_LEVELS with the one brand-sensitive value filled in."""
+    lv = [dict(kw) for kw in BODY_LEVELS]
+    lv[0]["bullet_color"] = accent()
+    return lv
 
 
 def body_specs(prompts):
-    return [S(p, **BODY_LEVELS[i]) for i, p in enumerate(prompts)]
+    return [S(p, **_levels()[i]) for i, p in enumerate(prompts)]
 
 
 def sldnum_sp(sid, dark, x=None, y=None, w=1371600):

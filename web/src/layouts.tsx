@@ -10,7 +10,7 @@ import {
   type DataTableProps,
 } from "./primitives";
 
-/* The 16 layouts of NCT-Slide-Template.potx, one component each. Names, slots
+/* The 18 layouts of NCT-Slide-Template.potx, one component each. Names, slots
    and geometry mirror the .potx so a design made here can be rebuilt in
    PowerPoint by picking the layout of the same number. */
 
@@ -399,6 +399,7 @@ export function SlideClosing({
       ) : (
         <div className="nct-decor" style={{ left: -144, top: 432, width: 384, height: 384 }} />
       )}
+      {ask && !full && <div className="nct-closing__veil" />}
       {band ? (
         <SectionBand image={image} alt={imageAlt} />
       ) : !full && (

@@ -102,7 +102,7 @@ export interface SlideProps extends SlideChromeProps {
  * The slide canvas: a fixed 1280×720 box (13.333in × 7.5in at 96dpi — the same
  * geometry as `NCT-Slide-Template.potx`) plus the footer chrome every layout
  * repeats. Layout components render inside it; use it directly only when you
- * need a one-off slide none of the 16 layouts covers.
+ * need a one-off slide none of the 18 layouts covers.
  */
 export function Slide({
   tone = "light",
@@ -199,7 +199,7 @@ export interface DeckProps extends SlideChromeProps {
  * Stacks slides vertically for a full deck preview, and owns the chrome.
  *
  * `footer`, `date` and `hideFooter` set here reach every slide, and page numbers
- * are counted from position — hand-typing `pageNumber` on sixteen slides meant
+ * are counted from position — hand-typing `pageNumber` on eighteen slides meant
  * inserting one at the front was fourteen edits with nothing to catch a repeat.
  * A prop set on the slide itself still wins, so a cover can pass `hideFooter`
  * or a slide can carry a number the count would not give it.

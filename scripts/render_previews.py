@@ -103,12 +103,16 @@ def main():
                 raise SystemExit("%s rendered %d slides, demo_slides() has %d"
                                  % (deck, len(shots), len(order)))
             pairs = sorted(zip(order, shots))     # into layout order
-            if brand == "web":
-                for layout, path in pairs:
-                    dest = os.path.join(PREVIEW, "layout-%02d.png" % layout)
-                    with open(path, "rb") as fh, open(dest, "wb") as out:
-                        out.write(fh.read())
-                print("wrote %d layout previews" % len(pairs))
+            # both brands, per layout. Corp used to exist only as a 618x348 cell
+            # of the contact sheet, and eleven layouts shipped mixing #006666
+            # chrome with #216B7F content because nobody could see it at that
+            # size. A brand you cannot inspect is a brand you cannot check.
+            pre = "" if brand == "web" else "corp-"
+            for layout, path in pairs:
+                dest = os.path.join(PREVIEW, "%slayout-%02d.png" % (pre, layout))
+                with open(path, "rb") as fh, open(dest, "wb") as out:
+                    out.write(fh.read())
+            print("wrote %d %s layout previews" % (len(pairs), brand))
             sheet(pairs, os.path.join(
                 PREVIEW, "all-layouts.png" if brand == "web" else "corp-all-layouts.png"))
 

@@ -80,3 +80,22 @@ Repo-specific gotchas. Read before re-syncing.
   It is emitted as `--nct-band-w` / `--nct-band-text-w` and re-exported to
   parts_layouts.py as `SEC_PHOTO_*`. Four layouts share it - change the token, not
   the four call sites.
+- **`preview/*.png` is stale, and regenerating it needs PowerPoint.**
+  `render_previews.py` drives PowerPoint over COM, so it only runs on a machine
+  with PowerPoint installed. The 2026-09-07 pass changed the rendered result of
+  layouts 09, 10, 15, 16 and 17 in both brands and could not re-render them, so
+  every PNG in `preview/` predates those fixes. It also now writes `corp-layout-NN.png`
+  alongside the house set: the corp brand used to exist only as a 618x348 cell of a
+  contact sheet, which is how eleven layouts shipped mixing `#006666` chrome with
+  `#216B7F` content without anyone seeing it. Re-run
+  `python scripts/build.py && python scripts/render_previews.py` on a PowerPoint
+  machine before trusting anything in that folder.
+- **spcPct is not `line-height`; use `tokens.lnspc`.** CSS line-height multiplies
+  the font size, OOXML spcPct multiplies the font's line box, and
+  NotoSansThai-Regular declares that box at 1.511 em. Copying a CSS number into a
+  layout makes it 1.5x looser, which is how L10's contact block and L15's agenda
+  list both ended up with their last line under the footer rule while every box
+  was legally above it. Layouts other than those two were left at their own
+  measured values rather than re-flowed sight unseen; `check_template.py` now
+  measures every demo slide against its layout's footer rule, so an overrun fails
+  the build instead of shipping.

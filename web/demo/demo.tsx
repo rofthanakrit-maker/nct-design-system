@@ -34,7 +34,7 @@ import {
 /* The demo is the file everyone copies, so it runs in argument order, not in
    layout-number order: cover, agenda, the problem, what changes, how the work
    is done, what is in scope, who is doing it, what it costs, what happens next.
-   Each of the sixteen layouts still appears exactly once — the 1:1 parity with
+   Each of the eighteen layouts still appears exactly once — the 1:1 parity with
    NCT-Slide-Template.potx is the point of the deck. Chrome and page numbers
    come from <Deck>; nothing here types a page number by hand. */
 
@@ -50,7 +50,7 @@ function App() {
   );
 }
 
-/** The house deck: sixteen layouts, web brand. */
+/** The house deck: all eighteen layouts, web brand. */
 function WebDeck() {
   return (
     <Deck footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569">
