@@ -85,6 +85,8 @@ export const fontSize = {
   body_3: 18.67,
   label: 16,
   foot: 13.33,
+  secnum: 80,
+  quotemark: 160,
   stepnum: 32,
   densehead: 21.33,
   densebody: 16,

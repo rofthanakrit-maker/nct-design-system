@@ -29,6 +29,11 @@ Repo-specific gotchas. Read before re-syncing.
 - **`Slide` measures itself.** `fit` scaling uses a `ResizeObserver`, not CSS —
   `scale()` needs a unitless number and `calc(100cqw / 1280)` resolves to a length.
   Preview cards that render a slide in a zero-width box will show it at scale 1.
+  The first measure runs in a layout effect, so the client never paints the
+  unscaled frame; server-rendered HTML still does until hydration.
+- **Photographs stay in the main entry.** A `@nct/slides/photos` split was tried
+  on 2026-09-11 and reverted: the `NctSlides` global is built from the main entry,
+  and a design agent under the artifact CSP has no other route to them.
 - **`preview/` is generated, not hand-made.** `python scripts/render_previews.py`
   renders both demo decks through PowerPoint COM (Windows only, read-only, never
   saves back) and writes `layout-01..19.png`, `corp-layout-01..19.png` and the two contact sheets. It went

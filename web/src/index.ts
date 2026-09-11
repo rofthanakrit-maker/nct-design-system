@@ -12,7 +12,7 @@
  * its own chrome.
  */
 export { Slide, SlideTitle, Deck, isDarkTone } from "./Slide";
-export type { SlideProps, SlideChromeProps, SlideTone, SlideBrand, DeckProps } from "./Slide";
+export type { SlideProps, SlideChromeProps, SlideTone, SlideBrand, SlideFit, DeckProps } from "./Slide";
 
 export {
   NctLogo,
@@ -96,7 +96,9 @@ export type {
 } from "./layouts";
 
 /* Stock imagery, inlined as data URIs so it survives a CSP that blocks external
-   images. Pass one to SlideSection's `image` or SlideFullImage's `src`. */
+   images. Pass one to SlideSection's `image` or SlideFullImage's `src`. It stays
+   in this entry because design-sync's NctSlides global is built from it; a
+   bundler drops the frames a deck does not import (JS is side-effect free). */
 export {
   photoSection,
   photoFacade,

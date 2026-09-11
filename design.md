@@ -101,6 +101,9 @@ flows, status columns). These extend the system — they don't replace anything 
 }
 ```
 - Status colors are data colors for tables/process flows only — never chrome, headings, or slide backgrounds. Max 3 statuses per slide.
+- On-dark ink is paper at three alphas, not a free dial: `--nct-on-dark-1` 0.92 (body),
+  `-2` 0.80 (secondary), `-3` 0.72 (footer; the floor that passes 4.5:1 at 10pt),
+  plus `--nct-on-dark-rule` 0.28 for hairlines. Eleven hand-picked alphas preceded it.
 - Category coding (FN/AP/AR/GL-style) — **superseded by v4 below.** v2 reused navy / teal / `#4E8FA8` / `#16324F`, four blues 1.31:1 apart. Beyond 4 categories, label instead of coloring (still true).
 - Dense type floor is **10pt** — never go lower; split content across slides instead.
 - See `slide-design-system-v2.md` (in the slide-template project) for full layout specs 11–16 and the dense type scale.
@@ -127,12 +130,22 @@ rhythm are observed rather than estimated).
   --nct-corp-dim:      #E1E1E1;  /* foot-bar spent segment — DECORATION ONLY, 1.2:1 */
   --nct-corp-bar-mid:  #A9C2C2;  /* foot-bar middle segment — decoration only */
 
-  /* the one pair that moves between modes; slides.css reads these everywhere it
-     used to name --nct-teal, so repointing them carries the whole deck */
-  --nct-accent:    var(--nct-teal);      /* .nct-slide--corp → var(--nct-corp)    */
-  --nct-accent-up: var(--nct-teal-up);   /* .nct-slide--corp → var(--nct-corp-up) */
+  /* the roles that move between modes; slides.css reads these everywhere it
+     used to name --nct-teal / --nct-navy, so repointing them carries the deck */
+  --nct-accent:    var(--nct-teal);      /* .nct-slide--corp → var(--nct-corp)      */
+  --nct-accent-up: var(--nct-teal-up);   /* .nct-slide--corp → var(--nct-corp-up)   */
+  --nct-heading:   var(--nct-navy);      /* .nct-slide--corp → var(--nct-ink)       */
+  --nct-dark:      var(--nct-navy);      /* .nct-slide--corp → var(--nct-corp-deep) */
 }
 ```
+
+**Heading and dark follow the mode too (2026-09-11).** Until then only the accent
+pair moved, so every header band, dark panel and card heading stayed house navy
+under a `#006666` rule, and `--nct-corp-deep` was declared and read by nothing.
+Corp headings take `--nct-ink` (the title rule, extended) and dark fills take
+`--nct-corp-deep`. The L10 closing gradient keeps navy in both modes: it is the
+house bookend. `check_template.py` fails a corp build that carries navy anywhere
+else.
 
 **No corp tint.** The source used `#C9D9D4` as a card and zebra fill, but `INK2`
 reads 4.37:1 on it and `OK_T` sits 1.05:1 against it — the exact
@@ -234,6 +247,10 @@ lightness band, all four under the chroma floor, navy↔teal at normal-vision Δ
   --nct-div-warm-l: #D6A67C;
 }
 ```
+- `cat-mute` is 2.5:1, under WCAG 1.4.11's 3:1 for a data mark, and no grey fixes it:
+  every grey that clears 3:1 lands within normal ΔE 12.0 / CVD 3.6 of `cat-3` (swept
+  2026-09-11). So the relief is text — with emphasis on, every muted bar carries its
+  value (12pt `ink-2`, under the 14pt bold emphasised one) and a muted line its end value.
 - Charts sit on paper only — never on a dark slide, so there is no dark variant.
 - A fifth series is never a new hue: fold it into "Other" (`cat-mute`) or split the slide.
 - `cat-2` and `cat-3` share a luminance: a greyscale print cannot separate them, so a key

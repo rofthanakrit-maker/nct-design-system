@@ -28,7 +28,7 @@ BODY_LEVELS = [
 
 def txstyles():
     title = ('<p:titleStyle>%s</p:titleStyle>'
-             % lvl_ppr(1, sz=T_H1, color=INK if BRAND == "corp" else NAVY,
+             % lvl_ppr(1, sz=T_H1, color=heading(),
                        bold=True, font="mj", line=108000))
     body = ('<p:bodyStyle>'
             + "".join(lvl_ppr(i + 1, **kw) for i, kw in enumerate(_levels()))
@@ -65,6 +65,19 @@ def accent_up():
     return CORP_UP if BRAND == "corp" else TEAL_UP
 
 
+def heading():
+    """Heading ink below and including the title. The corporate template sets its
+    titles near-black, and a card heading in house navy under an INK title was
+    the same two-brands-on-one-slide mix accent() exists to stop."""
+    return INK if BRAND == "corp" else NAVY
+
+
+def dark():
+    """Fill of a header band, dark panel, dark slide or system box. CORP_DEEP was
+    declared for exactly this and read by nothing - see tokens.py."""
+    return CORP_DEEP if BRAND == "corp" else NAVY
+
+
 def _levels():
     """BODY_LEVELS with the one brand-sensitive value filled in."""
     lv = [dict(kw) for kw in BODY_LEVELS]
@@ -80,7 +93,9 @@ def sldnum_sp(sid, dark, x=None, y=None, w=1371600):
     """The page-number field. Public because the corp cover builds its own foot
     - no bar, no lockup - and still needs this one piece of it."""
     c = PAPER if dark else INK2
-    alpha = '<a:alpha val="60000"/>' if dark else ''
+    # the run used to say 60 while its own lstStyle said 72, and the run wins:
+    # every dark slide's page number sat under the floor the footer beside it met
+    alpha = '<a:alpha val="%d"/>' % (ON_DARK_3 * 1000) if dark else ''
     x = (SW - MX - w) if x is None else x
     y = FOOT_Y if y is None else y
     return ('<p:sp><p:nvSpPr><p:cNvPr id="%d" name="Slide Number Placeholder"/>'
@@ -95,7 +110,7 @@ def sldnum_sp(sid, dark, x=None, y=None, w=1371600):
             '<a:t>2</a:t></a:fld><a:endParaRPr lang="th-TH" sz="%d"/></a:p></p:txBody></p:sp>'
             % (sid, xfrm(x, y, w, 274320),
                lst_style([dict(sz=T_FOOT, color=c, algn="r",
-                               alpha=72 if dark else None)]),
+                               alpha=ON_DARK_3 if dark else None)]),
                SLDNUM_GUID, T_FOOT, c, alpha, T_FOOT))
 
 
@@ -114,7 +129,7 @@ def _corp_chrome(dark, mark_rid, first_id):
     the rule would have been."""
     out = []
     c = PAPER if dark else INK2
-    alpha = 72 if dark else None
+    alpha = ON_DARK_3 if dark else None
     bar_y = SH - CORP_BAR_H - 45720
     for i, col in enumerate((CORP, CORP_BAR_MID, CORP_DIM)):
         out.append(shape(first_id + i, "Foot Bar %d" % (i + 1), i * CORP_BAR_SEG,
@@ -158,9 +173,9 @@ def chrome(dark=False, mark_rid=None, first_id=90):
         return _corp_chrome(dark, mark_rid, first_id)
     out = []
     c = PAPER if dark else INK2
-    alpha = 72 if dark else None
+    alpha = ON_DARK_3 if dark else None
     out.append(shape(first_id, "Footer Rule", MX, FOOT_Y - 137160, CW, 12700,
-                     solid(PAPER if dark else RULE, 22 if dark else None)))
+                     solid(PAPER if dark else RULE, ON_DARK_RULE if dark else None)))
     out.append(placeholder(first_id + 1, "Date Placeholder", "dt", MX, FOOT_Y, 2743200, 274320,
                            [S("", sz=T_FOOT, color=c, alpha=alpha)], idx=10, anchor="ctr"))
     out.append(placeholder(first_id + 2, "Footer Placeholder", "ftr",
@@ -179,7 +194,7 @@ def slide_master(mark_rid, n_layouts=16):
     corp = BRAND == "corp"
     s.append(placeholder(2, "Title Placeholder", "title", MX, TITLE_Y, CW, TITLE_H,
                          [S("แก้ไขรูปแบบชื่อเรื่องต้นแบบ", sz=T_H1,
-                            color=INK if corp else NAVY,
+                            color=heading(),
                             bold=True, font="mj", line=108000)], anchor="b"))
     s.append(shape(3, "Title Rule", 0 if corp else MX, RULE_Y,
                    SW if corp else RULE_W, CORP_RULE_H if corp else RULE_H,

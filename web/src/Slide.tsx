@@ -3,6 +3,7 @@ import {
   cloneElement,
   isValidElement,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -12,22 +13,41 @@ import {
 import { markColor, markWhite } from "./assets";
 import { canvas } from "./tokens";
 
+// Measure before paint, or the first frame draws the canvas at 1280px and crops
+// it. useLayoutEffect warns under SSR, where there is nothing to measure anyway.
+const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+
 /**
- * Scale factor that fits the fixed canvas into `ref`'s width.
+ * How the fixed canvas meets its container.
+ *
+ * `width` (and `true`) scales it to the container's width and lets the height
+ * follow at 16:9 - a deck scrolled as a page. `contain` scales it to fit both
+ * sides and centres it, for a box whose height is set by something else: a
+ * fullscreen presenter in a 1920x960 browser window cropped the bottom 120px -
+ * the takeaway band and the footer - under `width`. `false` is exactly 1280x720.
+ */
+export type SlideFit = boolean | "width" | "contain";
+
+/**
+ * Scale factor for the fixed canvas.
  * CSS alone can't do this — `scale()` needs a unitless number and
  * `calc(100cqw / 1280)` resolves to a length, so it is measured here instead.
  */
-function useFitScale(ref: React.RefObject<HTMLDivElement | null>, enabled: boolean) {
+function useFitScale(ref: React.RefObject<HTMLDivElement | null>, fit: SlideFit) {
   const [scale, setScale] = useState(1);
-  useEffect(() => {
+  useIsoLayoutEffect(() => {
     const el = ref.current;
-    if (!enabled || !el || typeof ResizeObserver === "undefined") return;
-    const measure = () => setScale((el.clientWidth || canvas.width) / canvas.width);
+    if (!fit || !el) return;
+    const measure = () => {
+      const w = (el.clientWidth || canvas.width) / canvas.width;
+      setScale(fit === "contain" ? Math.min(w, (el.clientHeight || canvas.height) / canvas.height) : w);
+    };
     measure();
+    if (typeof ResizeObserver === "undefined") return;
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [ref, enabled]);
+  }, [ref, fit]);
   return scale;
 }
 
@@ -89,10 +109,12 @@ export interface SlideProps extends SlideChromeProps {
   /** Background treatment. Layout components set this themselves. */
   tone?: SlideTone;
   /**
-   * `true` (default) scales the fixed 1280×720 canvas to the width of its
-   * container. `false` renders it at exactly 1280×720.
+   * `true` / `"width"` (default) scales the fixed 1280×720 canvas to the width
+   * of its container. `"contain"` fits it inside the container's width AND
+   * height, centred - give the container a height. `false` renders it at
+   * exactly 1280×720.
    */
-  fit?: boolean;
+  fit?: SlideFit;
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
@@ -102,7 +124,10 @@ export interface SlideProps extends SlideChromeProps {
  * The slide canvas: a fixed 1280×720 box (13.333in × 7.5in at 96dpi — the same
  * geometry as `NCT-Slide-Template.potx`) plus the footer chrome every layout
  * repeats. Layout components render inside it; use it directly only when you
- * need a one-off slide none of the 18 layouts covers.
+ * need a one-off slide none of the 19 layouts covers.
+ *
+ * It is a `group` announced as "slide", named by its page number when it has
+ * one, so a screen reader can move slide by slide instead of heading by heading.
  */
 export function Slide({
   tone = "light",
@@ -127,6 +152,9 @@ export function Slide({
         .filter(Boolean)
         .join(" ")}
       style={style}
+      role="group"
+      aria-roledescription="slide"
+      aria-label={pageNumber !== undefined ? String(pageNumber) : undefined}
     >
       {/* The corner lockup is a white card with a teal outline, so it only reads
           on a light ground. On the dark bookends corp mode keeps the plain
@@ -172,7 +200,7 @@ export function Slide({
   if (!fit) return board;
   return (
     <div
-      className="nct-slide-fit"
+      className={fit === "contain" ? "nct-slide-fit nct-slide-fit--contain" : "nct-slide-fit"}
       ref={fitRef}
       style={{ "--nct-scale": scale } as CSSProperties}
     >

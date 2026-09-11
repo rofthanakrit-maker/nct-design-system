@@ -16,8 +16,10 @@ No provider, no theme object. Two things only:
    (13.333in × 7.5in at 96dpi); the 19 layouts wrap it. Reach for bare `Slide`
    only when no layout fits.
 
-Slides scale themselves to their container by default (`fit`, measured with a
-`ResizeObserver`). Pass `fit={false}` for a fixed 1280×720 board.
+Slides scale themselves to their container's width by default (`fit`, measured
+before paint). `fit="contain"` fits width *and* height and centres the canvas —
+use it for a presenter or any box whose height is fixed; the default crops the
+foot of the slide there. Pass `fit={false}` for a fixed 1280×720 board.
 
 ## The 19 layouts
 
@@ -36,8 +38,10 @@ Compose with `Deck`. Building blocks: `BulletList`, `DataTable`, `TakeawayBand`,
 from `NCT Template.pptx` — a full-bleed rule edge to edge instead of the 0.6in
 stub, the outlined lockup card bled off the top-right corner, and a
 three-segment bar at the foot instead of the hairline. It also repoints
-`--nct-accent` / `--nct-accent-up`, which every layout reads, so the whole deck
-follows.
+`--nct-accent` / `--nct-accent-up`, `--nct-heading` (navy → ink, as the source
+sets its titles) and `--nct-dark` (navy → `--nct-corp-deep`, for header bands,
+dark panels and system boxes), which every layout reads, so the whole deck
+follows. The closing gradient stays navy in both: it is the house bookend.
 
 What does **not** move is the content palette: paper, ink, tints, status and the
 four category colours are shared, so a table means the same thing in either
@@ -61,11 +65,12 @@ your own layout glue, use the CSS variables:
 | Family | Real names |
 |---|---|
 | Colour | `--nct-paper` `--nct-paper-2` `--nct-ink` `--nct-ink-2` `--nct-rule` `--nct-navy` `--nct-teal` `--nct-teal-up` `--nct-deep` `--nct-mid` `--nct-teal-b` |
-| Accent (brand-switched) | `--nct-accent` `--nct-accent-up` — read these, not `--nct-teal`, in anything new |
+| Brand-switched roles | `--nct-accent` `--nct-accent-up` `--nct-heading` `--nct-dark` — read these, not `--nct-teal` / `--nct-navy`, in anything new |
+| On-dark ink | `--nct-on-dark-1` (body) `--nct-on-dark-2` (secondary) `--nct-on-dark-3` (footer, floor) `--nct-on-dark-rule` (hairlines) |
 | Corp brand | `--nct-corp` `--nct-corp-up` `--nct-corp-deep` `--nct-corp-dim` `--nct-corp-bar-mid` |
 | Status (data cells only) | `--nct-ok` `--nct-ok-tint` `--nct-warn` `--nct-warn-tint` `--nct-risk` `--nct-risk-tint` |
-| Category / chart series (max 4, in order) | `--nct-cat-1` … `--nct-cat-4` · `--nct-cat-mute` ("Other" / de-emphasis — marks only, never text) |
-| Type | `--nct-fs-display` `--nct-fs-section` `--nct-fs-h1` `--nct-fs-stat` `--nct-fs-quote` `--nct-fs-lead` `--nct-fs-body` `--nct-fs-body-2` `--nct-fs-body-3` `--nct-fs-label` `--nct-fs-foot` `--nct-fs-densehead` `--nct-fs-densebody` `--nct-fs-tblhead` `--nct-fs-densecell` |
+| Category / chart series (max 4, in order) | `--nct-cat-1` … `--nct-cat-4` · `--nct-cat-mute` ("Other" / de-emphasis — marks only, never text, and every muted mark carries its value: 2.5:1 is under the 3:1 a data mark needs) |
+| Type | `--nct-fs-display` `--nct-fs-section` `--nct-fs-h1` `--nct-fs-stat` `--nct-fs-quote` `--nct-fs-lead` `--nct-fs-body` `--nct-fs-body-2` `--nct-fs-body-3` `--nct-fs-label` `--nct-fs-foot` `--nct-fs-densehead` `--nct-fs-densebody` `--nct-fs-tblhead` `--nct-fs-densecell` `--nct-fs-secnum` `--nct-fs-quotemark` |
 | Family | `--nct-font-display` (Kanit, headings) `--nct-font-body` (Noto Sans Thai, copy) |
 | Grid | `--nct-mx` `--nct-cw` `--nct-gut` `--nct-fifth` `--nct-third` `--nct-evidence-h` `--nct-phase-tab-h` |
 
@@ -87,7 +92,8 @@ does not keep.
   second slide, never smaller type. The dense sizes are legal on layouts 11–14,
   16, 17 and 18 only, plus the 10pt source note on 19; 03/04/05 stay at 18/16/14pt. `SlideDenseTable` holds 8–9
   rows at that size once the takeaway strip has taken its 0.4in.
-- **On dark slides text is `--nct-paper`, dimmed with alpha — never grey.**
+- **On dark slides text is `--nct-paper` or a `--nct-on-dark-*` step — never grey,
+  never a new alpha.** Three steps replaced eleven hand-picked ones.
   Dark tones: `SlideCover`, `SlideSection`, `SlideAgenda`, `SlideClosing`,
   `SlideFullImage`, and the left panel of `SlideSplitPanel`.
 - **Status colours are data colours.** Tables and process cells only — never a
@@ -98,12 +104,12 @@ does not keep.
   `.nct-tone-foot` scrim under the footer on those two tones for exactly that
   reason: white at full opacity is still 4.0:1 on `TEAL_B`, so the ground has to
   change, not the ink. Never remove it.
-- **Footer chrome on dark tones is `rgb(255 255 255 / 0.72)`.** 0.55 measured
+- **Footer chrome on dark tones is `--nct-on-dark-3` (paper at 0.72).** 0.55 measured
   4.26:1 on navy and 3.00:1 at the teal end — under AA at 10pt, on the two slides
   that stay on screen longest.
 - **`--nct-ink-2` is the floor for muted text, not a dial.** `#5F5F5F` clears AA
   at 10pt on both `--nct-paper` and `--nct-paper-2`. Never lighten it.
-- **`--nct-teal` on white, `--nct-teal-up` on navy.** `teal-up` is the same hue
+- **`--nct-accent` on white, `--nct-accent-up` on `--nct-dark`.** `teal-up` is the same hue
   lifted to read on a dark panel and measures 2.1:1 on white. Swapping them is the
   mistake this pair exists to prevent.
 - **Category colours go in order and never skip.** Two categories are `1` and `2`,

@@ -126,7 +126,10 @@ def _tc_tx(hexv, bold=False):
             '<a:srgbClr val="%s"/></a:tcTxStyle>' % (b, hexv))
 
 
-TABLE_STYLES = (
+# A function, for the same reason layouts() is: the header band is PM.dark(), and
+# BRAND is only set once build() is about to run.
+def table_styles():
+    return (
     '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
     '<a:tblStyleLst xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" def="%s">'
     '<a:tblStyle styleId="%s" styleName="NCT">'
@@ -137,7 +140,7 @@ TABLE_STYLES = (
     % (TBL_STYLE_ID, TBL_STYLE_ID,
        _tc_tx(INK), _tc_bdr(), _tc_fill(PAPER),
        _tc_fill(PAPER2),
-       _tc_tx(PAPER, bold=True), _tc_bdr(insideH=False), _tc_fill(NAVY)))
+       _tc_tx(PAPER, bold=True), _tc_bdr(insideH=False), _tc_fill(PM.dark())))
 
 
 def mix(fg, bg, pct):
@@ -298,8 +301,8 @@ def _dia_box(sid, name, x, y, w, text, cat=None):
     """v2 §14 standard part: square corners, 0.80in tall, flat, 12pt label.
 
     Tone is the distinction: no category means a system that already exists, so
-    it takes the same NAVY L11 uses for the current state. A category means this
-    project adds it, so it goes light with the category on its edge and its tab.
+    it takes the same dark fill L11 uses for the current state. A category means
+    this project adds it, so it goes light with the category on its edge and its tab.
     """
     if cat:
         box = shape(sid, name, x, y, w, DIA_BOX_H, solid(PAPER), prst="rect",
@@ -309,7 +312,7 @@ def _dia_box(sid, name, x, y, w, text, cat=None):
         tab = shape(sid + 100, name + " Tab", x + 114300, y + 114300,
                     DIA_TAB_W, DIA_TAB_H, solid(cat))
         return [box, tab]
-    return [shape(sid, name, x, y, w, DIA_BOX_H, solid(NAVY), prst="rect",
+    return [shape(sid, name, x, y, w, DIA_BOX_H, solid(PM.dark()), prst="rect",
                   body=txbody([para(text, sz=T_DENSEBODY, color=PAPER, algn="ctr",
                                     line=110000)], anchor="ctr"))]
 
@@ -378,6 +381,10 @@ def column_chart(name, categories, values, highlight):
     value on the cap, the rest CAT_MUTE. Hairline RULE gridlines, a CAT_MUTE
     baseline, 12pt INK2 ticks, no legend for one series.
 
+    Every muted bar carries its value too, 12pt INK2 under the 14pt INK one:
+    CAT_MUTE is 2.5:1 on paper, under the 3:1 a data mark needs, and no grey
+    that clears 3:1 stays clear of CAT_3 (tokens.py). The label is the relief.
+
     Literal values (c:strLit / c:numLit), no embedded workbook: the demo shows
     the styling to copy. ponytail: "Edit Data" has nothing to open on this one
     chart - a real slide inserts its own chart on the placeholder, which starts
@@ -403,7 +410,8 @@ def column_chart(name, categories, values, highlight):
             '<c:dLblPos val="outEnd"/><c:showLegendKey val="0"/><c:showVal val="1"/>'
             '<c:showCatName val="0"/><c:showSerName val="0"/><c:showPercent val="0"/>'
             '<c:showBubbleSize val="0"/></c:dLbl>'
-            '<c:showLegendKey val="0"/><c:showVal val="0"/><c:showCatName val="0"/>'
+            '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr>%s<c:dLblPos val="outEnd"/>'
+            '<c:showLegendKey val="0"/><c:showVal val="1"/><c:showCatName val="0"/>'
             '<c:showSerName val="0"/><c:showPercent val="0"/><c:showBubbleSize val="0"/></c:dLbls>'
             '<c:cat><c:strLit><c:ptCount val="%d"/>%s</c:strLit></c:cat>'
             '<c:val><c:numLit><c:formatCode>General</c:formatCode><c:ptCount val="%d"/>%s'
@@ -428,7 +436,7 @@ def column_chart(name, categories, values, highlight):
             '<c:plotVisOnly val="1"/><c:dispBlanksAs val="gap"/></c:chart>'
             '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr>%s</c:chartSpace>'
             % (NS_C, name, solid(CAT_MUTE), highlight, solid(CAT_1), highlight,
-               _chart_txpr(T_BODY3, INK, bold=True),
+               _chart_txpr(T_BODY3, INK, bold=True), _chart_txpr(T_LABEL, INK2),
                n, pts(categories), n, pts(values), gap,
                ln(CAT_MUTE), _chart_txpr(T_LABEL, INK2), ln(RULE), _chart_txpr(T_LABEL, INK2),
                nice_step(max(values)), _chart_txpr(T_LABEL, INK2)))
@@ -778,7 +786,7 @@ def build(path, with_slides, title):
     w("ppt/_rels/presentation.xml.rels", rels(pres_rels))
     w("ppt/presProps.xml", PRES_PROPS)
     w("ppt/viewProps.xml", VIEW_PROPS)
-    w("ppt/tableStyles.xml", TABLE_STYLES)
+    w("ppt/tableStyles.xml", table_styles())
     w("ppt/theme/theme1.xml", PT.theme())
 
     # master
@@ -820,7 +828,7 @@ def build(path, with_slides, title):
 if __name__ == "__main__":
     build(os.path.join(OUT, "NCT-Slide-Template.potx"), False, "NCT Slide Template")
     build(os.path.join(OUT, "NCT-Slide-Template-Demo.pptx"), True, "NCT Slide Template — ตัวอย่าง")
-    # v3: the same eighteen layouts wearing the chrome the corporate proposal
+    # v3: the same nineteen layouts wearing the chrome the corporate proposal
     # template requires. A PowerPoint layout cannot toggle its own chrome the
     # way the React <Deck> can - it is baked in - so the corp deck is a second
     # file built from the same source, not a second set of layouts inside one.

@@ -29,7 +29,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 OUT = os.path.dirname(HERE)
 
-from tokens import SH, SW, TEAL, TEAL_UP  # noqa: E402
+from tokens import SH, SW, NAVY, TEAL, TEAL_UP  # noqa: E402
 import build as B  # noqa: E402
 
 A = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
@@ -222,10 +222,19 @@ def _brand_leaks(path, z, names):
     Layouts and master only, not the demo slides' content. There is no category
     exception any more: v2 had CAT_2 = TEAL and had to wave L12's cards and L16's
     key through; the v4 category palette shares no hex with either house accent.
+
+    NAVY is checked the same way, for the same bug one role over: it was every
+    header band, dark panel and card heading in both brands, and CORP_DEEP sat
+    declared and unread. The one exception is L10, whose navy->teal gradient is
+    the house bookend in either brand, so its photo fade has to meet that navy.
     """
     if "-Corp" not in os.path.basename(path):
         return []
     out = []
+    table = "ppt/tableStyles.xml"
+    if table in names and NAVY in z.read(table).decode("utf-8"):
+        out.append("%s: header band is house navy %s in a corp build - use "
+                   "PM.dark()" % (table, NAVY))
     for n in sorted(x for x in names
                     if x.startswith("ppt/slideLayouts/slideLayout")
                     or x.startswith("ppt/slideMasters/slideMaster")):
@@ -233,14 +242,19 @@ def _brand_leaks(path, z, names):
         tree = root.find(".//%scSld/%sspTree" % (P, P))
         if tree is None:
             continue
+        csld = root.find(".//%scSld" % P)
+        bookend = csld is not None and (csld.get("name") or "").startswith("10 ")
         for ch in list(tree):
             nv = ch.find(".//%scNvPr" % P)
             name = nv.get("name") if nv is not None else "?"
             xml = ET.tostring(ch, encoding="unicode")
-            for house in (TEAL, TEAL_UP):
+            for house, fix in ((TEAL, "accent()"), (TEAL_UP, "accent_up()"),
+                               (NAVY, "heading() / dark()")):
+                if house == NAVY and bookend:
+                    continue
                 if house in xml:
-                    out.append("%s: %r carries house accent %s in a corp build - "
-                               "use accent() / accent_up()" % (n, name, house))
+                    out.append("%s: %r carries house colour %s in a corp build - "
+                               "use %s" % (n, name, house, fix))
     return out
 
 

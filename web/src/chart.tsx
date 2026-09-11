@@ -130,10 +130,10 @@ export function Chart(props: ChartProps & { width: number; height: number }) {
 
   const marks: ReactNode[] = [];
   const labels: ReactNode[] = [];
-  const tip = (key: string, x: number, y: number, v: number, anchor: "middle" | "start") =>
+  const tip = (key: string, x: number, y: number, v: number, anchor: "middle" | "start", mute = false) =>
     labels.push(
-      <text key={key} className="nct-chart__value" x={x} y={y} textAnchor={anchor}
-            dominantBaseline={anchor === "start" ? "middle" : "auto"}>
+      <text key={key} className={mute ? "nct-chart__value nct-chart__value--mute" : "nct-chart__value"}
+            x={x} y={y} textAnchor={anchor} dominantBaseline={anchor === "start" ? "middle" : "auto"}>
         {fmt(v)}
       </text>,
     );
@@ -141,19 +141,23 @@ export function Chart(props: ChartProps & { width: number; height: number }) {
   if (props.kind === "column" || props.kind === "bar") {
     const s = list[0];
     const hi = props.highlight;
-    // label the emphasised bar; with no emphasis, the largest
+    // No emphasis: every bar is a series colour (>= 3:1), so only the largest is
+    // labelled. Emphasis: the muted bars are --nct-cat-mute at 2.5:1, under the
+    // 3:1 a data mark needs, and no grey that clears it stays clear of cat-3 - so
+    // every muted bar carries its value, quieter than the emphasised one.
     const labelled = hi ?? s.values.indexOf(Math.max(...s.values));
     s.values.forEach((v, c) => {
-      const fill = hi === undefined || c === hi ? cat(slotOf(0)) : MUTE;
+      const muted = hi !== undefined && c !== hi;
+      const fill = muted ? MUTE : cat(slotOf(0));
       const title = <title>{`${categories[c]} · ${s.name}: ${fmt(v)}${unit ? ` ${unit}` : ""}`}</title>;
       if (horizontal) {
         const y = c * band + (band - thick) / 2;
         marks.push(<path key={c} d={barPath(left, y, vx(v) - left, thick, "right")} fill={fill}>{title}</path>);
-        if (c === labelled) tip(`v${c}`, vx(v) + 9.6, y + thick / 2, v, "start");
+        if (c === labelled || muted) tip(`v${c}`, vx(v) + 9.6, y + thick / 2, v, "start", muted);
       } else {
         const x = left + c * band + (band - thick) / 2;
         marks.push(<path key={c} d={barPath(x, vy(v), thick, vy(0) - vy(v), "up")} fill={fill}>{title}</path>);
-        if (c === labelled) tip(`v${c}`, x + thick / 2, vy(v) - 9.6, v, "middle");
+        if (c === labelled || muted) tip(`v${c}`, x + thick / 2, vy(v) - 9.6, v, "middle", muted);
       }
     });
   }
@@ -204,8 +208,9 @@ export function Chart(props: ChartProps & { width: number; height: number }) {
           ))}
         </g>,
       );
-      if (clear && (lineHi === undefined || lineHi === i))
-        tip(`e${i}`, px(n - 1) + 12, ends[i], s.values[n - 1], "start");
+      // a muted line gets its end value too, for the same 2.5:1 reason as a muted bar
+      if (clear)
+        tip(`e${i}`, px(n - 1) + 12, ends[i], s.values[n - 1], "start", lineHi !== undefined && lineHi !== i);
     });
   }
 
@@ -256,6 +261,7 @@ export function Chart(props: ChartProps & { width: number; height: number }) {
       </svg>
       {/* wrapped: a table will not shrink below its content, so the clip lives on a div */}
       <div className="nct-sr"><table>
+        <caption>{list.map((s) => s.name).join(", ")}{unit ? ` (${unit})` : ""}</caption>
         <thead>
           <tr><th />{list.map((s, i) => <th key={i}>{s.name}</th>)}</tr>
         </thead>

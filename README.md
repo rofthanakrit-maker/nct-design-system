@@ -27,14 +27,14 @@ scripts/tokens.py            ← single source of truth
 ## Layout ทั้ง 19
 
 Render จาก PowerPoint จริง ไม่ต้อง clone ก็ดูได้ — ภาพในนี้คือไฟล์ใน `preview/`
-ที่ `scripts/render_previews.py` เขียนทับทุกครั้งที่ geometry ขยับ
+ที่ `scripts/render_previews.py` เขียนทับทุกครั้งที่ geometry หรือสีขยับ
 
 | web | corp |
 |---|---|
 | <img src="preview/all-layouts.png" alt="contact sheet ของ 19 layout brand web" width="380"> | <img src="preview/corp-all-layouts.png" alt="contact sheet ของ 19 layout brand corp" width="380"> |
 
 <details>
-<summary>ดูทีละ layout (19 ภาพ)</summary>
+<summary>ดูทีละ layout — web (19 ภาพ)</summary>
 
 ![layout 01](preview/layout-01.png)
 
@@ -76,6 +76,49 @@ Render จาก PowerPoint จริง ไม่ต้อง clone ก็ด�
 
 </details>
 
+<details>
+<summary>ดูทีละ layout — corp (19 ภาพ)</summary>
+
+![corp layout 01](preview/corp-layout-01.png)
+
+![corp layout 02](preview/corp-layout-02.png)
+
+![corp layout 03](preview/corp-layout-03.png)
+
+![corp layout 04](preview/corp-layout-04.png)
+
+![corp layout 05](preview/corp-layout-05.png)
+
+![corp layout 06](preview/corp-layout-06.png)
+
+![corp layout 07](preview/corp-layout-07.png)
+
+![corp layout 08](preview/corp-layout-08.png)
+
+![corp layout 09](preview/corp-layout-09.png)
+
+![corp layout 10](preview/corp-layout-10.png)
+
+![corp layout 11](preview/corp-layout-11.png)
+
+![corp layout 12](preview/corp-layout-12.png)
+
+![corp layout 13](preview/corp-layout-13.png)
+
+![corp layout 14](preview/corp-layout-14.png)
+
+![corp layout 15](preview/corp-layout-15.png)
+
+![corp layout 16](preview/corp-layout-16.png)
+
+![corp layout 17](preview/corp-layout-17.png)
+
+![corp layout 18](preview/corp-layout-18.png)
+
+![corp layout 19](preview/corp-layout-19.png)
+
+</details>
+
 ## PowerPoint
 
 ```bash
@@ -97,8 +140,9 @@ python scripts/render_previews.py  # → preview/ (ต้องมี PowerPoint
 
 `check_template.py` ตรวจ 5 อย่าง — XML parse, shape id / placeholder idx ซ้ำ,
 shape หลุดขอบ canvas, **ข้อความล้นลงไปทับเส้น footer** (คิดความสูงบรรทัดไทยจริง
-ที่ 1.511 em ไม่ใช่ค่า spcPct ตรง ๆ) และ **สีเทาบ้าน `#216B7F` / `#8FBACE`
-โผล่ในไฟล์ corp** สองข้อหลังคือบั๊กที่เคยหลุดไปแล้วทั้งคู่
+ที่ 1.511 em ไม่ใช่ค่า spcPct ตรง ๆ) และ **สีบ้าน `#216B7F` / `#8FBACE` / navy
+`#23436D` โผล่ในไฟล์ corp** (navy ยกเว้น gradient ของ layout 10) สองข้อหลังคือ
+บั๊กที่เคยหลุดไปแล้วทั้งคู่
 
 - `preview/` — `layout-01..19.png` (web) + `corp-layout-01..19.png` (corp)
   เรียงตามเบอร์ layout + contact sheet สองใบ (`all-layouts.png` = web,
@@ -122,12 +166,13 @@ npm run assets               # โลโก้เป็น data URI
 ใน PowerPoint ได้โดยหยิบ layout เบอร์เดิม
 
 `<Deck brand="corp">` เปลี่ยนเป็นแบบฟอร์มบริษัท — เส้นเต็มความกว้าง, การ์ดโลโก้
-มุมขวาบน, แถบสามช่วงที่ก้น และ `--nct-accent` ย้ายไป `#006666` ทั้งเด็ค
+มุมขวาบน, แถบสามช่วงที่ก้น และย้าย role สีทั้งเด็ค: `--nct-accent` → `#006666`,
+`--nct-heading` → ink, `--nct-dark` (หัวตาราง, panel เข้ม, กล่องระบบ) → `#193B36`
 ฝั่งเว็บสลับได้ใน deck เดียว ฝั่ง PowerPoint ต้องหยิบไฟล์ `-Corp.potx`
 
 สองแบรนด์ **เลือกทั้งเด็ค ไม่ผสมในสไลด์เดียว** — ฝั่ง `.potx` บังคับด้วย
-`check_template.py` ที่ fail ถ้าเจอสีเทาบ้านหลุดเข้าไฟล์ corp ข้อยกเว้นเดียวคือ
-สี category 4 สีที่ใช้ร่วมกันทั้งสองแบรนด์โดยตั้งใจ — ตารางต้องแปลว่าเหมือนกัน
+`check_template.py` ที่ fail ถ้าเจอสีบ้านหลุดเข้าไฟล์ corp สีที่ไม่ย้ายตามแบรนด์คือ
+paper, ink, tint, status และ category 4 สี โดยตั้งใจ — ตารางต้องแปลว่าเหมือนกัน
 ไม่ว่าอยู่บนหัวจดหมายไหน
 
 `SlideCover` เป็น layout เดียวที่สอง brand เป็น**คนละสไลด์** ไม่ใช่สไลด์เดียวกัน

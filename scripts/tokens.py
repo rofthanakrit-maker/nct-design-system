@@ -53,6 +53,12 @@ CAT_4   = "6C4289"   # violet                                 | 7.6:1
 # dE >= 15 from every slot (15.5 to CAT_3); a darker one collides with CAT_3.
 # It is the old INK2 value, banned as TEXT at 2.5:1 - MARKS ONLY, and every use
 # needs a value or legend beside it.
+#
+# 2.5:1 is also under the 3:1 WCAG 1.4.11 asks of a data mark, and no grey fixes
+# that: swept 2026-09-11, every grey >= 3:1 lands within normal dE 12.0 / CVD 3.6
+# of CAT_3 (#949494 is the lightest). So the relief is text, not colour - every
+# muted bar carries its value in INK2, and a muted line its end value. The mark
+# stops being the only place the number lives.
 CAT_MUTE = "A4A4A4"
 
 # ---- v4: sequential ramp - magnitude, one hue (256), light -> dark ----
@@ -74,7 +80,18 @@ DIV_WARM_L = "D6A67C"  # CAT_2's hue at SEQ_300's weight: 2.19:1 against its 2.1
 CORP      = "006666"   # the anchor: full-bleed rule, phase tab, card outline
                         # 6.8:1 on PAPER both ways - safe as fill and as text
 CORP_DEEP = "193B36"   # the deep companion: second header band, on-dark panel
-                        # 12.2:1 on PAPER both ways
+                        # 12.2:1 on PAPER both ways. It is the corp half of
+                        # DARK below - for a year it was declared and read by
+                        # nothing, and a corp table header came out house NAVY
+# The two roles that move with the brand besides the accent pair. NAVY did both
+# jobs in both brands, so a corp deck set #006666 rules over #23436D table heads
+# and panels - two unrelated blues on one slide, the mix design.md forbids.
+#   HEADING - ink for headings below the title: card, dense, figure, quote.
+#             Corp follows the title rule the source sets: near-black INK.
+#   DARK    - fill of a header band, a dark panel, a dark slide, a system box.
+# Resolve them with parts_master.heading() / dark(); slides.css reads
+# --nct-heading / --nct-dark. L01's and L10's gradients are not DARK: they are
+# the house bookends and keep NAVY in either brand.
 CORP_UP   = "8CC2C2"   # the same corp teal lifted until it reads on a dark
                         # ground: 5.1:1 on NAVY, 6.2:1 on CORP_DEEP. ON DARK
                         # ONLY - it is 2.0:1 on PAPER. Same trap, same rule as
@@ -84,6 +101,17 @@ CORP_DIM  = "E1E1E1"   # foot-bar spent segment. DECORATION ONLY - 1.2:1 on
 # No corp tint. The source used C9D9D4 as a card/zebra fill, but INK2 reads
 # 4.37:1 on it and OK_T sits 1.05:1 against it - the exact status-fill-vanishes
 # bug the v2 note above exists to prevent. Corp surfaces are PAPER2, same as v1.
+
+# ---- on-dark ink: PAPER at alpha, the only text colour on a dark ground ----
+# Eleven alphas had drifted in (70 72 75 78 80 82 88 92 on text, 22 32 on rules),
+# two points apart where the eye cannot tell them apart, and every contrast fix
+# meant re-measuring each one. Three ink steps and one rule. Each is the value
+# that was measured to pass where its lowest user sits: 72 is 4.5:1 for the 10pt
+# footer on NAVY and on a scrimmed gradient foot, which is why it is the floor.
+ON_DARK_1    = 92   # body on dark: lists, the ask, contact
+ON_DARK_2    = 80   # secondary: section description, captions, subtitle, labels
+ON_DARK_3    = 72   # tertiary and chrome: footer, page number, level-3 lines
+ON_DARK_RULE = 28   # hairlines on a dark or accent ground - never text
 
 # ---- canvas ----
 SW, SH  = 12192000, 6858000          # 16:9, 13.333in x 7.5in
@@ -222,6 +250,8 @@ T_BODY2   = 1600   # 16pt  body L2
 T_BODY3   = 1400   # 14pt  body L3 / caption
 T_LABEL   = 1200   # 12pt  eyebrow / stat label
 T_FOOT    = 1000   # 10pt  footer, page number
+T_SECNUM  = 6000   # 60pt  section number on L02 / L15
+T_QUOTEMK = 12000  # 120pt the decorative opening quote on L07
 
 # ---- v2: dense type roles - ONLY legal on L11-L14 and L16, floor is 1000 (10pt) ----
 T_STEPNUM   = 2400   # 24pt  step/card number chip

@@ -1,8 +1,8 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { coverScatter, markColor } from "./assets";
 import { Chart, type ChartProps } from "./chart";
 import { space } from "./tokens";
-import { Slide, SlideTitle, type SlideChromeProps } from "./Slide";
+import { Slide, SlideTitle, type SlideChromeProps, type SlideFit } from "./Slide";
 import {
   BulletList,
   DataTable,
@@ -12,11 +12,11 @@ import {
   type DataTableProps,
 } from "./primitives";
 
-/* The 18 layouts of NCT-Slide-Template.potx, one component each. Names, slots
+/* The 19 layouts of NCT-Slide-Template.potx, one component each. Names, slots
    and geometry mirror the .potx so a design made here can be rebuilt in
    PowerPoint by picking the layout of the same number. */
 
-type Base = SlideChromeProps & { fit?: boolean };
+type Base = SlideChromeProps & { fit?: SlideFit };
 
 /* ---------------------------------------------------------------- 01 */
 export interface SlideCoverProps extends Base {
@@ -58,8 +58,8 @@ export function SlideCover({ title, subtitle, ...chrome }: SlideCoverProps) {
   }
   return (
     <Slide tone="open" {...chrome}>
-      <div className="nct-decor" style={{ right: -160, top: -160, width: 480, height: 480 }} />
-      <div className="nct-decor" style={{ right: -60, top: 300, width: 288, height: 288 }} />
+      <div className="nct-decor nct-decor--cover-a" />
+      <div className="nct-decor nct-decor--cover-b" />
       <NctLogo variant="white" className="nct-cover__logo" width={269} />
       <h1 className="nct-cover__title">{title}</h1>
       <div className="nct-cover__rule" />
@@ -204,9 +204,7 @@ export function SlideKeyFigures({ title, figures, footnote, ...chrome }: SlideKe
   return (
     <Slide {...chrome}>
       <SlideTitle>{title}</SlideTitle>
-      {/* the body box starts 91.2px lower here, so it has to end 91.2px earlier
-          too - inheriting --nct-body-h ran it to 724.8 and past the canvas */}
-      <div className="nct-body" style={{ top: 268.8, height: 364.8 }}>
+      <div className="nct-body nct-body--figures">
         <div className="nct-figures">
           {figures.map((f, i) => (
             <div className="nct-figure" key={i}>
@@ -215,7 +213,7 @@ export function SlideKeyFigures({ title, figures, footnote, ...chrome }: SlideKe
             </div>
           ))}
         </div>
-        {footnote && <p className="nct-caption" style={{ marginTop: 57.6 }}>{footnote}</p>}
+        {footnote && <p className="nct-caption nct-caption--footnote">{footnote}</p>}
       </div>
     </Slide>
   );
@@ -399,13 +397,13 @@ export function SlideClosing({
           <div className="nct-closing__scrim-foot" />
         </>
       ) : (
-        <div className="nct-decor" style={{ left: -144, top: 432, width: 384, height: 384 }} />
+        <div className="nct-decor nct-decor--close-a" />
       )}
       {ask && !full && <div className="nct-closing__veil" />}
       {band ? (
         <SectionBand image={image} alt={imageAlt} />
       ) : !full && (
-        <div className="nct-decor" style={{ right: -48, top: -48, width: 336, height: 336 }} />
+        <div className="nct-decor nct-decor--close-b" />
       )}
       <h2 className={image ? "nct-closing__title nct-closing__title--photo" : "nct-closing__title"}>
         {title}
@@ -477,7 +475,7 @@ export function SlideSplitPanel({
           </div>
         </div>
         {takeaway && (
-          <div style={{ marginTop: 14.4 }}>
+          <div className="nct-follow">
             <TakeawayBand label={takeawayLabel}>{takeaway}</TakeawayBand>
           </div>
         )}
@@ -513,22 +511,21 @@ export function SlideFourCards({
       <SlideTitle>{title}</SlideTitle>
       <div className="nct-body">
         <div className="nct-cards nct-cards--4">
-          {cards.map((c, i) => {
-            const cat = `var(--nct-cat-${i + 1})`;
-            return (
-              <div className="nct-card nct-card--square" key={i}>
-                <div className="nct-card__tab" style={{ background: cat }} />
-                <div className="nct-card__num" style={{ color: cat }}>
-                  {c.number ?? `0${i + 1}`}
-                </div>
-                <h3 className="nct-card__heading">{c.heading}</h3>
-                {c.body && <p className="nct-card__body">{c.body}</p>}
-              </div>
-            );
-          })}
+          {cards.map((c, i) => (
+            <div
+              className="nct-card nct-card--square"
+              key={i}
+              style={{ "--nct-card-cat": `var(--nct-cat-${i + 1})` } as CSSProperties}
+            >
+              <div className="nct-card__tab" />
+              <div className="nct-card__num">{c.number ?? `0${i + 1}`}</div>
+              <h3 className="nct-card__heading">{c.heading}</h3>
+              {c.body && <p className="nct-card__body">{c.body}</p>}
+            </div>
+          ))}
         </div>
         {band && (
-          <div style={{ marginTop: 14.4 }}>
+          <div className="nct-follow">
             <TakeawayBand label={bandLabel} tone="dark">
               {band}
             </TakeawayBand>
@@ -579,10 +576,10 @@ export function SlideProcessFlow({
     <Slide {...chrome}>
       <SlideTitle>{title}</SlideTitle>
       <div className="nct-body">
-        {subtitle && <p className="nct-caption" style={{ margin: 0 }}>{subtitle}</p>}
-        <div className="nct-flow" style={{ marginTop: 33.6 }}>
+        {subtitle && <p className="nct-caption nct-caption--flush">{subtitle}</p>}
+        <div className="nct-flow">
           {steps.map((s, i) => (
-            <div key={i} style={{ display: "contents" }}>
+            <div key={i} className="nct-flow__pair">
               <div className="nct-flow__step">
                 <div className="nct-flow__chip">{i + 1}</div>
                 <h3 className="nct-densehead nct-flow__head">{s.heading}</h3>
@@ -599,11 +596,11 @@ export function SlideProcessFlow({
           ))}
         </div>
         {result && (
-          <div style={{ marginTop: 19.2 }}>
+          <div className="nct-flow-foot">
             <TakeawayBand label={resultLabel}>{result}</TakeawayBand>
           </div>
         )}
-        {note && <p className="nct-dense" style={{ marginTop: 19.2, color: "var(--nct-ink-2)" }}>{note}</p>}
+        {note && <p className="nct-dense nct-flow-note">{note}</p>}
       </div>
     </Slide>
   );

@@ -25,7 +25,7 @@ COLORS = [
     ("ink", T.INK, "body text"),
     ("ink-2", T.INK2, "caption, label, footer"),
     ("rule", T.RULE, "hairline, divider"),
-    ("navy", T.NAVY, "headings, dark panels, primary accent"),
+    ("navy", T.NAVY, "house brand navy - read it through --nct-heading / --nct-dark"),
     ("teal", T.TEAL, "rules, bullets, links, secondary accent"),
     ("teal-up", T.TEAL_UP, "the same teal lifted to read ON NAVY - never on white"),
     ("deep", T.DEEP, "photo scrim, full-image background"),
@@ -90,6 +90,8 @@ TYPE = [
     ("body-3", T.T_BODY3, "body level 3 / caption"),
     ("label", T.T_LABEL, "eyebrow / stat label"),
     ("foot", T.T_FOOT, "footer, page number"),
+    ("secnum", T.T_SECNUM, "section number (L02 / L15)"),
+    ("quotemark", T.T_QUOTEMK, "decorative opening quote (L07)"),
     ("stepnum", T.T_STEPNUM, "dense: step / card number"),
     ("densehead", T.T_DENSEHEAD, "dense: section heading (L11-L14)"),
     ("densebody", T.T_DENSEBODY, "dense: body copy (L11-L14)"),
@@ -118,6 +120,17 @@ def css():
     out.append("     both modes. */")
     out.append("  --nct-accent:    var(--nct-teal);")
     out.append("  --nct-accent-up: var(--nct-teal-up);")
+    out.append("  /* heading ink and dark fill, the other two roles the brand moves -")
+    out.append("     tokens.py HEADING / DARK. .nct-slide--corp repoints them to ink and")
+    out.append("     --nct-corp-deep; nothing in slides.css names --nct-navy for either. */")
+    out.append("  --nct-heading:   var(--nct-navy);")
+    out.append("  --nct-dark:      var(--nct-navy);")
+    out.append("")
+    out.append("  /* ---- on-dark ink: paper at alpha, the only text colour on a dark ground ---- */")
+    for name, a in (("on-dark-1", T.ON_DARK_1), ("on-dark-2", T.ON_DARK_2),
+                    ("on-dark-3", T.ON_DARK_3), ("on-dark-rule", T.ON_DARK_RULE)):
+        r, g, b = (int(T.PAPER[i:i + 2], 16) for i in (0, 2, 4))
+        out.append("  --nct-%-13s rgb(%d %d %d / %g);" % (name + ":", r, g, b, a / 100))
     out.append("")
     out.append("  /* ---- canvas & grid (px at 96dpi; 1px = 9525 EMU) ---- */")
     for name, emu in SPACE:

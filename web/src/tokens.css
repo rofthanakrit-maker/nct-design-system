@@ -8,7 +8,7 @@
   --nct-ink:         #333333;  /* body text */
   --nct-ink-2:       #5F5F5F;  /* caption, label, footer */
   --nct-rule:        #E5E5E5;  /* hairline, divider */
-  --nct-navy:        #23436D;  /* headings, dark panels, primary accent */
+  --nct-navy:        #23436D;  /* house brand navy - read it through --nct-heading / --nct-dark */
   --nct-teal:        #216B7F;  /* rules, bullets, links, secondary accent */
   --nct-teal-up:     #8FBACE;  /* the same teal lifted to read ON NAVY - never on white */
   --nct-deep:        #16324F;  /* photo scrim, full-image background */
@@ -42,6 +42,17 @@
      both modes. */
   --nct-accent:    var(--nct-teal);
   --nct-accent-up: var(--nct-teal-up);
+  /* heading ink and dark fill, the other two roles the brand moves -
+     tokens.py HEADING / DARK. .nct-slide--corp repoints them to ink and
+     --nct-corp-deep; nothing in slides.css names --nct-navy for either. */
+  --nct-heading:   var(--nct-navy);
+  --nct-dark:      var(--nct-navy);
+
+  /* ---- on-dark ink: paper at alpha, the only text colour on a dark ground ---- */
+  --nct-on-dark-1:    rgb(255 255 255 / 0.92);
+  --nct-on-dark-2:    rgb(255 255 255 / 0.8);
+  --nct-on-dark-3:    rgb(255 255 255 / 0.72);
+  --nct-on-dark-rule: rgb(255 255 255 / 0.28);
 
   /* ---- canvas & grid (px at 96dpi; 1px = 9525 EMU) ---- */
   --nct-slide-w:     1280px;
@@ -93,6 +104,8 @@
   --nct-fs-body-3:    18.67px;  /* 14pt - body level 3 / caption */
   --nct-fs-label:     16px;  /* 12pt - eyebrow / stat label */
   --nct-fs-foot:      13.33px;  /* 10pt - footer, page number */
+  --nct-fs-secnum:    80px;  /* 60pt - section number (L02 / L15) */
+  --nct-fs-quotemark: 160px;  /* 120pt - decorative opening quote (L07) */
   --nct-fs-stepnum:   32px;  /* 24pt - dense: step / card number */
   --nct-fs-densehead: 21.33px;  /* 16pt - dense: section heading (L11-L14) */
   --nct-fs-densebody: 16px;  /* 12pt - dense: body copy (L11-L14) */

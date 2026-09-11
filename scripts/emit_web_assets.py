@@ -2,13 +2,19 @@
 """Embed the NCT marks and the stock photography as data URIs in web/src/assets.ts.
 
 Artifacts render under a CSP that blocks external images, so anything a layout
-shows has to travel inside the bundle. The marks are downscaled to the largest
-size the layouts actually use (logo 2.56in wide, mark 0.30in) at 2x for retina,
-then quantised; the photographs are already cropped and compressed by
-scripts/prepare_images.py and are passed through as-is.
+shows has to travel inside the bundle. The photographs stay in the main entry on
+purpose: design-sync builds the `NctSlides` global from it, and a design agent
+working under that CSP has no other way to reach them. A consumer with a bundler
+drops the unused ones - package.json marks the JS side-effect free. (Moving them
+to a `@nct/slides/photos` entry was tried and reverted for exactly this reason.)
 
-Only the photographs a layout or the demo actually shows are inlined - the rest
-of assets/ stays on disk for the .potx side, which reads files, not base64.
+The logos ship at full source width. They used to be cut to 512px "at 2x for
+the 2.56in the layouts use" - but the corp cover draws the lockup at 4.375in,
+and <Slide fit> scales the whole canvas up to the screen, so a 1920px projector
+put 630 css px of logo on a 512px bitmap. 733px is every pixel assets/ has; a
+vector master is the real fix and there is none in the repo. The photographs
+are already cropped and compressed by scripts/prepare_images.py and pass
+through as-is.
 """
 import base64, io, os
 from PIL import Image
@@ -18,10 +24,10 @@ ROOT = os.path.dirname(HERE)
 SRC = os.path.join(ROOT, "assets")
 OUT = os.path.join(ROOT, "web", "src", "assets.ts")
 
-# name -> (source file, target width in px @2x, has soft gradient?)
+# name -> (source file, target width in px, has soft gradient?). None = source width.
 ITEMS = [
-    ("logoColor", "nct-logo-color.png", 512, True),
-    ("logoWhite", "nct-logo-white.png", 512, False),
+    ("logoColor", "nct-logo-color.png", None, True),
+    ("logoWhite", "nct-logo-white.png", None, False),
     ("markColor", "nct-mark-color.png", 180, True),
     ("markWhite", "nct-mark-white.png", 180, False),
 ]
@@ -38,10 +44,11 @@ PHOTOS = [
 
 def encode(path, width, gradient):
     im = Image.open(path).convert("RGBA")
-    h = round(im.height * width / im.width)
-    im = im.resize((width, h), Image.LANCZOS)
-    # RGBA input -> FASTOCTREE is the only quantiser Pillow allows here
-    im = im.quantize(colors=64 if gradient else 16,
+    if width and width < im.width:
+        im = im.resize((width, round(im.height * width / im.width)), Image.LANCZOS)
+    # RGBA input -> FASTOCTREE is the only quantiser Pillow allows here. 64 levels
+    # banded the gradient lockup once it was drawn larger than its bitmap.
+    im = im.quantize(colors=256 if gradient else 16,
                      method=Image.FASTOCTREE).convert("RGBA")
     buf = io.BytesIO()
     im.save(buf, "PNG", optimize=True)

@@ -3,7 +3,7 @@
 import parts_master as PM
 from tokens import *
 from ooxml import *
-from parts_master import chrome, body_specs, accent, accent_up, FOOT_Y
+from parts_master import chrome, body_specs, accent, accent_up, heading, dark, FOOT_Y
 
 LOGO_AR = 373 / 733
 MARK_AR = 229 / 360
@@ -42,9 +42,9 @@ def _diamond(sid, x, y, s, alpha=8):
 def _title(sid, prompt="ชื่อสไลด์"):
     # the corporate template sets its title in near-black, not the house navy;
     # that is chrome, so it moves with the brand
-    c = INK if PM.BRAND == "corp" else NAVY
     return placeholder(sid, "Title Placeholder", "title", MX, TITLE_Y, CW, TITLE_H,
-                       [S(prompt, sz=T_H1, color=c, bold=True, font="mj", line=108000)],
+                       [S(prompt, sz=T_H1, color=heading(), bold=True, font="mj",
+                          line=108000)],
                        anchor="b")
 
 
@@ -162,10 +162,10 @@ def l01_title(rid_logo, rid_mark):
          placeholder(13, "Title Placeholder", "ctrTitle", MX, 2560320, 8229600, 1463040,
                      [S("ชื่อเรื่องงานนำเสนอ", sz=T_DISPLAY, color=PAPER, bold=True,
                         font="mj", line=106000)], anchor="b"),
-         _rule(14, y=4206240, color=PAPER, alpha=70),
+         _rule(14, y=4206240, color=PAPER, alpha=ON_DARK_3),
          placeholder(15, "Subtitle", "subTitle", MX, 4480560, 7315200, 731520,
                      [S("คำโปรย / ชื่อลูกค้า / วันที่", sz=T_LEAD, color=PAPER,
-                        alpha=82, line=130000)], idx=1),
+                        alpha=ON_DARK_2, line=130000)], idx=1),
          _foot_scrim(16)]
     s += chrome(dark=True, mark_rid=rid_mark_white)
     return _wrap("01 Title Slide", "title", s, bgfill=grad(NAVY, TEAL_B, 45, c_mid=MID))
@@ -175,12 +175,13 @@ def l01_title(rid_logo, rid_mark):
 def l02_section(rid_mark_white, rid_photo):
     # the photograph takes the right 40%; text keeps the left panel to itself
     s = [pic(9, "Section Photo", rid_photo, SEC_PHOTO_X, 0, SEC_PHOTO_W, SH),
-         shape(10, "Photo Fade", SEC_PHOTO_X, 0, SEC_PHOTO_W, SH, fade_x(NAVY)),
-         # the footer chrome sits on top of the band - keep it on navy, not on glass
+         shape(10, "Photo Fade", SEC_PHOTO_X, 0, SEC_PHOTO_W, SH, fade_x(dark())),
+         # the footer chrome sits on top of the band - keep it on the panel, not on glass
          shape(15, "Photo Foot Scrim", SEC_PHOTO_X, SH - 2057400, SEC_PHOTO_W, 2057400,
-               scrim(NAVY)),
+               scrim(dark())),
          placeholder(11, "Section Number", "body", MX, 1737360, 2286000, 1005840,
-                     [S("01", sz=6000, color=accent_up(), bold=True, font="mj", line=100000)],
+                     [S("01", sz=T_SECNUM, color=accent_up(), bold=True, font="mj",
+                        line=100000)],
                      idx=1, anchor="b"),
          _rule(12, y=2834640, color=accent_up()),
          placeholder(13, "Title Placeholder", "title", MX, 2926080, SEC_TEXT_W, 1188720,
@@ -188,9 +189,9 @@ def l02_section(rid_mark_white, rid_photo):
                         font="mj", line=108000)], anchor="t"),
          placeholder(14, "Description", "body", MX, 4297680, SEC_TEXT_W, 731520,
                      [S("คำอธิบายหัวข้อสั้น ๆ หนึ่งถึงสองบรรทัด", sz=T_BODY, color=PAPER,
-                        alpha=78, line=130000)], idx=2)]
+                        alpha=ON_DARK_2, line=130000)], idx=2)]
     s += chrome(dark=True, mark_rid=rid_mark_white)
-    return _wrap("02 Section Divider", "secHead", s, bgfill=solid(NAVY))
+    return _wrap("02 Section Divider", "secHead", s, bgfill=solid(dark()))
 
 
 # ---------------------------------------------------------------- 03 Title + Content
@@ -226,7 +227,7 @@ def l05_cards(rid_mark_color):
                        solid(accent()))); sid += 1
         s.append(placeholder(sid, "Card %d Heading" % (i + 1), "body",
                              x + PAD, CARD_Y + PAD + 182880, THIRD - 2 * PAD, 640080,
-                             [S("หัวข้อการ์ด %d" % (i + 1), sz=T_LEAD, color=NAVY,
+                             [S("หัวข้อการ์ด %d" % (i + 1), sz=T_LEAD, color=heading(),
                                 bold=True, font="mj", line=115000)],
                              idx=i * 2 + 1, anchor="t")); sid += 1
         s.append(placeholder(sid, "Card %d Body" % (i + 1), "body",
@@ -250,7 +251,7 @@ def l06_stats(rid_mark_color):
             s.append(shape(sid, "Divider %d" % i, x - GUT // 2, ST_Y + 91440, 12700, 1737360,
                            solid(RULE))); sid += 1
         s.append(placeholder(sid, "Figure %d" % (i + 1), "body", x, ST_Y, THIRD, 1188720,
-                             [S("00", sz=T_STAT, color=NAVY, bold=True, font="mj",
+                             [S("00", sz=T_STAT, color=heading(), bold=True, font="mj",
                                 line=100000)], idx=i * 2 + 1, anchor="b")); sid += 1
         s.append(placeholder(sid, "Figure %d Label" % (i + 1), "body",
                              x, ST_Y + 1280160, THIRD, 731520,
@@ -265,13 +266,14 @@ def l06_stats(rid_mark_color):
 
 # ---------------------------------------------------------------- 07 Quote
 def l07_quote(rid_mark_color):
-    s = [shape(10, "Quote Bar", 0, 0, 137160, SH, grad(NAVY, accent(), 90)),
+    s = [shape(10, "Quote Bar", 0, 0, 137160, SH, grad(dark(), accent(), 90)),
          shape(11, "Quote Mark", MX, 868680, 1371600, 1188720, nofill(),
-               body=txbody([para(LQUOTE, sz=12000, color=accent(), bold=True, font="mj",
-                                 alpha=25, line=100000)], anchor="t")),
+               body=txbody([para(LQUOTE, sz=T_QUOTEMK, color=accent(), bold=True,
+                                 font="mj", alpha=25, line=100000)], anchor="t")),
          placeholder(12, "Quote", "body", MX, 1965960, 9144000, 2194560,
                      [S("ข้อความคำพูดที่ต้องการเน้น ยาวได้ประมาณสองถึงสามบรรทัด",
-                        sz=T_QUOTE, color=NAVY, font="mj", line=132000)], idx=1, anchor="t"),
+                        sz=T_QUOTE, color=heading(), font="mj", line=132000)],
+                     idx=1, anchor="t"),
          _rule(13, y=4389120),
          placeholder(14, "Attribution", "body", MX, 4663440, 6858000, 731520,
                      [S("ชื่อผู้พูด — ตำแหน่ง, องค์กร", sz=T_BODY3, color=INK2,
@@ -289,7 +291,7 @@ def l08_image(rid_mark_white):
                         font="mj", line=108000)], anchor="b"),
          placeholder(13, "Caption", "body", MX, 5303520, 7315200, 640080,
                      [S("คำบรรยายภาพหนึ่งบรรทัด", sz=T_BODY3, color=PAPER,
-                        alpha=80, line=130000)], idx=2)]
+                        alpha=ON_DARK_2, line=130000)], idx=2)]
     s += chrome(dark=True, mark_rid=rid_mark_white)
     return _wrap("08 Full Image", "picTx", s, bgfill=solid(DEEP))
 
@@ -351,13 +353,13 @@ def l10_closing(rid_mark_white, rid_photo):
          placeholder(12, "Title Placeholder", "title", MX, 1554480, SEC_TEXT_W, 1188720,
                      [S("ขอบคุณครับ", sz=T_SECTION, color=PAPER, bold=True,
                         font="mj", line=108000)], anchor="b"),
-         _rule(13, y=2926080, color=PAPER, alpha=70),
+         _rule(13, y=2926080, color=PAPER, alpha=ON_DARK_3),
          placeholder(14, "Next Steps Label", "body", ASK_X, 3200400, 2743200, 228600,
-                     [S("ขั้นตอนถัดไป", sz=T_LABEL, color=PAPER, alpha=75, bold=True,
+                     [S("ขั้นตอนถัดไป", sz=T_LABEL, color=PAPER, alpha=ON_DARK_2, bold=True,
                         spc=120, line=100000)], idx=1, anchor="ctr"),
          placeholder(15, "Next Steps", "body", ASK_X, 3474720, ASK_W, 1188720,
                      [S("สิ่งที่ต้องเกิดขึ้นต่อ พร้อมผู้รับผิดชอบ", sz=T_BODY2, color=PAPER,
-                        alpha=92, bullet=True, bullet_auto=True,
+                        alpha=ON_DARK_1, bullet=True, bullet_auto=True,
                         bullet_color=PAPER, indent=320040, marL=320040,
                         line=lnspc(1.40), space_before=400)], idx=2),
          # 20pt Kanit at full PAPER, over 16pt at 92%: this is the one sentence
@@ -367,7 +369,7 @@ def l10_closing(rid_mark_white, rid_photo):
                      [S("ต้องการคำตอบภายในวันที่ ...", sz=T_LEAD, color=PAPER,
                         bold=True, font="mj", line=115000)], idx=3, anchor="ctr"),
          placeholder(19, "Contact", "body", ASK_X, 5303520, ASK_W, 731520,
-                     [S("โทร · 0X-XXX-XXXX", sz=T_BODY3, color=PAPER, alpha=88,
+                     [S("โทร · 0X-XXX-XXXX", sz=T_BODY3, color=PAPER, alpha=ON_DARK_1,
                         line=lnspc(1.35))], idx=4),
          _foot_scrim(21)]
     s += chrome(dark=True, mark_rid=rid_mark_white)
@@ -378,7 +380,7 @@ def l10_closing(rid_mark_white, rid_photo):
 def l11_split(rid_mark_color):
     PY, PH = BODY_Y, 3810000
     s = [_title(10), _rule(11),
-         shape(12, "Context Panel", MX, PY, HALF, PH, solid(NAVY)),
+         shape(12, "Context Panel", MX, PY, HALF, PH, solid(dark())),
          placeholder(13, "Context Kicker", "body", MX + PAD, PY + PAD, HALF - 2 * PAD, 365760,
                      [S("สภาพปัจจุบัน", sz=T_LEAD, color=PAPER, bold=True, font="mj",
                         line=115000)], idx=1, anchor="t"),
@@ -386,11 +388,12 @@ def l11_split(rid_mark_color):
          placeholder(14, "Context Body", "body", MX + PAD, PY + PAD + 548640,
                      HALF - 2 * PAD, PH - PAD - 548640,
                      dense_specs(["บริบทหรือปัญหาที่พบ", "ระดับที่สอง"],
-                                 color=PAPER, alpha=88, bullet_color=accent_up()), idx=2),
+                                 color=PAPER, alpha=ON_DARK_1, bullet_color=accent_up()),
+                     idx=2),
          shape(15, "Outcome Panel", MX + HALF + GUT, PY, HALF, PH, solid(PAPER2)),
          placeholder(16, "Outcome Kicker", "body", MX + HALF + GUT + PAD, PY + PAD,
                      HALF - 2 * PAD, 365760,
-                     [S("สิ่งที่จะเกิดขึ้น", sz=T_LEAD, color=NAVY, bold=True, font="mj",
+                     [S("สิ่งที่จะเกิดขึ้น", sz=T_LEAD, color=heading(), bold=True, font="mj",
                         line=115000)], idx=3, anchor="t"),
          placeholder(17, "Outcome Body", "body", MX + HALF + GUT + PAD, PY + PAD + 548640,
                      HALF - 2 * PAD, PH - PAD - 548640,
@@ -426,14 +429,14 @@ def l12_cards_band(rid_mark_color):
                                 font="mj", line=100000)], idx=PH_FREE + i * 3, anchor="t")); sid += 1
         s.append(placeholder(sid, "Card %d Heading" % (i + 1), "body",
                              x + PAD, CARD_Y + PAD + 640080, QUARTER - 2 * PAD, 548640,
-                             [S("หัวข้อ %d" % (i + 1), sz=T_DENSEHEAD, color=NAVY, bold=True,
+                             [S("หัวข้อ %d" % (i + 1), sz=T_DENSEHEAD, color=heading(), bold=True,
                                 font="mj", line=118000)], idx=PH_FREE + i * 3 + 1, anchor="t")); sid += 1
         s.append(placeholder(sid, "Card %d Body" % (i + 1), "body",
                              x + PAD, CARD_Y + PAD + 1280160, QUARTER - 2 * PAD,
                              CARD_H - 2 * PAD - 1280160,
                              [S("คำอธิบายสั้น ๆ", sz=T_DENSEBODY, color=INK, line=132000,
                                 space_before=200)], idx=PH_FREE + i * 3 + 2, anchor="t")); sid += 1
-    s.append(shape(sid, "Band", MX, CARD_Y + CARD_H + 137160, CW, 548640, solid(NAVY)))
+    s.append(shape(sid, "Band", MX, CARD_Y + CARD_H + 137160, CW, 548640, solid(dark())))
     sid += 1
     s.append(placeholder(sid, "Band Label", "body", MX + 228600,
                          CARD_Y + CARD_H + 137160 + 91440, 2011680, 365760,
@@ -467,7 +470,7 @@ def l13_process(rid_mark_color):
                                 algn="ctr", line=100000)], idx=PH_FREE + i * 3, anchor="ctr")); sid += 1
         s.append(placeholder(sid, "Step %d Head" % (i + 1), "body",
                              x + 228600, STEP_Y + 731520, FIFTH - 457200, 411480,
-                             [S("ขั้นตอน %d" % (i + 1), sz=T_DENSEHEAD, color=NAVY, bold=True,
+                             [S("ขั้นตอน %d" % (i + 1), sz=T_DENSEHEAD, color=heading(), bold=True,
                                 font="mj", line=115000)], idx=PH_FREE + i * 3 + 1, anchor="t")); sid += 1
         s.append(placeholder(sid, "Step %d Body" % (i + 1), "body",
                              x + 228600, STEP_Y + 1143000, FIFTH - 457200, 640080,
@@ -510,11 +513,12 @@ def l14_diagram(rid_mark_color):
 def l15_agenda(rid_mark_white, rid_photo):
     # same band as L02 - 15 is a chapter opener too, not a content slide
     s = [pic(9, "Section Photo", rid_photo, SEC_PHOTO_X, 0, SEC_PHOTO_W, SH),
-         shape(10, "Photo Fade", SEC_PHOTO_X, 0, SEC_PHOTO_W, SH, fade_x(NAVY)),
+         shape(10, "Photo Fade", SEC_PHOTO_X, 0, SEC_PHOTO_W, SH, fade_x(dark())),
          shape(19, "Photo Foot Scrim", SEC_PHOTO_X, SH - 2057400, SEC_PHOTO_W, 2057400,
-               scrim(NAVY)),
+               scrim(dark())),
          placeholder(11, "Section Number", "body", MX, 1737360, 2286000, 1005840,
-                     [S("01", sz=6000, color=accent_up(), bold=True, font="mj", line=100000)],
+                     [S("01", sz=T_SECNUM, color=accent_up(), bold=True, font="mj",
+                        line=100000)],
                      idx=1, anchor="b"),
          _rule(12, y=2834640, color=accent_up()),
          placeholder(13, "Title Placeholder", "title", MX, 2926080, SEC_TEXT_W, 1188720,
@@ -527,17 +531,17 @@ def l15_agenda(rid_mark_white, rid_photo):
          # 29px BELOW it. Converted, six lines clear the rule by 0.07in at the
          # documented ceiling, with the 18pt type intact.
          placeholder(14, "Agenda List", "body", MX, 3931920, SEC_TEXT_W, 2194560,
-                     [S("หัวข้อที่หนึ่ง", sz=T_BODY, color=PAPER, alpha=88, bullet=True,
+                     [S("หัวข้อที่หนึ่ง", sz=T_BODY, color=PAPER, alpha=ON_DARK_1, bullet=True,
                         bullet_color=accent_up(), indent=274320, marL=274320,
                         line=lnspc(1.45), space_before=300),
-                      S("หัวข้อที่สอง", sz=T_BODY, color=PAPER, alpha=88, bullet=True,
+                      S("หัวข้อที่สอง", sz=T_BODY, color=PAPER, alpha=ON_DARK_1, bullet=True,
                         bullet_color=accent_up(), indent=274320, marL=274320,
                         line=lnspc(1.45), space_before=300),
-                      S("หัวข้อที่สาม", sz=T_BODY, color=PAPER, alpha=88, bullet=True,
+                      S("หัวข้อที่สาม", sz=T_BODY, color=PAPER, alpha=ON_DARK_1, bullet=True,
                         bullet_color=accent_up(), indent=274320, marL=274320,
                         line=lnspc(1.45), space_before=300)], idx=2)]
     s += chrome(dark=True, mark_rid=rid_mark_white)
-    return _wrap("15 Agenda", "secHead", s, bgfill=solid(NAVY))
+    return _wrap("15 Agenda", "secHead", s, bgfill=solid(dark()))
 
 
 # ---------------------------------------------------------------- 16 Dense Table (variant of 09)
@@ -620,7 +624,7 @@ def l17_phase(rid_mark_color):
     # the hairline between the number cell and the label, same as .nct-phase__num
     s.append(shape(sid, "Phase Tab Divider", MX + lab_x - 137160,
                    card_y - PHASE_TAB_H // 2 + 68580, 12700, PHASE_TAB_H - 137160,
-                   solid(PAPER, 32)))
+                   solid(PAPER, ON_DARK_RULE)))
     sid += 1
     s.append(placeholder(sid, "Phase Label", "body", MX + lab_x,
                          card_y - PHASE_TAB_H // 2, tab_w - lab_x - 137160, PHASE_TAB_H,
@@ -669,7 +673,7 @@ def l18_evidence(rid_mark_color):
                          band_y - 137160 - claim_y, 2),
          # the takeaway on this layout is dark, not tinted: it is the strip's
          # header as well as the finding, and it has to hold the two apart
-         shape(15, "Takeaway Band", MX, band_y, CW, TAKE_H, solid(NAVY)),
+         shape(15, "Takeaway Band", MX, band_y, CW, TAKE_H, solid(dark())),
          placeholder(16, "Takeaway Label", "body", MX + 182880,
                      band_y + (TAKE_H - 289560) // 2, 1828800, 289560,
                      [S("สรุป", sz=T_LABEL, color=accent_up(), bold=True, spc=120,
@@ -720,7 +724,7 @@ def l19_chart(rid_mark_color):
     s = [_title(10), _rule(11),
          chart_placeholder(12, "Chart Placeholder", MX, BODY_Y, CHART_W, CHART_H, 1),
          placeholder(13, "Figure", "body", RAIL_X, BODY_Y, THIRD, FIG_H,
-                     [S("00%", sz=T_STAT, color=NAVY, bold=True, font="mj",
+                     [S("00%", sz=T_STAT, color=heading(), bold=True, font="mj",
                         line=100000)], idx=2, anchor="b"),
          placeholder(14, "Figure Label", "body", RAIL_X, BODY_Y + FIG_H, THIRD, 457200,
                      [S("ตัวเลขนี้วัดอะไร", sz=T_LABEL, color=INK2, bold=True, spc=120,
