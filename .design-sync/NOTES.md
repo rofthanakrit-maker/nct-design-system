@@ -31,11 +31,11 @@ Repo-specific gotchas. Read before re-syncing.
   Preview cards that render a slide in a zero-width box will show it at scale 1.
 - **`preview/` is generated, not hand-made.** `python scripts/render_previews.py`
   renders both demo decks through PowerPoint COM (Windows only, read-only, never
-  saves back) and writes `layout-01..18.png` plus the two contact sheets. It went
+  saves back) and writes `layout-01..19.png`, `corp-layout-01..19.png` and the two contact sheets. It went
   stale across a whole release when it was a manual pass; run it after any change
   that moves geometry.
 - **No Storybook.** Preview cards are authored from `web/demo/demo.tsx`, which
-  renders all 18 layouts with real proposal copy, in both brand modes. It is the reference usage example.
+  renders all 19 layouts with real proposal copy, in both brand modes. It is the reference usage example.
 - The PowerPoint side (`scripts/build.py` → `.potx`) shares `scripts/tokens.py` with
   the web package but nothing else. A token change must be rebuilt on both sides.
 - **The visual loop is `web/demo/`.** `npm run demo` bundles `demo.tsx` to the
@@ -80,16 +80,15 @@ Repo-specific gotchas. Read before re-syncing.
   It is emitted as `--nct-band-w` / `--nct-band-text-w` and re-exported to
   parts_layouts.py as `SEC_PHOTO_*`. Four layouts share it - change the token, not
   the four call sites.
-- **`preview/*.png` is stale, and regenerating it needs PowerPoint.**
-  `render_previews.py` drives PowerPoint over COM, so it only runs on a machine
-  with PowerPoint installed. The 2026-09-07 pass changed the rendered result of
-  layouts 09, 10, 15, 16 and 17 in both brands and could not re-render them, so
-  every PNG in `preview/` predates those fixes. It also now writes `corp-layout-NN.png`
-  alongside the house set: the corp brand used to exist only as a 618x348 cell of a
-  contact sheet, which is how eleven layouts shipped mixing `#006666` chrome with
-  `#216B7F` content without anyone seeing it. Re-run
-  `python scripts/build.py && python scripts/render_previews.py` on a PowerPoint
-  machine before trusting anything in that folder.
+- **Regenerating `preview/*.png` needs PowerPoint.** `render_previews.py` drives
+  PowerPoint over COM, so it only runs on a machine with PowerPoint installed. The
+  whole folder was re-rendered on 2026-09-11 (v4), which caught up the 2026-09-07
+  fixes to layouts 09, 10, 15, 16 and 17 that could not be rendered at the time.
+  It writes `corp-layout-NN.png` alongside the house set: the corp brand used to
+  exist only as a 618x348 cell of a contact sheet, which is how eleven layouts
+  shipped mixing `#006666` chrome with `#216B7F` content without anyone seeing it.
+  Re-run `python scripts/build.py && python scripts/render_previews.py` after any
+  change that moves geometry or colour.
 - **spcPct is not `line-height`; use `tokens.lnspc`.** CSS line-height multiplies
   the font size, OOXML spcPct multiplies the font's line box, and
   NotoSansThai-Regular declares that box at 1.511 em. Copying a CSS number into a

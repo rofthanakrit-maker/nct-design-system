@@ -5,7 +5,7 @@ Design system ของ New Computer Technology Consulting Co., Ltd. — token �
 
 ```
 scripts/tokens.py            ← single source of truth
-   ├── scripts/build.py            → NCT-Slide-Template.potx   (18 layouts x 2 brands)
+   ├── scripts/build.py            → NCT-Slide-Template.potx   (19 layouts x 2 brands)
    └── scripts/emit_web_tokens.py  → web/src/tokens.{css,ts}   (@nct/slides)
 ```
 
@@ -20,25 +20,21 @@ scripts/tokens.py            ← single source of truth
 | [`slide-design-system.md`](slide-design-system.md) | v1 — canvas, grid, type scale, layout 01–10, กติกาการทำเด็ค |
 | [`slide-design-system-v2.md`](slide-design-system-v2.md) | v2 — token dense, status/category, layout 11–16 |
 | [`slide-design-system-v3.md`](slide-design-system-v3.md) | v3 — brand mode `corp`, chrome geometry, cover คนละใบ, layout 17–18 (แกะจาก `NCT Template.pptx`) |
+| [`slide-design-system-v4.md`](slide-design-system-v4.md) | v4 — สีข้อมูลที่ผ่าน validator ของ dataviz (`CAT_1..4` ชุดใหม่), mark spec ของกราฟ, layout 19 (สเปก 20–23 ยังไม่ทำ) |
 | [`.design-sync/conventions.md`](.design-sync/conventions.md) | กติกาที่ design agent ต้องอ่านก่อนสร้างสไลด์ |
 | [`.design-sync/NOTES.md`](.design-sync/NOTES.md) | กับดักเฉพาะ repo นี้ อ่านก่อน re-sync |
 
-## Layout ทั้ง 18
+## Layout ทั้ง 19
 
 Render จาก PowerPoint จริง ไม่ต้อง clone ก็ดูได้ — ภาพในนี้คือไฟล์ใน `preview/`
 ที่ `scripts/render_previews.py` เขียนทับทุกครั้งที่ geometry ขยับ
 
-> **ภาพชุดนี้ยังไม่อัปเดต (2026-09-07)** — layout 09, 10, 15, 16, 17 แก้ไปแล้วแต่
-> re-render ไม่ได้เพราะเครื่องที่แก้ไม่มี PowerPoint ติดตั้ง ให้รัน
-> `python scripts/build.py && python scripts/render_previews.py` บนเครื่องที่มี
-> PowerPoint ก่อนเชื่อภาพในโฟลเดอร์นี้
-
 | web | corp |
 |---|---|
-| <img src="preview/all-layouts.png" alt="contact sheet ของ 18 layout brand web" width="380"> | <img src="preview/corp-all-layouts.png" alt="contact sheet ของ 18 layout brand corp" width="380"> |
+| <img src="preview/all-layouts.png" alt="contact sheet ของ 19 layout brand web" width="380"> | <img src="preview/corp-all-layouts.png" alt="contact sheet ของ 19 layout brand corp" width="380"> |
 
 <details>
-<summary>ดูทีละ layout (18 ภาพ)</summary>
+<summary>ดูทีละ layout (19 ภาพ)</summary>
 
 ![layout 01](preview/layout-01.png)
 
@@ -76,6 +72,8 @@ Render จาก PowerPoint จริง ไม่ต้อง clone ก็ด�
 
 ![layout 18](preview/layout-18.png)
 
+![layout 19](preview/layout-19.png)
+
 </details>
 
 ## PowerPoint
@@ -84,9 +82,9 @@ Render จาก PowerPoint จริง ไม่ต้อง clone ก็ด�
 python scripts/build.py          # เขียนทับ .potx และ .pptx ที่ root
 ```
 
-- `NCT-Slide-Template.potx` — 1 slide master + 18 custom layouts + NCT theme
-- `NCT-Slide-Template-Demo.pptx` — เดโม 18 สไลด์ layout ละ 1
-- `NCT-Slide-Template-Corp.potx` — 18 layout เบอร์เดิม ใส่ chrome แบบฟอร์มบริษัท
+- `NCT-Slide-Template.potx` — 1 slide master + 19 custom layouts + NCT theme
+- `NCT-Slide-Template-Demo.pptx` — เดโม 19 สไลด์ layout ละ 1
+- `NCT-Slide-Template-Corp.potx` — 19 layout เบอร์เดิม ใส่ chrome แบบฟอร์มบริษัท
   (เส้นเต็มความกว้าง, การ์ดโลโก้มุมขวาบน, แถบสามช่วงที่ก้นสไลด์) **ยกเว้น layout 01
   ที่เป็นคนละสไลด์** — พื้นขาว จัดกลาง watermark ตามหน้าปกที่บริษัทใช้จริง
   แยกไฟล์เพราะ layout ใน PowerPoint สลับ chrome ของตัวเองไม่ได้
@@ -102,7 +100,7 @@ shape หลุดขอบ canvas, **ข้อความล้นลงไป
 ที่ 1.511 em ไม่ใช่ค่า spcPct ตรง ๆ) และ **สีเทาบ้าน `#216B7F` / `#8FBACE`
 โผล่ในไฟล์ corp** สองข้อหลังคือบั๊กที่เคยหลุดไปแล้วทั้งคู่
 
-- `preview/` — `layout-01..18.png` (web) + `corp-layout-01..18.png` (corp)
+- `preview/` — `layout-01..19.png` (web) + `corp-layout-01..19.png` (corp)
   เรียงตามเบอร์ layout + contact sheet สองใบ (`all-layouts.png` = web,
   `corp-all-layouts.png` = corp) render จาก PowerPoint จริง
   **รันใหม่ทุกครั้งที่ geometry ขยับ**
@@ -120,7 +118,7 @@ npm run fonts                # woff2 (ต้องมี Kanit ติดตั�
 npm run assets               # โลโก้เป็น data URI
 ```
 
-18 component ตรงกับ 18 layout ใน `.potx` เลขเดียวกัน ออกแบบฝั่งเว็บแล้วมาทำต่อ
+19 component ตรงกับ 19 layout ใน `.potx` เลขเดียวกัน ออกแบบฝั่งเว็บแล้วมาทำต่อ
 ใน PowerPoint ได้โดยหยิบ layout เบอร์เดิม
 
 `<Deck brand="corp">` เปลี่ยนเป็นแบบฟอร์มบริษัท — เส้นเต็มความกว้าง, การ์ดโลโก้
@@ -176,6 +174,6 @@ scripts/                                generator ทั้งหมด (Python,
   emit_web_tokens.py build_webfonts.py emit_web_assets.py
 web/                                    @nct/slides
   src/  Slide.tsx primitives.tsx layouts.tsx  + ไฟล์ที่ generate
-  demo/ demo.tsx                        18 layout (web) + 5 สไลด์อ้างอิง corp
+  demo/ demo.tsx                        17 layout (web) + 5 สไลด์อ้างอิง corp
 assets/  fonts/  preview/               โลโก้ · ฟอนต์ต้นฉบับ · ภาพ render (generate)
 ```

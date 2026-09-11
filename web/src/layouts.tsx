@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import { coverScatter, markColor } from "./assets";
+import { Chart, type ChartProps } from "./chart";
+import { space } from "./tokens";
 import { Slide, SlideTitle, type SlideChromeProps } from "./Slide";
 import {
   BulletList,
@@ -693,8 +695,8 @@ export interface SlideDenseTableProps
   intro?: ReactNode;
   /**
    * The key for any `category` coding in the grid — a `CategoryKey`. Required in
-   * practice, not in the type: a coded column with no key on the same slide asks
-   * the reader to decode four navies that sit 1.31:1 apart from memory.
+   * practice, not in the type: a coded column with no key on the same slide
+   * leaves identity to colour alone.
    */
   legend?: ReactNode;
   footnote?: ReactNode;
@@ -899,6 +901,67 @@ export function SlideEvidence({
             </figure>
           ))}
         </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ================================================================ v4
+   Data layouts, specified with the dataviz method in slide-design-system-v4.md.
+   Charts sit on paper only, and read --nct-cat-* in slot order.
+   ---------------------------------------------------------------- 19 */
+
+/** One to three. A fourth point means the chart is carrying two stories. */
+export type ChartInsights = [ReactNode] | [ReactNode, ReactNode] | [ReactNode, ReactNode, ReactNode];
+
+export interface SlideChartProps extends Base {
+  /** Write the conclusion ("ปิดงบ พ.ค. นานสุดในรอบครึ่งปี"), not the topic ("เวลาปิดงบ"). */
+  title: ReactNode;
+  chart: ChartProps;
+  /** The one number the chart proves. It has to come out of this chart - otherwise use L06. */
+  figure: { value: ReactNode; label: ReactNode };
+  insights?: ChartInsights;
+  /** Required: where the numbers came from, and where the full table lives if not here. */
+  source: ReactNode;
+  takeawayLabel?: string;
+  /** Required. The chart shows the shape; this says what it means. */
+  takeaway: ReactNode;
+}
+
+/** The chart box: eight columns wide, 3.80in tall with its own axis band. */
+const CHART_W = space.cw - space.gut - space.third;
+const CHART_H = 364.8;
+
+/**
+ * 19 · Chart + Insight. One chart on eight columns, the number it proves and up
+ * to three findings on the other four. Default to emphasis — one bar or line in
+ * cat-1, the rest mute — when the story is "this one"; give every series its own
+ * colour only when the series are the story.
+ */
+export function SlideChart({
+  title,
+  chart,
+  figure,
+  insights,
+  source,
+  takeawayLabel = "สรุป",
+  takeaway,
+  ...chrome
+}: SlideChartProps) {
+  return (
+    <Slide {...chrome}>
+      <SlideTitle>{title}</SlideTitle>
+      <div className="nct-body">
+        <div className="nct-chart-grid">
+          <Chart {...chart} width={CHART_W} height={CHART_H} />
+          <div className="nct-chart-rail">
+            <div className="nct-chart-rail__figure nct-figure__value">{figure.value}</div>
+            <div className="nct-figure__label">{figure.label}</div>
+            {insights && <BulletList className="nct-chart-rail__insights" items={insights.map((t) => ({ text: t }))} />}
+          </div>
+        </div>
+        <p className="nct-dia-legend">{source}</p>
+        <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
       </div>
     </Slide>
   );

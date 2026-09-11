@@ -4,10 +4,11 @@
 # ---- colour tokens (from design.md, nctthai.com) ----
 NAVY    = "23436D"   # accent      - primary brand navy
 TEAL    = "216B7F"   # accent-2    - secondary brand teal
-TEAL_L  = "4E8FA8"   # accent-3    - derived light teal (charts, 2nd series)
-TEAL_UP = "8FBACE"   # accent-3 on navy - the same hue lifted until it reads.
-                      # TEAL_L on NAVY is 2.8:1 and fails AA; this is 4.8:1.
+TEAL_UP = "8FBACE"   # teal on navy - the same hue lifted until it reads.
+                      # The old TEAL_L (4E8FA8) was 2.8:1 on NAVY; this is 4.8:1.
                       # ON NAVY ONLY - it is 2.1:1 on white. Adds no new hue.
+                      # TEAL_L itself is gone: v4 took it out of the theme and the
+                      # category set, which were its only two readers.
 DEEP    = "16324F"   # accent-6    - derived deep navy (dark scrim, shadow)
 INK     = "333333"   # body text
 INK2    = "5F5F5F"   # muted text - caption, label, footer. 6.4:1 on PAPER,
@@ -32,8 +33,34 @@ RISK    = "B3261E";  RISK_T = "F6D0CC"   # high risk, blocker      | 4.6:1 on ti
 WARN    = "7F4B00";  WARN_T = "F2D9AC"   # unconfirmed, needs call | 5.3:1 on tint
 OK      = "1A6647";  OK_T   = "BFE3CA"   # ready, quick win, passed| 5.0:1 on tint
 
-# ---- v2: category coding - reuses existing accents, adds no new hues ----
-CAT_1, CAT_2, CAT_3, CAT_4 = NAVY, TEAL, TEAL_L, DEEP
+# ---- v4: category / series identity - one palette for tables AND charts ----
+# v2 reused NAVY, TEAL, TEAL_L, DEEP here. Four cool blues 1.31:1 apart work in a
+# table where every row is also labelled, and fail as chart series: the dataviz
+# validator put two of them below the lightness band, all four under the chroma
+# floor, and NAVY/TEAL at normal-vision dE 12.2 (floor 15). A chart and a table
+# about the same four categories must use the same colours, so there is one set.
+# Validated on PAPER and PAPER2 in this order (slide-design-system-v4.md §2.1):
+# adjacent CVD worst 15.0, normal worst 21.4, every slot >= 3:1. The ORDER is the
+# colour-blind safety - never reorder. All-pairs forms (scatter, small multiples)
+# take slots 1-3 only: CAT_4 and CAT_1 collapse to dE 4.0 under deuteranopia.
+# CAT_2 and CAT_3 have the same luminance (1.00:1) and differ by hue alone, so a
+# greyscale print cannot tell them apart - the key's labels carry that case.
+CAT_1   = "2A5EA0"   # blue, NAVY's hue lifted into the band  | 6.6:1 on PAPER
+CAT_2   = "BB731B"   # amber, the one warm pole               | 3.8:1
+CAT_3   = "0D9298"   # teal, TEAL_B lifted to the chroma floor | 3.8:1
+CAT_4   = "6C4289"   # violet                                 | 7.6:1
+# "Other", a de-emphasised series, a chart baseline. The lightest grey still
+# dE >= 15 from every slot (15.5 to CAT_3); a darker one collides with CAT_3.
+# It is the old INK2 value, banned as TEXT at 2.5:1 - MARKS ONLY, and every use
+# needs a value or legend beside it.
+CAT_MUTE = "A4A4A4"
+
+# ---- v4: sequential ramp - magnitude, one hue (256), light -> dark ----
+# 500/600/700 are CAT_1, NAVY and DEEP, so the ramp ends in the brand. Ordinal
+# use (tiers, funnel stages) starts at 300, the lightest step still >= 2:1.
+SEQ_100, SEQ_200, SEQ_300, SEQ_400 = "DBE9FC", "B7D0F2", "90B4E4", "6994CF"
+# ---- v4: diverging - cool arm CAT_1 / SEQ_300, midpoint RULE, warm arm below ----
+DIV_WARM_L = "D6A67C"  # CAT_2's hue at SEQ_300's weight: 2.19:1 against its 2.14:1
 
 # ---- v3: corporate proposal chrome (studied from NCT Template.pptx sl. 33-43) ----
 # The second brand set. The website palette above dresses narrative decks; the

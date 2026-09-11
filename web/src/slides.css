@@ -505,8 +505,8 @@
 }
 .nct-note__source { text-align: right; }
 
-/* the key for --nct-cat-*: a swatch plus its meaning, because four navies
-   1.31:1 apart cannot carry a taxonomy on hue alone */
+/* the key for --nct-cat-*: a swatch plus its meaning, because identity is never
+   colour alone - cat-2 and cat-3 are the same luminance in a greyscale print */
 .nct-key { display: inline-flex; align-items: center; gap: 19.2px; }
 .nct-key__item { display: inline-flex; align-items: center; gap: 6px; }
 .nct-key__dot { width: 14.4px; height: 9.6px; flex: none; }
@@ -798,11 +798,11 @@
 .nct-table--roomy tbody td { font-size: var(--nct-fs-body-3); }
 .nct-table [data-align="center"] { text-align: center; }
 .nct-table [data-align="right"] { text-align: right; }
-/* a bar, not a fill: on --nct-cat-3 neither white (3.61:1) nor ink (3.50:1)
+/* a bar, not a fill: on --nct-cat-2 / -3 neither white (3.76:1) nor ink (3.36:1)
    clears AA at the 10pt floor, so the colour moves to the cell edge and the
    value stays on paper. Needs a CategoryKey on the same slide to decode. */
 /* the row's own hairline, thickened and recoloured on this one cell - not a fill
-   behind the value (no text colour clears AA on --nct-cat-3 at 10pt) and not a
+   behind the value (no text colour clears AA on --nct-cat-2 / -3 at 10pt) and not a
    stripe down its side (that is the side-tab tell). A real border, not a pseudo-
    element, so it collapses with the row rule exactly as the .potx cell's lnB does. */
 .nct-table tbody td.nct-table__chip {
@@ -1146,4 +1146,51 @@
   text-align: center;
   font-size: var(--nct-fs-lead);
   color: var(--nct-ink-2);
+}
+
+/* ================================================================ v4 data layouts
+   slide-design-system-v4.md §3. Marks carry --nct-cat-*; every piece of text is
+   an ink token. Gridlines are solid hairlines, never dashed. */
+
+/* ---------------------------------------------------------------- 19 */
+/* 1fr + --nct-third lands the chart on exactly eight grid columns; 8fr 4fr
+   would split the gutter-less remainder and miss by 6px */
+.nct-chart-grid {
+  display: grid;
+  grid-template-columns: 1fr var(--nct-third);
+  column-gap: var(--nct-gut);
+  height: 364.8px;
+}
+.nct-chart { position: relative; font-family: var(--nct-font-body); }
+.nct-chart__head {
+  display: flex;
+  align-items: center;
+  gap: 19.2px;
+  height: 28.8px;
+  font-size: var(--nct-fs-label);
+  color: var(--nct-ink-2);
+}
+.nct-chart__key { display: inline-flex; align-items: center; gap: 6px; color: var(--nct-ink); }
+.nct-chart__swatch { display: block; width: 12px; height: 12px; }
+.nct-chart__swatch--line { width: 19.2px; height: 2px; }
+.nct-chart svg { display: block; overflow: visible; }
+.nct-chart__tick,
+.nct-chart__cat { font-size: var(--nct-fs-label); fill: var(--nct-ink-2); }
+.nct-chart__tick { font-variant-numeric: tabular-nums; }
+.nct-chart__value { font-size: var(--nct-fs-body-3); font-weight: 700; fill: var(--nct-ink); }
+.nct-chart-rail { display: flex; flex-direction: column; }
+/* the figure box is 1.10in with the number sat on its floor, as the .potx
+   anchors it - proportional figures, never tabular, at this size */
+.nct-chart-rail__figure { height: 105.6px; display: flex; align-items: flex-end; }
+.nct-chart-rail .nct-figure__label { margin: 0; height: 62.4px; }
+.nct-chart-rail__insights .nct-list__item { font-size: var(--nct-fs-body-2); line-height: 1.3; }
+
+/* the chart's values for a screen reader - the drawing is aria-hidden */
+.nct-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

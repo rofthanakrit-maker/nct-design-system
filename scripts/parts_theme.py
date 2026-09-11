@@ -15,12 +15,15 @@ def theme():
            f'<a:lt1><a:srgbClr val="{PAPER}"/></a:lt1>'
            f'<a:dk2><a:srgbClr val="{NAVY}"/></a:dk2>'
            f'<a:lt2><a:srgbClr val="{PAPER2}"/></a:lt2>'
-           f'<a:accent1><a:srgbClr val="{NAVY}"/></a:accent1>'
-           f'<a:accent2><a:srgbClr val="{TEAL}"/></a:accent2>'
-           f'<a:accent3><a:srgbClr val="{TEAL_L}"/></a:accent3>'
-           f'<a:accent4><a:srgbClr val="{DEEP}"/></a:accent4>'
-           f'<a:accent5><a:srgbClr val="{INK2}"/></a:accent5>'
-           f'<a:accent6><a:srgbClr val="{PAPER2}"/></a:accent6>'
+           # Insert Chart colours series n from accent n, so accents 1-4 ARE the
+           # validated category order and 5 is "Other". The old 6 was PAPER2,
+           # an invisible sixth series on white; TEAL keeps teal in the picker.
+           f'<a:accent1><a:srgbClr val="{CAT_1}"/></a:accent1>'
+           f'<a:accent2><a:srgbClr val="{CAT_2}"/></a:accent2>'
+           f'<a:accent3><a:srgbClr val="{CAT_3}"/></a:accent3>'
+           f'<a:accent4><a:srgbClr val="{CAT_4}"/></a:accent4>'
+           f'<a:accent5><a:srgbClr val="{CAT_MUTE}"/></a:accent5>'
+           f'<a:accent6><a:srgbClr val="{TEAL}"/></a:accent6>'
            f'<a:hlink><a:srgbClr val="{TEAL}"/></a:hlink>'
            f'<a:folHlink><a:srgbClr val="{NAVY}"/></a:folHlink></a:clrScheme>')
     fonts = (f'<a:fontScheme name="NCT">'

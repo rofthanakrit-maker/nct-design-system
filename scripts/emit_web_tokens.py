@@ -37,10 +37,11 @@ COLORS = [
     ("warn-tint", T.WARN_T, "status fill behind --nct-warn"),
     ("ok", T.OK, "status: ready / passed"),
     ("ok-tint", T.OK_T, "status fill behind --nct-ok"),
-    ("cat-1", T.CAT_1, "category coding 1 of 4 - reuses navy"),
-    ("cat-2", T.CAT_2, "category coding 2 of 4 - reuses teal"),
-    ("cat-3", T.CAT_3, "category coding 3 of 4 - reuses teal-l"),
-    ("cat-4", T.CAT_4, "category coding 4 of 4 - reuses deep"),
+    ("cat-1", T.CAT_1, "category / series 1 - validated order, never reorder"),
+    ("cat-2", T.CAT_2, "category / series 2"),
+    ("cat-3", T.CAT_3, "category / series 3 - all-pairs charts stop here"),
+    ("cat-4", T.CAT_4, "category / series 4"),
+    ("cat-mute", T.CAT_MUTE, "Other / de-emphasised / baseline - MARKS ONLY, never text"),
     ("corp", T.CORP, "v3 corp chrome anchor - rule, phase tab, card outline"),
     ("corp-deep", T.CORP_DEEP, "v3 corp deep - second header band, on-dark panel"),
     ("corp-up", T.CORP_UP, "v3 corp accent lifted to read ON DARK - never on paper"),
@@ -55,6 +56,7 @@ COLORS = [
 SPACE = [
     ("slide-w", T.SW), ("slide-h", T.SH),
     ("mx", T.MX), ("cw", T.CW), ("gut", T.GUT), ("fifth", T.FIFTH),
+    ("third", T.THIRD),                    # v4: the insight rail on L19
     ("band-w", T.BAND_W), ("band-text-w", T.BAND_TW),
     ("title-y", T.TITLE_Y), ("title-h", T.TITLE_H),
     ("rule-y", T.RULE_Y), ("rule-h", T.RULE_H), ("rule-w", T.RULE_W),
@@ -111,8 +113,9 @@ def css():
     out.append("     deck - rule, bullets, band labels, card tabs, recommended column. The")
     out.append("     -up half exists for the same reason its default does: the accent is")
     out.append("     1.5:1 on navy and has to be lifted to survive a dark panel. Category")
-    out.append("     colours are literal hex and deliberately do NOT follow - four coded")
-    out.append("     columns are a taxonomy, and it has to mean the same thing in both modes. */")
+    out.append("     colours are literal hex and deliberately do NOT follow - a table and a")
+    out.append("     chart about the same four categories have to mean the same thing in")
+    out.append("     both modes. */")
     out.append("  --nct-accent:    var(--nct-teal);")
     out.append("  --nct-accent-up: var(--nct-teal-up);")
     out.append("")

@@ -101,7 +101,7 @@ flows, status columns). These extend the system — they don't replace anything 
 }
 ```
 - Status colors are data colors for tables/process flows only — never chrome, headings, or slide backgrounds. Max 3 statuses per slide.
-- Category coding (FN/AP/AR/GL-style) reuses `--color-accent` / `--color-accent-2` / `TEAL_L #4E8FA8` / `DEEP #16324F` — no 5th hue exists in this system; beyond 4 categories, label instead of coloring.
+- Category coding (FN/AP/AR/GL-style) — **superseded by v4 below.** v2 reused navy / teal / `#4E8FA8` / `#16324F`, four blues 1.31:1 apart. Beyond 4 categories, label instead of coloring (still true).
 - Dense type floor is **10pt** — never go lower; split content across slides instead.
 - See `slide-design-system-v2.md` (in the slide-template project) for full layout specs 11–16 and the dense type scale.
 
@@ -208,3 +208,36 @@ five slides · 8pt table type, under the 10pt floor · `#FF0000` at 4.0:1 on whi
 `Calibri`, `Tahoma`, `NissanAG-Medium` and Japanese faces left in from other
 decks · the theme's `clrScheme` never set, so every colour is inline hex. None of
 it survives the port; all of it is why the port was worth doing.
+
+
+## v4 — data colours (validated with the `dataviz` skill, 2026-09-11)
+Charts need series a reader can tell apart, and a chart and a table about the same
+four categories must use the same colours — so the category set was replaced, not
+duplicated. The v2 set failed the validator three ways: navy and deep below the
+lightness band, all four under the chroma floor, navy↔teal at normal-vision ΔE 12.2.
+
+```css
+:root {
+  /* identity: categories AND chart series. Order is the colour-blind safety - never reorder.
+     adjacent CVD worst 15.0 · normal worst 21.4 · all >= 3:1 on paper and paper-2.
+     Scatter / small multiples take slots 1-3 only (cat-4 vs cat-1 = CVD 4.0). */
+  --nct-cat-1:    #2A5EA0;  /* blue - navy's hue lifted into the band */
+  --nct-cat-2:    #BB731B;  /* amber - the system's one warm pole */
+  --nct-cat-3:    #0D9298;  /* teal - teal-b (logo end-stop) lifted to the chroma floor, dE 1.5 */
+  --nct-cat-4:    #6C4289;  /* violet */
+  --nct-cat-mute: #A4A4A4;  /* Other / de-emphasised series / baseline. MARKS ONLY - the old
+                               ink-2 value, 2.5:1, never text. dE >= 15 from every slot */
+  /* magnitude, one hue: 100-400 here, then cat-1 / navy / deep. Ordinal use starts at 300 */
+  --nct-seq-100: #DBE9FC;  --nct-seq-200: #B7D0F2;
+  --nct-seq-300: #90B4E4;  --nct-seq-400: #6994CF;
+  /* polarity: cat-1 / seq-300 | rule midpoint | div-warm-l / cat-2 */
+  --nct-div-warm-l: #D6A67C;
+}
+```
+- Charts sit on paper only — never on a dark slide, so there is no dark variant.
+- A fifth series is never a new hue: fold it into "Other" (`cat-mute`) or split the slide.
+- `cat-2` and `cat-3` share a luminance: a greyscale print cannot separate them, so a key
+  with words stays mandatory wherever the coding appears.
+- The PowerPoint theme's accent1–4 are this set in order, accent5 is `cat-mute`, so
+  Insert Chart starts on-system.
+- Full method, validator output and layouts 19–23: `slide-design-system-v4.md`.

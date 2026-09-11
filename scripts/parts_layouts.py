@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""The 18 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3)."""
+"""The 19 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3 + 1 chart, v4)."""
 import parts_master as PM
 from tokens import *
 from ooxml import *
@@ -411,7 +411,7 @@ def l11_split(rid_mark_color):
 # ---------------------------------------------------------------- 12 Four Cards + Band
 def l12_cards_band(rid_mark_color):
     CARD_Y, CARD_H = BODY_Y, 3474720
-    CATS = [NAVY, TEAL, TEAL_L, DEEP]
+    CATS = [CAT_1, CAT_2, CAT_3, CAT_4]
     s = [_title(10), _rule(11)]
     sid = 12
     for i in range(4):
@@ -551,7 +551,7 @@ def l16_dense_table(rid_mark_color):
          tbl_placeholder(13, "Table Placeholder", MX, 2011680, CW, 3154680, 1),
          # the note line carries two things: the key for any category coding on
          # the left, the source note on the right. A coded column with no key on
-         # the slide asks the reader to decode four navies 1.31:1 apart from memory
+         # the slide leaves identity to colour alone
          #
          # The swatches carry the category colours, the labels stay INK2. One
          # grey run for the whole line is what shipped before, and a key whose
@@ -561,7 +561,7 @@ def l16_dense_table(rid_mark_color):
                      [S("", sz=T_DENSECELL, color=INK2, line=130000,
                         runs=[("■ ", dict(color=CAT_1, bold=True)), ("หมวด 1   ", {}),
                               ("■ ", dict(color=CAT_2, bold=True)), ("หมวด 2   ", {}),
-                              ("■ ", dict(color=CAT_4, bold=True)), ("หมวด 3", {})])],
+                              ("■ ", dict(color=CAT_3, bold=True)), ("หมวด 3", {})])],
                      idx=3),
          placeholder(19, "Footnote", "body", MX + CW // 2, NOTE_Y, CW // 2, NOTE_H,
                      [S("ที่มาของข้อมูล / หมายเหตุ", sz=T_DENSECELL, color=INK2,
@@ -701,3 +701,38 @@ def l18_evidence(rid_mark_color):
         idx += 1
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("18 Evidence Strip", "picTx", s, bgfill=solid(PAPER))
+
+
+# ---------------------------------------------------------------- 19 Chart + Insight (v4)
+def l19_chart(rid_mark_color):
+    """One chart on eight columns, the number it proves on the other four.
+
+    The figure and the chart have to be the same story - a big number that does
+    not come out of the chart beside it is L06. The chart box includes its own
+    x-axis band (v4 §4): a frame sized to the plot alone is how axis labels end
+    up under the source note. Charts sit on paper only, so there is no dark
+    variant of this layout.
+    """
+    CHART_W = 8 * COL + 7 * GUT
+    CHART_H = 3474720                    # 3.80in - ends at 5.65in, above the note
+    RAIL_X, FIG_H = colx(8), 1005840     # 1.10in
+    INS_Y = BODY_Y + 1600200             # 1.75in into the body
+    s = [_title(10), _rule(11),
+         chart_placeholder(12, "Chart Placeholder", MX, BODY_Y, CHART_W, CHART_H, 1),
+         placeholder(13, "Figure", "body", RAIL_X, BODY_Y, THIRD, FIG_H,
+                     [S("00%", sz=T_STAT, color=NAVY, bold=True, font="mj",
+                        line=100000)], idx=2, anchor="b"),
+         placeholder(14, "Figure Label", "body", RAIL_X, BODY_Y + FIG_H, THIRD, 457200,
+                     [S("ตัวเลขนี้วัดอะไร", sz=T_LABEL, color=INK2, bold=True, spc=120,
+                        line=130000)], idx=3, anchor="t"),
+         placeholder(15, "Insight", "body", RAIL_X, INS_Y, THIRD,
+                     BODY_Y + CHART_H - INS_Y,
+                     [S("สิ่งที่กราฟบอก ไม่เกินสามข้อ", sz=T_BODY2, color=INK, bullet=True,
+                        bullet_color=accent(), indent=228600, marL=228600,
+                        line=lnspc(1.3), space_before=600)], idx=4),
+         placeholder(16, "Source", "body", MX, NOTE_Y, CW, NOTE_H,
+                     [S("ที่มาของข้อมูล", sz=T_DENSECELL, color=INK2, line=130000)],
+                     idx=5)]
+    s += _takeaway(17, 6)
+    s += chrome(dark=False, mark_rid=rid_mark_color)
+    return _wrap("19 Chart + Insight", "chartAndTx", s, bgfill=solid(PAPER))

@@ -20,10 +20,11 @@
   --nct-warn-tint:   #F2D9AC;  /* status fill behind --nct-warn */
   --nct-ok:          #1A6647;  /* status: ready / passed */
   --nct-ok-tint:     #BFE3CA;  /* status fill behind --nct-ok */
-  --nct-cat-1:       #23436D;  /* category coding 1 of 4 - reuses navy */
-  --nct-cat-2:       #216B7F;  /* category coding 2 of 4 - reuses teal */
-  --nct-cat-3:       #4E8FA8;  /* category coding 3 of 4 - reuses teal-l */
-  --nct-cat-4:       #16324F;  /* category coding 4 of 4 - reuses deep */
+  --nct-cat-1:       #2A5EA0;  /* category / series 1 - validated order, never reorder */
+  --nct-cat-2:       #BB731B;  /* category / series 2 */
+  --nct-cat-3:       #0D9298;  /* category / series 3 - all-pairs charts stop here */
+  --nct-cat-4:       #6C4289;  /* category / series 4 */
+  --nct-cat-mute:    #A4A4A4;  /* Other / de-emphasised / baseline - MARKS ONLY, never text */
   --nct-corp:        #006666;  /* v3 corp chrome anchor - rule, phase tab, card outline */
   --nct-corp-deep:   #193B36;  /* v3 corp deep - second header band, on-dark panel */
   --nct-corp-up:     #8CC2C2;  /* v3 corp accent lifted to read ON DARK - never on paper */
@@ -36,8 +37,9 @@
      deck - rule, bullets, band labels, card tabs, recommended column. The
      -up half exists for the same reason its default does: the accent is
      1.5:1 on navy and has to be lifted to survive a dark panel. Category
-     colours are literal hex and deliberately do NOT follow - four coded
-     columns are a taxonomy, and it has to mean the same thing in both modes. */
+     colours are literal hex and deliberately do NOT follow - a table and a
+     chart about the same four categories have to mean the same thing in
+     both modes. */
   --nct-accent:    var(--nct-teal);
   --nct-accent-up: var(--nct-teal-up);
 
@@ -48,6 +50,7 @@
   --nct-cw:          1088px;
   --nct-gut:         19.2px;
   --nct-fifth:       202.24px;
+  --nct-third:       349.87px;
   --nct-band-w:      512px;
   --nct-band-text-w: 652.8px;
   --nct-title-y:     57.6px;

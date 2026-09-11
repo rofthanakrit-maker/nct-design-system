@@ -90,7 +90,7 @@ def main():
         raise SystemExit("PowerPoint COM is Windows-only; run this on the "
                          "machine that opens the decks.")
     import build as B
-    order = [lay for lay, _ in B.demo_slides()]   # demo slide i renders layout order[i]
+    order = [s[0] for s in B.demo_slides()]       # demo slide i renders layout order[i]
     os.makedirs(PREVIEW, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         for brand, deck in (("web", "NCT-Slide-Template-Demo.pptx"),

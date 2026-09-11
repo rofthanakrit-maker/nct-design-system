@@ -119,8 +119,8 @@ export interface TableCell {
   status?: CellStatus;
   /**
    * Marks the cell with a category colour (1–4) as a bar down its leading edge.
-   * Not a fill: white on `--nct-cat-3` measures 3.61:1 and dark ink on it 3.50:1,
-   * so at the 10pt floor there is no legible text colour for a filled cat-3 cell.
+   * Not a fill: white on `--nct-cat-2` / `--nct-cat-3` measures 3.76:1 and dark
+   * ink on them 3.36:1, so at the 10pt floor no text colour is legible on the fill.
    * The bar leaves the value on paper, where it reads at 12.6:1.
    * A coded column needs a `CategoryKey` on the same slide.
    */
@@ -263,11 +263,11 @@ export interface CategoryKeyItem {
 }
 
 /**
- * The decoder for `--nct-cat-*`. A colour-coded column without one asks the
- * reader to remember which navy meant which thing, and the four category
- * colours sit as little as 1.31:1 apart — close enough that the key is what
- * makes the coding readable at all. Put it on the note line of the slide that
- * uses the coding, never on a different slide.
+ * The decoder for `--nct-cat-*`. The four hues now tell apart on sight, but
+ * identity is never left to colour alone: a colour-blind reader, a greyscale
+ * print (cat-2 and cat-3 have the same luminance) and anyone meeting the coding
+ * for the first time all need the words. Put it on the note line of the slide
+ * that uses the coding, never on a different slide.
  */
 export function CategoryKey({ items }: { items: CategoryKeyItem[] }) {
   return (

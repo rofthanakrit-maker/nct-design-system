@@ -81,7 +81,7 @@ cd scripts && py build.py
 | `RULE` | `#E5E5E5` | hairline, divider | design.md |
 | `NAVY` | `#23436D` | หัวเรื่อง, ตัวเลขเด่น, พื้น section | design.md accent |
 | `TEAL` | `#216B7F` | rule, bullet, tab, link | design.md accent-2 |
-| `TEAL_L` | `#4E8FA8` | series ที่ 2 ในกราฟ, หมวดที่ 3 — **พื้นขาวเท่านั้น** | **derived** |
+| ~~`TEAL_L`~~ | ~~`#4E8FA8`~~ | **ถอดแล้วใน v4** — สีกราฟและสีหมวดย้ายไป `CAT_1..4` ([v4 §2](slide-design-system-v4.md)) | derived |
 | `TEAL_UP` | `#8FBACE` | เลขหัวข้อ / bullet / label **บนพื้น navy เท่านั้น** | **derived** |
 | `DEEP` | `#16324F` | scrim ทับรูป, พื้น full-image | **derived** |
 
@@ -92,10 +92,12 @@ map ไว้แล้วใน `.potx` — กราฟและตาราง
 |---|---|---|---|---|
 | dk1 / tx1 | `INK` | | accent1 | `NAVY` |
 | lt1 / bg1 | `PAPER` | | accent2 | `TEAL` |
-| dk2 / tx2 | `NAVY` | | accent3 | `TEAL_L` |
-| lt2 / bg2 | `PAPER2` | | accent4 | `DEEP` |
-| hlink | `TEAL` | | accent5 | `INK2` |
-| folHlink | `NAVY` | | accent6 | `PAPER2` |
+| dk2 / tx2 | `NAVY` | | accent3 | `CAT_3` (v4) |
+| lt2 / bg2 | `PAPER2` | | accent4 | `CAT_4` (v4) |
+| hlink | `TEAL` | | accent5 | `CAT_MUTE` (v4) |
+| folHlink | `NAVY` | | accent6 | `TEAL` (v4) |
+
+accent1–2 เป็น `CAT_1` / `CAT_2` ตั้งแต่ v4 (เดิม `NAVY` / `TEAL`) — ดู v4 §2.5
 
 ### กติกาสี
 - สไลด์เข้ม (01, 02, 08, 10) ตัวหนังสือเป็น `PAPER` เท่านั้น ห้ามใช้ `NAVY` บนพื้นเข้ม

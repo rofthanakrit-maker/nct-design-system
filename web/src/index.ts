@@ -5,7 +5,7 @@
  * design built here can be rebuilt in PowerPoint by picking the layout with the
  * matching number. Import "@nct/slides/styles.css" once at the app root.
  *
- * Eighteen layouts and two brand modes. `<Deck brand="corp">` swaps in the
+ * Nineteen layouts and two brand modes. `<Deck brand="corp">` swaps in the
  * chrome the company requires on every bid - full-bleed rule, corner lockup,
  * three-segment foot bar - and repoints the accent; PowerPoint gets that as a
  * separate NCT-Slide-Template-Corp.potx, because a .potx layout cannot toggle
@@ -58,7 +58,10 @@ export {
   SlideDenseTable,
   SlidePhaseCard,
   SlideEvidence,
+  SlideChart,
 } from "./layouts";
+export { Chart } from "./chart";
+export type { ChartProps, ChartSeries, ChartSeriesList } from "./chart";
 export type {
   SlideCoverProps,
   SlideSectionProps,
@@ -88,6 +91,8 @@ export type {
   SlideEvidenceProps,
   EvidenceFigure,
   EvidenceFigures,
+  SlideChartProps,
+  ChartInsights,
 } from "./layouts";
 
 /* Stock imagery, inlined as data URIs so it survives a CSP that blocks external

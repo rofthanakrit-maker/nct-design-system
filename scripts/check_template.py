@@ -70,10 +70,6 @@ def _ph_idxs(root):
 
 CHROME_IDX = {"10", "11", "12"}          # date, footer, page number
 TEXT_PH = {"title", "ctrTitle", "subTitle", "body", None}
-# CAT_2 is TEAL, and the category palette is shared by both brands on purpose.
-# These are the shapes whose job is to BE those colours: L12's four coded cards
-# and L16's key, whose swatches decode them.
-CAT_CODED = re.compile(r"^(Card \d+ (Tab|Number)|Category Key)$")
 
 
 def _foot_rule_y(root):
@@ -223,9 +219,9 @@ def _brand_leaks(path, z, names):
     drew a #006666 full-bleed rule over #216B7F step chips two inches below it.
     Nothing caught it, because a hardcoded constant is a legal colour.
 
-    The category colours are the deliberate exception - CAT_2 is TEAL, and a
-    taxonomy that changes colour with the letterhead is not one - so this only
-    reads the layouts' own chrome, not the demo slides' table content.
+    Layouts and master only, not the demo slides' content. There is no category
+    exception any more: v2 had CAT_2 = TEAL and had to wave L12's cards and L16's
+    key through; the v4 category palette shares no hex with either house accent.
     """
     if "-Corp" not in os.path.basename(path):
         return []
@@ -240,8 +236,6 @@ def _brand_leaks(path, z, names):
         for ch in list(tree):
             nv = ch.find(".//%scNvPr" % P)
             name = nv.get("name") if nv is not None else "?"
-            if CAT_CODED.match(name or ""):
-                continue
             xml = ET.tostring(ch, encoding="unicode")
             for house in (TEAL, TEAL_UP):
                 if house in xml:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Assemble NCT-Slide-Template.potx (+ a demo .pptx) as raw OOXML."""
-import os, zipfile, datetime
+import os, zipfile, datetime, math
 from tokens import *
 from ooxml import *
 import parts_theme as PT
@@ -55,6 +55,8 @@ _LAYOUTS_02_18 = [
     # --- v3: the two layouts studied from the corporate proposal template ---
     (lambda: PL.l17_phase("rId2"),         ["mark-color.png"]),
     (lambda: PL.l18_evidence("rId2"),      ["mark-color.png"]),
+    # --- v4: data layouts (slide-design-system-v4.md) ---
+    (lambda: PL.l19_chart("rId2"),         ["mark-color.png"]),
 ]
 
 REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -155,7 +157,7 @@ ROW_BODY = 352044        # 0.385in
 def _cell(text, sz, color, bold=False, algn="l", fill=None, spc=0, bar=None):
     """`bar` underlines the cell with a category colour.
 
-    Not a fill: white on CAT_3 is 3.61:1 and INK on it 3.50:1, so a filled
+    Not a fill: white on CAT_2 / CAT_3 is 3.76:1 and INK on them 3.36:1, so a filled
     category cell has no legible text colour at the 10pt floor. Not a left edge
     either - a coloured stripe down one side of a box is the side-tab tell. The
     colour goes under the value, which stays on paper. Line elements come before
@@ -230,7 +232,7 @@ APP_PROPS = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
              '<AppVersion>16.0000</AppVersion></Properties>')
 
 
-def content_types(n_slides, is_template):
+def content_types(n_slides, is_template, n_charts=0):
     main = ("template" if is_template else "presentation")
     ov = ['<Override PartName="/ppt/presentation.xml" ContentType="application/vnd.openxmlformats-'
           'officedocument.presentationml.%s.main+xml"/>' % main,
@@ -254,6 +256,9 @@ def content_types(n_slides, is_template):
     for i in range(1, n_slides + 1):
         ov.append('<Override PartName="/ppt/slides/slide%d.xml" ContentType="application/vnd.'
                   'openxmlformats-officedocument.presentationml.slide+xml"/>' % i)
+    for i in range(1, n_charts + 1):
+        ov.append('<Override PartName="/ppt/charts/chart%d.xml" ContentType="application/vnd.'
+                  'openxmlformats-officedocument.drawingml.chart+xml"/>' % i)
     return ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
             '<Types xmlns="%s">'
             '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
@@ -333,8 +338,8 @@ def _diagram_kit(sid):
                      body=txbody([para("ส่วนที่เพิ่มใหม่", sz=T_DENSEBODY, color=TEAL,
                                        bold=True, spc=120, line=100000)], anchor="ctr")))
     sid += 2
-    labels = [("ระบบ ERP ปัจจุบัน", None), ("คิวเอกสารกลาง", NAVY),
-              ("ตัวตรวจกฎธุรกิจ", TEAL), ("ระบบบัญชี", None)]
+    labels = [("ระบบ ERP ปัจจุบัน", None), ("คิวเอกสารกลาง", CAT_1),
+              ("ตัวตรวจกฎธุรกิจ", CAT_2), ("ระบบบัญชี", None)]
     for i, (t, cat) in enumerate(labels):
         out += _dia_box(sid, "Box %d" % (i + 1), xs[i], BY, BW, t, cat); sid += 1
     for i in range(3):
@@ -349,6 +354,97 @@ def _diagram_kit(sid):
     return out
 
 
+NS_C = 'xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart"'
+
+
+def _chart_txpr(sz, color, bold=False):
+    b = ' b="1"' if bold else ''
+    return ('<c:txPr><a:bodyPr/><a:lstStyle/><a:p><a:pPr><a:defRPr sz="%d"%s>%s'
+            '<a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/>'
+            '</a:defRPr></a:pPr><a:endParaRPr lang="th-TH"/></a:p></c:txPr>'
+            % (sz, b, solid(color)))
+
+
+def nice_step(vmax):
+    """1 / 2 / 5 step giving four to six ticks from 0. PowerPoint's own axis put
+    eleven on a 0-9 range. Same rule as niceTicks in web/src/chart.tsx."""
+    raw = (vmax or 1) / 5.0
+    mag = 10 ** math.floor(math.log10(raw))
+    return next(m * mag for m in (1, 2, 5, 10) if m * mag >= raw)
+
+
+def column_chart(name, categories, values, highlight):
+    """v4 §3 column chart, emphasis form: the highlighted bar in CAT_1 with its
+    value on the cap, the rest CAT_MUTE. Hairline RULE gridlines, a CAT_MUTE
+    baseline, 12pt INK2 ticks, no legend for one series.
+
+    Literal values (c:strLit / c:numLit), no embedded workbook: the demo shows
+    the styling to copy. ponytail: "Edit Data" has nothing to open on this one
+    chart - a real slide inserts its own chart on the placeholder, which starts
+    from the theme accents v4 set. Embed a workbook if the demo must be editable.
+    """
+    ln = lambda c: '<a:ln w="9525">%s</a:ln>' % solid(c)
+    pts = lambda vals: "".join('<c:pt idx="%d"><c:v>%s</c:v></c:pt>' % (i, v)
+                               for i, v in enumerate(vals))
+    n = len(values)
+    # bars stay under 0.25in: ~6.9in of plot / n categories, gap = band - bar
+    gap = min(500, round((6.9 / n - 0.25) / 0.25 * 100))
+    return ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
+            '<c:chartSpace %s xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" '
+            'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+            '<c:roundedCorners val="0"/><c:chart><c:autoTitleDeleted val="1"/>'
+            '<c:plotArea><c:layout/><c:barChart><c:barDir val="col"/>'
+            '<c:grouping val="clustered"/><c:varyColors val="0"/>'
+            '<c:ser><c:idx val="0"/><c:order val="0"/><c:tx><c:v>%s</c:v></c:tx>'
+            '<c:spPr>%s</c:spPr><c:invertIfNegative val="0"/>'
+            '<c:dPt><c:idx val="%d"/><c:invertIfNegative val="0"/><c:bubble3D val="0"/>'
+            '<c:spPr>%s</c:spPr></c:dPt>'
+            '<c:dLbls><c:dLbl><c:idx val="%d"/><c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr>%s'
+            '<c:dLblPos val="outEnd"/><c:showLegendKey val="0"/><c:showVal val="1"/>'
+            '<c:showCatName val="0"/><c:showSerName val="0"/><c:showPercent val="0"/>'
+            '<c:showBubbleSize val="0"/></c:dLbl>'
+            '<c:showLegendKey val="0"/><c:showVal val="0"/><c:showCatName val="0"/>'
+            '<c:showSerName val="0"/><c:showPercent val="0"/><c:showBubbleSize val="0"/></c:dLbls>'
+            '<c:cat><c:strLit><c:ptCount val="%d"/>%s</c:strLit></c:cat>'
+            '<c:val><c:numLit><c:formatCode>General</c:formatCode><c:ptCount val="%d"/>%s'
+            '</c:numLit></c:val></c:ser>'
+            '<c:gapWidth val="%d"/><c:overlap val="0"/>'
+            '<c:axId val="19001"/><c:axId val="19002"/></c:barChart>'
+            '<c:catAx><c:axId val="19001"/><c:scaling><c:orientation val="minMax"/></c:scaling>'
+            '<c:delete val="0"/><c:axPos val="b"/><c:numFmt formatCode="General" sourceLinked="0"/>'
+            '<c:majorTickMark val="none"/><c:minorTickMark val="none"/><c:tickLblPos val="nextTo"/>'
+            '<c:spPr>%s</c:spPr>%s<c:crossAx val="19002"/><c:crosses val="autoZero"/>'
+            '<c:auto val="1"/><c:lblAlgn val="ctr"/><c:lblOffset val="100"/>'
+            '<c:noMultiLvlLbl val="0"/></c:catAx>'
+            '<c:valAx><c:axId val="19002"/><c:scaling><c:orientation val="minMax"/>'
+            '<c:min val="0"/></c:scaling><c:delete val="0"/><c:axPos val="l"/>'
+            '<c:majorGridlines><c:spPr>%s</c:spPr></c:majorGridlines>'
+            '<c:numFmt formatCode="#,##0" sourceLinked="0"/>'
+            '<c:majorTickMark val="none"/><c:minorTickMark val="none"/><c:tickLblPos val="nextTo"/>'
+            '<c:spPr><a:ln><a:noFill/></a:ln></c:spPr>%s<c:crossAx val="19001"/>'
+            '<c:crosses val="autoZero"/><c:crossBetween val="between"/>'
+            '<c:majorUnit val="%g"/></c:valAx>'
+            '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr></c:plotArea>'
+            '<c:plotVisOnly val="1"/><c:dispBlanksAs val="gap"/></c:chart>'
+            '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr>%s</c:chartSpace>'
+            % (NS_C, name, solid(CAT_MUTE), highlight, solid(CAT_1), highlight,
+               _chart_txpr(T_BODY3, INK, bold=True),
+               n, pts(categories), n, pts(values), gap,
+               ln(CAT_MUTE), _chart_txpr(T_LABEL, INK2), ln(RULE), _chart_txpr(T_LABEL, INK2),
+               nice_step(max(values)), _chart_txpr(T_LABEL, INK2)))
+
+
+def chart_frame(sid, name, idx, x, y, w, h, rid):
+    """the graphicFrame that fills a layout's chart placeholder"""
+    return ('<p:graphicFrame><p:nvGraphicFramePr><p:cNvPr id="%d" name="%s"/>'
+            '<p:cNvGraphicFramePr><a:graphicFrameLocks noGrp="1"/></p:cNvGraphicFramePr>'
+            '<p:nvPr><p:ph type="chart" idx="%d"/></p:nvPr></p:nvGraphicFramePr>'
+            '<p:xfrm><a:off x="%d" y="%d"/><a:ext cx="%d" cy="%d"/></p:xfrm>'
+            '<a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/chart">'
+            '<c:chart %s r:id="%s"/></a:graphicData></a:graphic></p:graphicFrame>'
+            % (sid, name, idx, x, y, w, h, NS_C, rid))
+
+
 def slide(shapes):
     return ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
             '<p:sld %s>' % NS_P
@@ -361,8 +457,8 @@ def demo_slides():
 
     It is the file people copy, so it has to teach an argument: cover, agenda,
     the problem, what changes, how the work is done, what is in scope, who is
-    doing it, what it costs, what happens next. Each of the sixteen layouts
-    still appears exactly once - the 1:1 parity with the .potx is the point.
+    doing it, what it costs, what happens next. Each layout still appears
+    exactly once - the 1:1 parity with the .potx is the point.
     """
     S = []
     # ---------------------------------------------------------------- 1 · cover
@@ -400,6 +496,25 @@ def demo_slides():
                    sp_text(7, "TkL", "body", 5, ["สรุป"]),
                    sp_text(8, "TkC", "body", 6,
                            ["ปัญหาหลักคือการคีย์ซ้ำ ไม่ใช่จำนวนเอกสาร"])]))
+    # ------------------------------------------------ 4b · the problem, measured (L19)
+    # emphasis, not six colours: the story is one month. A third tuple element
+    # carries the slide's chart parts; build() gives each the next rId from rId2.
+    S.append((19, [sp_text(2, "Title", "title", None,
+                           ["ปิดงบ พ.ค. ใช้ 9 วัน นานสุดในรอบครึ่งปี"]),
+                   chart_frame(3, "Close Days", 1, MX, BODY_Y, 8 * COL + 7 * GUT,
+                               3474720, "rId2"),
+                   sp_text(4, "Fig", "body", 2, ["9 วัน"]),
+                   sp_text(5, "FigL", "body", 3, ["เวลาปิดงบ พ.ค. 2569 · เป้าหมาย 2 วัน"]),
+                   sp_text(6, "Ins", "body", 4,
+                           ["เดือนที่เอกสารเข้ามากสุด คือเดือนที่ปิดงบนานสุด",
+                            "ทุกเดือนเกินเป้าอย่างน้อยสามเท่า",
+                            "ความล่าช้าเกิดที่ขั้นกระทบยอด ไม่ใช่ขั้นคีย์"]),
+                   sp_text(7, "Src", "body", 5, ["ระบบบัญชีของลูกค้า · ม.ค.–มิ.ย. 2569 · หน่วย: วันทำการ"]),
+                   sp_text(8, "TkL", "body", 6, ["สรุป"]),
+                   sp_text(9, "TkC", "body", 7,
+                           ["เวลาปิดงบแปรตามปริมาณเอกสาร การลดงานคีย์ซ้ำจึงลดเวลาปิดงบได้จริง"])],
+              [column_chart("เวลาปิดงบ", ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย."],
+                            [6, 7, 6, 8, 9, 7], 4)]))
     # ---------------------------------------------------------------- 5 · before/after (L04)
     S.append((4, [sp_text(2, "Title", "title", None, ["ก่อนและหลังใช้บริการ"]),
                   sp_text(3, "L", "body", 1,
@@ -459,7 +574,7 @@ def demo_slides():
     # ---------------------------------------------------------------- 10 · scope (L16)
     w16 = [594360, 3200400, 1965960, 1600200, 1554480, 1447800]
     head16 = ["#", "กระบวนการ", "หมวด", "ปริมาณ/เดือน", "ความพร้อม", "รอบที่ทำ"]
-    cats16 = [NAVY, TEAL, TEAL_L, DEEP]
+    cats16 = [CAT_1, CAT_2, CAT_3, CAT_4]
     body16 = [
         ("บันทึกใบแจ้งหนี้ซื้อ", "AP", "420 ใบ", ("พร้อม", OK, OK_T), "รอบ 1"),
         ("กระทบยอดใบสั่งซื้อ", "AP", "380 ใบ", ("พร้อม", OK, OK_T), "รอบ 1"),
@@ -470,7 +585,8 @@ def demo_slides():
         ("กระทบยอดธนาคาร", "GL", "12 บัญชี", ("พร้อม", OK, OK_T), "รอบ 1"),
         ("รายงานภาษีซื้อ-ขาย", "GL", "2 ชุด", ("ติดข้อจำกัด", RISK, RISK_T), "รอบ 3"),
     ]
-    catmap = {"AP": 0, "AR": 1, "GL": 3}
+    # slots are assigned in order, never skipped - the order is what was validated
+    catmap = {"AP": 0, "AR": 1, "GL": 2}
     rows16 = [(ROW_HEAD, [_cell(t, T_TBLHEAD, PAPER, bold=True, spc=60,
                                 algn="ctr" if i in (0, 2, 3, 4, 5) else "l")
                           for i, t in enumerate(head16)])]
@@ -638,7 +754,8 @@ def build(path, with_slides, title):
     def w(name, data):
         z.writestr(name, data.encode("utf-8") if isinstance(data, str) else data)
 
-    w("[Content_Types].xml", content_types(len(slides), not with_slides))
+    n_charts = sum(len(s[2]) for s in slides if len(s) > 2)
+    w("[Content_Types].xml", content_types(len(slides), not with_slides, n_charts))
     w("_rels/.rels", rels([
         ("rId1", "officeDocument", "ppt/presentation.xml"),
         ("rId2", "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties",
@@ -682,10 +799,15 @@ def build(path, with_slides, title):
         w("ppt/slideLayouts/_rels/slideLayout%d.xml.rels" % i, rels(lr))
 
     # slides
-    for i, (layout_no, shapes) in enumerate(slides, 1):
+    chart_no = 0
+    for i, (layout_no, shapes, *parts) in enumerate(slides, 1):
         w("ppt/slides/slide%d.xml" % i, slide(shapes))
-        w("ppt/slides/_rels/slide%d.xml.rels" % i, rels([
-            ("rId1", "slideLayout", "../slideLayouts/slideLayout%d.xml" % layout_no)]))
+        sr = [("rId1", "slideLayout", "../slideLayouts/slideLayout%d.xml" % layout_no)]
+        for j, chart_xml in enumerate(parts[0] if parts else []):
+            chart_no += 1
+            w("ppt/charts/chart%d.xml" % chart_no, chart_xml)
+            sr.append(("rId%d" % (2 + j), "chart", "../charts/chart%d.xml" % chart_no))
+        w("ppt/slides/_rels/slide%d.xml.rels" % i, rels(sr))
 
     # media
     for name, src in IMG.items():

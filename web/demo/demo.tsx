@@ -8,6 +8,7 @@ import {
   DiagramGroup,
   DiagramLink,
   SlideAgenda,
+  SlideChart,
   SlideClosing,
   SlideContent,
   SlideCover,
@@ -34,7 +35,7 @@ import {
 /* The demo is the file everyone copies, so it runs in argument order, not in
    layout-number order: cover, agenda, the problem, what changes, how the work
    is done, what is in scope, who is doing it, what it costs, what happens next.
-   Each of the eighteen layouts still appears exactly once — the 1:1 parity with
+   Each of the nineteen layouts still appears exactly once — the 1:1 parity with
    NCT-Slide-Template.potx is the point of the deck. Chrome and page numbers
    come from <Deck>; nothing here types a page number by hand. */
 
@@ -50,7 +51,7 @@ function App() {
   );
 }
 
-/** The house deck: all eighteen layouts, web brand. */
+/** The house deck: layouts 01–16 and 19, web brand. 17–18 are in the corp deck. */
 function WebDeck() {
   return (
     <Deck footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569">
@@ -98,6 +99,25 @@ function WebDeck() {
           "บันทึกทุกการแก้ไขพร้อมผู้ทำและเวลา",
         ]}
         takeaway="ปัญหาหลักคือการคีย์ซ้ำ ไม่ใช่จำนวนเอกสาร"
+      />
+      {/* 19 · the problem, measured. Emphasis, not six colours: the story is one month */}
+      <SlideChart
+        title="ปิดงบ พ.ค. ใช้ 9 วัน นานสุดในรอบครึ่งปี"
+        chart={{
+          kind: "column",
+          unit: "วันทำการ",
+          categories: ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย."],
+          series: { name: "เวลาปิดงบ", values: [6, 7, 6, 8, 9, 7] },
+          highlight: 4,
+        }}
+        figure={{ value: "9 วัน", label: "เวลาปิดงบ พ.ค. 2569 · เป้าหมาย 2 วัน" }}
+        insights={[
+          "เดือนที่เอกสารเข้ามากสุด คือเดือนที่ปิดงบนานสุด",
+          "ทุกเดือนเกินเป้าอย่างน้อยสามเท่า",
+          "ความล่าช้าเกิดที่ขั้นกระทบยอด ไม่ใช่ขั้นคีย์",
+        ]}
+        source="ระบบบัญชีของลูกค้า · ม.ค.–มิ.ย. 2569"
+        takeaway="เวลาปิดงบแปรตามปริมาณเอกสาร การลดงานคีย์ซ้ำจึงลดเวลาปิดงบได้จริง"
       />
       <SlideTwoColumn
         title="ก่อนและหลังใช้บริการ"
@@ -160,7 +180,7 @@ function WebDeck() {
             items={[
               { category: 1, label: en("AP · เจ้าหนี้") },
               { category: 2, label: en("AR · ลูกหนี้") },
-              { category: 4, label: en("GL · บัญชีแยกประเภท") },
+              { category: 3, label: en("GL · บัญชีแยกประเภท") },
             ]}
           />
         }
@@ -180,9 +200,9 @@ function WebDeck() {
           [{ value: 3, category: 2 }, "ออกใบแจ้งหนี้ขาย", { value: en("AR"), align: "center", bold: true }, { value: "260 ใบ", align: "center" }, { value: "พร้อม", status: "ok" }, { value: "รอบ 1", align: "center" }],
           [{ value: 4, category: 2 }, "ติดตามลูกหนี้ค้างชำระ", { value: en("AR"), align: "center", bold: true }, { value: "150 ราย", align: "center" }, { value: "รอยืนยัน", status: "warn" }, { value: "รอบ 2", align: "center" }],
           [{ value: 5, category: 1 }, "บันทึกค่าใช้จ่ายพนักงาน", { value: en("AP"), align: "center", bold: true }, { value: "310 ใบ", align: "center" }, { value: "รอยืนยัน", status: "warn" }, { value: "รอบ 2", align: "center" }],
-          [{ value: 6, category: 4 }, "ปรับปรุงบัญชีสิ้นเดือน", { value: en("GL"), align: "center", bold: true }, { value: "45 รายการ", align: "center" }, { value: "ติดข้อจำกัด", status: "risk" }, { value: "รอบ 3", align: "center" }],
-          [{ value: 7, category: 4 }, "กระทบยอดธนาคาร", { value: en("GL"), align: "center", bold: true }, { value: "12 บัญชี", align: "center" }, { value: "พร้อม", status: "ok" }, { value: "รอบ 1", align: "center" }],
-          [{ value: 8, category: 4 }, "รายงานภาษีซื้อ-ขาย", { value: en("GL"), align: "center", bold: true }, { value: "2 ชุด", align: "center" }, { value: "ติดข้อจำกัด", status: "risk" }, { value: "รอบ 3", align: "center" }],
+          [{ value: 6, category: 3 }, "ปรับปรุงบัญชีสิ้นเดือน", { value: en("GL"), align: "center", bold: true }, { value: "45 รายการ", align: "center" }, { value: "ติดข้อจำกัด", status: "risk" }, { value: "รอบ 3", align: "center" }],
+          [{ value: 7, category: 3 }, "กระทบยอดธนาคาร", { value: en("GL"), align: "center", bold: true }, { value: "12 บัญชี", align: "center" }, { value: "พร้อม", status: "ok" }, { value: "รอบ 1", align: "center" }],
+          [{ value: 8, category: 3 }, "รายงานภาษีซื้อ-ขาย", { value: en("GL"), align: "center", bold: true }, { value: "2 ชุด", align: "center" }, { value: "ติดข้อจำกัด", status: "risk" }, { value: "รอบ 3", align: "center" }],
         ]}
         footnote="ปริมาณเป็นค่าเฉลี่ยจากข้อมูล 3 เดือนล่าสุด"
       />

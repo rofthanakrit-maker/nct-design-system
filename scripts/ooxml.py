@@ -229,6 +229,13 @@ def tbl_placeholder(sid, name, x, y, w, h, idx):
                              S("", sz=T_BODY, color=INK))
 
 
+def chart_placeholder(sid, name, x, y, w, h, idx):
+    """Insert Chart colours series n from theme accent n - v4 made those the
+    validated category order, so the placeholder needs no colour of its own."""
+    return _bare_placeholder(sid, name, "chart", x, y, w, h, idx,
+                             S("", sz=T_LABEL, color=INK2))
+
+
 def bg(fill):
     return '<p:bg><p:bgPr>%s<a:effectLst/></p:bgPr></p:bg>' % fill
 

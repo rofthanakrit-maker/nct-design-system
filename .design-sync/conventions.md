@@ -13,19 +13,19 @@ No provider, no theme object. Two things only:
    (every `--nct-*` variable) and `slides.css`. Without it slides render unstyled
    at the wrong size — there is no inline-style fallback.
 2. Put content inside a layout component. `Slide` is the raw 1280×720 canvas
-   (13.333in × 7.5in at 96dpi); the 18 layouts wrap it. Reach for bare `Slide`
+   (13.333in × 7.5in at 96dpi); the 19 layouts wrap it. Reach for bare `Slide`
    only when no layout fits.
 
 Slides scale themselves to their container by default (`fit`, measured with a
 `ResizeObserver`). Pass `fit={false}` for a fixed 1280×720 board.
 
-## The 18 layouts
+## The 19 layouts
 
 `SlideCover` 01 · `SlideSection` 02 · `SlideContent` 03 · `SlideTwoColumn` 04 ·
 `SlideThreeCards` 05 · `SlideKeyFigures` 06 · `SlideQuote` 07 · `SlideFullImage` 08 ·
 `SlideTable` 09 · `SlideClosing` 10 · `SlideSplitPanel` 11 · `SlideFourCards` 12 ·
 `SlideProcessFlow` 13 · `SlideDiagram` 14 · `SlideAgenda` 15 · `SlideDenseTable` 16 ·
-`SlidePhaseCard` 17 · `SlideEvidence` 18
+`SlidePhaseCard` 17 · `SlideEvidence` 18 · `SlideChart` 19
 
 Compose with `Deck`. Building blocks: `BulletList`, `DataTable`, `TakeawayBand`,
 `DiagramBox`, `DiagramLink`, `DiagramGroup`, `NctLogo`, `NctMark`.
@@ -50,7 +50,7 @@ card with an accent outline, and on the navy bookends it would be a hole.
 
 PowerPoint gets the corp mode as a **separate file**,
 `NCT-Slide-Template-Corp.potx`, because a `.potx` layout cannot toggle its own
-chrome — the chrome is baked in. Same eighteen layouts, same numbering.
+chrome — the chrome is baked in. Same nineteen layouts, same numbering.
 
 ## The styling idiom
 
@@ -64,16 +64,17 @@ your own layout glue, use the CSS variables:
 | Accent (brand-switched) | `--nct-accent` `--nct-accent-up` — read these, not `--nct-teal`, in anything new |
 | Corp brand | `--nct-corp` `--nct-corp-up` `--nct-corp-deep` `--nct-corp-dim` `--nct-corp-bar-mid` |
 | Status (data cells only) | `--nct-ok` `--nct-ok-tint` `--nct-warn` `--nct-warn-tint` `--nct-risk` `--nct-risk-tint` |
-| Category (max 4) | `--nct-cat-1` … `--nct-cat-4` |
+| Category / chart series (max 4, in order) | `--nct-cat-1` … `--nct-cat-4` · `--nct-cat-mute` ("Other" / de-emphasis — marks only, never text) |
 | Type | `--nct-fs-display` `--nct-fs-section` `--nct-fs-h1` `--nct-fs-stat` `--nct-fs-quote` `--nct-fs-lead` `--nct-fs-body` `--nct-fs-body-2` `--nct-fs-body-3` `--nct-fs-label` `--nct-fs-foot` `--nct-fs-densehead` `--nct-fs-densebody` `--nct-fs-tblhead` `--nct-fs-densecell` |
 | Family | `--nct-font-display` (Kanit, headings) `--nct-font-body` (Noto Sans Thai, copy) |
-| Grid | `--nct-mx` `--nct-cw` `--nct-gut` `--nct-fifth` `--nct-evidence-h` `--nct-phase-tab-h` |
+| Grid | `--nct-mx` `--nct-cw` `--nct-gut` `--nct-fifth` `--nct-third` `--nct-evidence-h` `--nct-phase-tab-h` |
 
 Tokens are also importable as values: `import { color, space, fontSize, canvas } from '@nct/slides'`.
 
 `tokens.css` emits only what something reads. The grid units `--nct-mt` `--nct-mb`
-`--nct-col` `--nct-half` `--nct-third` `--nct-quarter` and `--nct-note-h` were
-declared for nine months without a single `var()` and are gone; `scripts/tokens.py`
+`--nct-col` `--nct-half` `--nct-quarter` and `--nct-note-h` were
+declared for nine months without a single `var()` and are gone (`--nct-third` came
+back in v4, when `SlideChart`'s insight rail needed it); `scripts/tokens.py`
 still holds every one of them, so adding one back is a line in `emit_web_tokens.py`
 the day a rule actually needs it. A token nobody reads is a promise the system
 does not keep.
@@ -84,7 +85,7 @@ does not keep.
   never add a third family. Never italic — Thai italics are synthesised obliques.
 - **`--nct-fs-densecell` (10pt) is the floor.** Content that will not fit is a
   second slide, never smaller type. The dense sizes are legal on layouts 11–14,
-  16, 17 and 18 only; 03/04/05 stay at 18/16/14pt. `SlideDenseTable` holds 8–9
+  16, 17 and 18 only, plus the 10pt source note on 19; 03/04/05 stay at 18/16/14pt. `SlideDenseTable` holds 8–9
   rows at that size once the takeaway strip has taken its 0.4in.
 - **On dark slides text is `--nct-paper`, dimmed with alpha — never grey.**
   Dark tones: `SlideCover`, `SlideSection`, `SlideAgenda`, `SlideClosing`,
@@ -102,9 +103,26 @@ does not keep.
   that stay on screen longest.
 - **`--nct-ink-2` is the floor for muted text, not a dial.** `#5F5F5F` clears AA
   at 10pt on both `--nct-paper` and `--nct-paper-2`. Never lighten it.
-- **`--nct-teal-l` on white, `--nct-teal-up` on navy.** They are the same hue;
-  `teal-l` reads at 2.8:1 on navy and `teal-up` at 2.1:1 on white. Swapping them
-  is the mistake this pair exists to prevent.
+- **`--nct-teal` on white, `--nct-teal-up` on navy.** `teal-up` is the same hue
+  lifted to read on a dark panel and measures 2.1:1 on white. Swapping them is the
+  mistake this pair exists to prevent.
+- **Category colours go in order and never skip.** Two categories are `1` and `2`,
+  not `1` and `4` — the order is what was validated for colour-blind readers. A
+  fifth category is not a colour; label it.
+- **A chart is `SlideChart`, never a picture pasted into `SlideContent`.** Pass
+  `chart={{ kind, categories, series }}` — `column` / `bar` take one series,
+  `line` / `stacked` take one to four. When the story is one bar or one line, set
+  `highlight`: it keeps `cat-1` and its value and mutes the rest. That is the
+  default reach; give every series its own colour only when the series are the
+  story. `figure`, `source` and `takeaway` are required: the big number must come
+  out of the chart beside it (otherwise it is `SlideKeyFigures`), and the source
+  says where the full table lives. Charts never go on a dark slide, never take a
+  second y-axis, and never use a pie — part-to-whole is a `stacked` column with
+  the tail folded into `slot: "mute"`.
+- **Values are selective.** The chart labels the highlighted bar (or the largest),
+  the line ends when they sit apart, and the last stack total. It never prints a
+  number on every mark; the axis, the hidden table and each mark's hover title
+  carry the rest.
 - **Flat.** No shadows, bevels, 3-D or reflections anywhere, diagrams included.
 - Every table slide and diagram slide carries a one-line `TakeawayBand`. On
   `SlideTable`, `SlideDiagram` and `SlideDenseTable` the `takeaway` prop is
@@ -183,7 +201,7 @@ does not keep.
   canvas) and `--nct-band-text-w` are tokens; layouts 02, 15, 10 and
   `SlideFullImage variant="fade"` all sit on them. Never retype the pixel values,
   and never introduce a fifth width.
-- **`.potx` parity is 18↔18 by count, and by rendering everywhere but two.**
+- **`.potx` parity is 19↔19 by count, and by rendering everywhere but two.**
   `SlideFullImage variant="fade"` and `SlideClosing imageMode="full"` are web-only
   treatments; PowerPoint layout 08 stays full-bleed and layout 10 keeps the 40%
   band. Every other layout renders the same on both sides. State it that way —
@@ -215,11 +233,11 @@ import '@nct/slides/styles.css';
     rows={[
       [{ value: 1, category: 1 }, 'บันทึกใบแจ้งหนี้ซื้อ',
        { value: 'พร้อม', status: 'ok' }, { value: 'รอบ 1', align: 'center' }],
-      [{ value: 2, category: 4 }, 'ปรับปรุงบัญชีสิ้นเดือน',
+      [{ value: 2, category: 2 }, 'ปรับปรุงบัญชีสิ้นเดือน',
        { value: 'ติดข้อจำกัด', status: 'risk' }, { value: 'รอบ 3', align: 'center' }],
     ]}
     // a coded column needs its key on the same slide
-    legend={<CategoryKey items={[{ category: 1, label: 'AP' }, { category: 4, label: 'GL' }]} />}
+    legend={<CategoryKey items={[{ category: 1, label: 'AP' }, { category: 2, label: 'GL' }]} />}
     footnote="ปริมาณเป็นค่าเฉลี่ย 3 เดือนล่าสุด"
     takeaway="หนึ่งในสองกระบวนการเริ่มได้ทันที อีกรายการรอสิทธิ์เข้าระบบ"
   />
