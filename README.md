@@ -165,6 +165,12 @@ npm run assets               # โลโก้เป็น data URI
 19 component ตรงกับ 19 layout ใน `.potx` เลขเดียวกัน ออกแบบฝั่งเว็บแล้วมาทำต่อ
 ใน PowerPoint ได้โดยหยิบ layout เบอร์เดิม
 
+Icon ใช้ `<Icon icon={Truck} size="body" tone="accent" />` กับ glyph lucide 40 ตัว
+ที่ bundle มากับ `@nct/slides` (import จาก `@nct/slides` ได้เลย รายชื่ออยู่ใน
+`web/src/index.ts`) — ขนาดเป็น step ของ `--nct-fs-*` สีเป็น
+role token ละไว้ทั้งคู่ก็ตามข้อความรอบข้าง icon วางคู่คำเสมอ ไม่แทนคำ ฝั่ง `.potx`
+ไม่มีคู่ ต้องวาง SVG จาก lucide.dev เอง
+
 `<Deck brand="corp">` เปลี่ยนเป็นแบบฟอร์มบริษัท — เส้นเต็มความกว้าง, การ์ดโลโก้
 มุมขวาบน, แถบสามช่วงที่ก้น และย้าย role สีทั้งเด็ค: `--nct-accent` → `#006666`,
 `--nct-heading` → ink, `--nct-dark` (หัวตาราง, panel เข้ม, กล่องระบบ) → `#193B36`

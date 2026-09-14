@@ -2,11 +2,16 @@ import { createRoot } from "react-dom/client";
 import {
   BulletList,
   CategoryKey,
+  ClipboardCheck,
+  FileInput,
+  Layers,
+  Timer,
   DataTable,
   Deck,
   DiagramBox,
   DiagramGroup,
   DiagramLink,
+  Icon,
   SlideAgenda,
   SlideChart,
   SlideClosing,
@@ -127,10 +132,10 @@ function WebDeck() {
       <SlideFourCards
         title="สี่ผลลัพธ์ที่ข้อเสนอนี้ให้"
         cards={[
-          { heading: "ลดงานคีย์ซ้ำ", body: "รับเอกสารเข้าระบบเดียว แล้วกระจายต่อให้ทุกปลายทางอัตโนมัติ" },
-          { heading: "ตรวจสอบได้", body: "ทุกรายการมี audit trail ผู้ทำ เวลา และค่าก่อนหลัง" },
-          { heading: "ปิดงบเร็วขึ้น", body: "กระทบยอดอัตโนมัติรายวัน ไม่ต้องรอสิ้นเดือน" },
-          { heading: "ขยายต่อได้", body: "เพิ่มกระบวนการใหม่โดยไม่แก้ของเดิม" },
+          { heading: <><Icon icon={FileInput} tone="accent" /> ลดงานคีย์ซ้ำ</>, body: "รับเอกสารเข้าระบบเดียว แล้วกระจายต่อให้ทุกปลายทางอัตโนมัติ" },
+          { heading: <><Icon icon={ClipboardCheck} tone="accent" /> ตรวจสอบได้</>, body: "ทุกรายการมี audit trail ผู้ทำ เวลา และค่าก่อนหลัง" },
+          { heading: <><Icon icon={Timer} tone="accent" /> ปิดงบเร็วขึ้น</>, body: "กระทบยอดอัตโนมัติรายวัน ไม่ต้องรอสิ้นเดือน" },
+          { heading: <><Icon icon={Layers} tone="accent" /> ขยายต่อได้</>, body: "เพิ่มกระบวนการใหม่โดยไม่แก้ของเดิม" },
         ]}
         band="ทั้งสี่ข้อมาจากการแก้จุดเดียวกัน คือรวมจุดรับเอกสาร"
       />

@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
 import { logoColor, logoWhite, markColor, markWhite } from "./assets";
 
 /* ------------------------------------------------------------------ logo */
@@ -282,6 +283,53 @@ export function CategoryKey({ items }: { items: CategoryKeyItem[] }) {
         </span>
       ))}
     </span>
+  );
+}
+
+/* ------------------------------------------------------------------ icon */
+
+const ICON_TONE_VAR = {
+  accent: "--nct-accent",
+  "accent-up": "--nct-accent-up",
+  heading: "--nct-heading",
+  "ink-2": "--nct-ink-2",
+  "on-dark": "--nct-on-dark-1",
+} as const;
+
+export interface IconProps {
+  /** A lucide-react glyph, passed as the component: `import { Truck } from "lucide-react"`. */
+  icon: LucideIcon;
+  /** The type step it sits beside. Omit and it matches the surrounding text (1em). */
+  size?: "stat" | "h1" | "lead" | "body" | "body-2" | "body-3" | "label" | "densehead" | "densebody";
+  /**
+   * Omit to inherit the text colour. `accent` on paper, `accent-up` on `--nct-dark`
+   * — the same pair rule as text. No status or category tones: those are data.
+   */
+  tone?: keyof typeof ICON_TONE_VAR;
+  /** Names the icon for screen readers. Omit when the words beside it already say it. */
+  label?: string;
+}
+
+/**
+ * A lucide glyph sized to a type token and coloured by a role token, so an icon
+ * is set like a word, not placed like a picture. The stroke scales with the
+ * size the way a font's weight does.
+ *
+ * An icon sits beside words and never replaces them. It has no .potx twin: in
+ * PowerPoint, draw the same glyph from lucide.dev as SVG in the same colour.
+ */
+export function Icon({ icon: Glyph, size, tone, label }: IconProps) {
+  return (
+    <Glyph
+      size="1em"
+      {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })}
+      style={{
+        fontSize: size && `var(--nct-fs-${size})`,
+        color: tone && `var(${ICON_TONE_VAR[tone]})`,
+        verticalAlign: "-0.125em",
+        flexShrink: 0,
+      }}
+    />
   );
 }
 

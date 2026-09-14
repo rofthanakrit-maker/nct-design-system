@@ -30,7 +30,21 @@ foot of the slide there. Pass `fit={false}` for a fixed 1280×720 board.
 `SlidePhaseCard` 17 · `SlideEvidence` 18 · `SlideChart` 19
 
 Compose with `Deck`. Building blocks: `BulletList`, `DataTable`, `TakeawayBand`,
-`DiagramBox`, `DiagramLink`, `DiagramGroup`, `NctLogo`, `NctMark`.
+`DiagramBox`, `DiagramLink`, `DiagramGroup`, `NctLogo`, `NctMark`, `Icon`.
+
+`Icon` sets a lucide glyph: `<Icon icon={Truck} size="body" tone="accent" />`.
+Forty glyphs ship with the library — import them from `@nct/slides` like any
+component, nothing else to install: `Building2` `Calendar` `ChartColumn`
+`ChartLine` `CircleAlert` `CircleCheck` `CircleX` `ClipboardCheck` `Clock`
+`Cloud` `Database` `FileInput` `FileText` `Folder` `Globe` `Handshake`
+`KeyRound` `Layers` `Lightbulb` `Lock` `Mail` `MapPin` `Phone` `Receipt`
+`Rocket` `Search` `Server` `Settings` `Shield` `ShieldCheck` `Target` `Timer`
+`TrendingDown` `TrendingUp` `Truck` `User` `Users` `Workflow` `Wrench` `Zap`.
+A glyph not on that list is not available — pick the nearest one, never draw
+an SVG by hand.
+`size` is a `--nct-fs-*` step, `tone` a role token; omit both and it follows the
+text around it. An icon sits beside words, never instead of them — no
+icon-only cards, no centred icon grid, no icons inside `DiagramBox`.
 
 ## Two brand modes
 
