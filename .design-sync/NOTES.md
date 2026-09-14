@@ -103,3 +103,17 @@ Repo-specific gotchas. Read before re-syncing.
   measured values rather than re-flowed sight unseen; `check_template.py` now
   measures every demo slide against its layout's footer rule, so an overrun fails
   the build instead of shipping.
+- **Icons: `web/src/index.ts` is the list, and the Claude Design port is generated.**
+  The lucide re-export block there is the only place a glyph is named; tsup inlines
+  those glyphs into `dist`. `node scripts/emit_design_icons.mjs <out>` reads the same
+  block and writes the project's `components/icons/Icon.jsx` (path data inlined — a
+  design there has no npm), `Icon.d.ts`, `Icon.prompt.md` and `card.html`, and fails
+  if any glyph differs from lucide-react's own render. Also list a new glyph in
+  `conventions.md`. The project is a hand-maintained port (`NCTDesignSystem_7648d8`,
+  not the `NctSlides` global), and on 2026-09-14 the app did not rebuild
+  `_ds_bundle.js` / `_ds_manifest.json` after `Icon.jsx` changed — not on upload, not
+  on a GitHub re-sync. Both were patched by hand: the source wrapped as a
+  `try { (() => { … })(); } catch` block, `__ds_ns.Icon` exposed, the header's
+  `sourceHashes` entry as the first 12 hex digits of sha256 over the source, and the
+  card added to `cards`. Re-read both from the project before patching again; they
+  are the base, not a local copy.

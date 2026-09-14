@@ -33,13 +33,22 @@ Compose with `Deck`. Building blocks: `BulletList`, `DataTable`, `TakeawayBand`,
 `DiagramBox`, `DiagramLink`, `DiagramGroup`, `NctLogo`, `NctMark`, `Icon`.
 
 `Icon` sets a lucide glyph: `<Icon icon={Truck} size="body" tone="accent" />`.
-Forty glyphs ship with the library — import them from `@nct/slides` like any
-component, nothing else to install: `Building2` `Calendar` `ChartColumn`
-`ChartLine` `CircleAlert` `CircleCheck` `CircleX` `ClipboardCheck` `Clock`
-`Cloud` `Database` `FileInput` `FileText` `Folder` `Globe` `Handshake`
-`KeyRound` `Layers` `Lightbulb` `Lock` `Mail` `MapPin` `Phone` `Receipt`
-`Rocket` `Search` `Server` `Settings` `Shield` `ShieldCheck` `Target` `Timer`
-`TrendingDown` `TrendingUp` `Truck` `User` `Users` `Workflow` `Wrench` `Zap`.
+These glyphs ship with the library — import them from `@nct/slides` like any
+component, nothing else to install:
+
+- General: `Building2` `ChartColumn` `ChartLine` `CircleAlert` `CircleCheck`
+  `CircleX` `ClipboardCheck` `FileInput` `FileText` `Folder` `Globe` `Handshake`
+  `Layers` `Lightbulb` `Mail` `MapPin` `Phone` `Rocket` `Search` `Target`
+  `TrendingDown` `TrendingUp` `Truck` `User` `Users` `Wrench` `Zap`
+- Money: `Banknote` `Calculator` `Coins` `CreditCard` `HandCoins` `Landmark`
+  `PiggyBank` `Receipt` `Wallet` — there is no baht sign; use `Banknote`, never
+  a dollar
+- Time: `AlarmClock` `Calendar` `CalendarCheck` `CalendarClock` `CalendarRange`
+  `ChartGantt` `Clock` `History` `Hourglass` `Milestone` `Timer`
+- Security: `BadgeCheck` `EyeOff` `Eye` `FingerprintPattern` `KeyRound` `Lock`
+  `LockKeyhole` `Shield` `ShieldAlert` `ShieldCheck` `ShieldUser` `UserCheck`
+- Technology: `Bot` `Cloud` `Code` `Cpu` `Database` `HardDrive` `Laptop`
+  `Network` `Plug` `Server` `Settings` `Smartphone` `Terminal` `Wifi` `Workflow`
 A glyph not on that list is not available — pick the nearest one, never draw
 an SVG by hand.
 `size` is a `--nct-fs-*` step, `tone` a role token; omit both and it follows the
