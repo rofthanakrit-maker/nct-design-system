@@ -14,8 +14,12 @@ status token, กติกาการทำเด็คทั้งหมด
 
 > ลำดับการแก้ยังเหมือนเดิม: `design.md` → `scripts/tokens.py` → `python scripts/build.py`
 > **สถานะ (2026-09-11)** — §2 ลง `design.md § v4` และ `tokens.py` แล้ว · §2.2 เจ้าของระบบอนุมัติแล้ว ·
-> L19 build แล้วทั้ง `.potx` และ React · **L20–L23 ยังเป็น spec** · web ยัง emit แค่ `--nct-cat-*`,
+> L19 build แล้วทั้ง `.potx` และ React · **L21–L24 ยังเป็น spec** · web ยัง emit แค่ `--nct-cat-*`,
 > `--nct-seq-*` / `--nct-div-warm-l` จะ emit วันที่มี layout อ่านมัน
+>
+> **แก้เบอร์ (2026-09-22)** — เดิมจองไว้ L20–L23 ตอนนี้เลื่อนเป็น **L21–L24**
+> เพราะ layout 20 ถูกใช้ไปแล้วเป็นปก gradient (`SlideCoverGradient`) ตอนที่ปก corp
+> ขึ้นเป็นปกตั้งต้นของ layout 01 ทั้งสอง brand — ดู README §PowerPoint
 
 ---
 
@@ -139,7 +143,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 
 ---
 
-## 3. Mark spec — ใช้กับทุกกราฟใน L19–L23
+## 3. Mark spec — ใช้กับทุกกราฟใน L19 · L21–L24
 
 หน่วยฝั่งเว็บเป็น px บน canvas 1280×720 (96 dpi) · 1 px = 0.75 pt
 
@@ -153,15 +157,15 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 | gridline | `RULE` 0.75 pt ทึบ · column/line = แนวนอน · bar/แผนงาน = แนวตั้ง · **ห้ามเส้นประ** |
 | เส้นฐาน / เส้นเป้า | `CAT_MUTE` 0.75 pt ทึบ · เส้นเป้ามีป้ายตรงปลาย ("เป้า 95%") |
 
-**Type roles ที่เพิ่ม — ใช้ได้เฉพาะ L19–L23**
+**Type roles ที่เพิ่ม — ใช้ได้เฉพาะ L19 · L21–L24**
 
 | Role | Font | Size | สี | หมายเหตุ |
 |---|---|---|---|---|
-| Tile value | Kanit Bold | 40 pt | สีตัวเลขเด่นตาม L06 ของ brand | L20 · L23 · ตัวเลขกว้างตามปกติ (ไม่ใช้ tabular) |
+| Tile value | Kanit Bold | 40 pt | สีตัวเลขเด่นตาม L06 ของ brand | L21 · L24 · ตัวเลขกว้างตามปกติ (ไม่ใช้ tabular) |
 | Axis tick | Noto Sans Thai | 12 pt | `INK2` | `tabular-nums` · มีคอมมาหลักพัน · หน่วยใส่ในชื่อแกน ไม่ใส่ทุก tick |
 | Direct label | Noto Sans Thai Bold | 14 pt | `INK` | ค่าที่ปลายแท่ง / ปลายเส้น |
 | Legend / row label | Noto Sans Thai | 12 / 14 pt | `INK` | |
-| Milestone label | Noto Sans Thai | 10 pt | `INK2` | L22 เท่านั้น |
+| Milestone label | Noto Sans Thai | 10 pt | `INK2` | L23 เท่านั้น |
 | Source note | Noto Sans Thai | 10 pt | `INK2` | แถว note เดียวกับ L16 |
 
 **กติกาป้ายและ legend**
@@ -173,9 +177,9 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 - แกนตั้งของ bar/column **เริ่มที่ 0 เสมอ** · 4–6 tick ค่ากลม ๆ
 
 **ห้ามทั้งระบบ** — กราฟสองแกนตั้ง (แยกเป็นสองกราฟ หรือ index ทั้งคู่เทียบค่าเริ่มต้น = 100) · pie/donut
-(ใช้ L23) · 3-D · เงา · gradient ในกราฟ · เปลี่ยนสีตัวที่เหลือตอนเอา series ออก · สีที่ 5
+(ใช้ L24) · 3-D · เงา · gradient ในกราฟ · เปลี่ยนสีตัวที่เหลือตอนเอา series ออก · สีที่ 5
 
-**ตัวเลขต้องมีที่อ่าน** — กราฟทุกรูปต้องมีตัวเลขครบ ถ้าไม่อยู่บนสไลด์ (L21 · L23 แบบแท่งเดียว)
+**ตัวเลขต้องมีที่อ่าน** — กราฟทุกรูปต้องมีตัวเลขครบ ถ้าไม่อยู่บนสไลด์ (L22 · L24 แบบแท่งเดียว)
 ให้ใส่ตาราง L16 ในภาคผนวก แล้วเขียนที่ source note ว่า "ตัวเลขทั้งหมด: ภาคผนวก ก"
 ฝั่งเว็บทุก mark มี `<title>` และในกราฟมี `<table>` ซ่อนไว้ให้ screen reader
 (`ponytail:` ไม่ทำ tooltip JS เพราะเด็คใช้นำเสนอ ไม่ได้ให้คนกดดูข้อมูล ถ้าเด็คไหนเปิดเป็น dashboard ค่อยเพิ่ม)
@@ -249,7 +253,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 | Source PH · Takeaway | | 5.750 · 6.150 | | | เหมือน L19 |
 
 - **tile ไม่มีพื้น** ใช้เส้นบนแบ่ง sparkline `CAT_MUTE` บน `PAPER2` เหลือ 2.25:1 เลยไม่ใส่พื้นการ์ด
-- ▲▼ คือ "ไอคอน + ข้อความ" ที่ status ต้องมี ขยาย v2 §3.2 ให้ **ใช้สี status กับ glyph ตัวต่างใน L20 ได้**
+- ▲▼ คือ "ไอคอน + ข้อความ" ที่ status ต้องมี ขยาย v2 §3.2 ให้ **ใช้สี status กับ glyph ตัวต่างใน L21 ได้**
   (`OK` 6.9:1 · `RISK` 6.5:1 บนขาว) ตัวข้อความยังเป็น `INK`
 - ส่วนต่างต้องบอกว่าเทียบกับอะไรทุกครั้ง ("จาก Q2", "เทียบเป้า")
 - ถ้าไม่มีแนวโน้มให้เล่า ใช้ L06
@@ -351,7 +355,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 
 - `series` / `segments` ส่งเป็นลำดับ slot ตรง ๆ **index ของสีผูกกับตัวข้อมูล ไม่ใช่ลำดับที่ render**
   เอา series ไหนออก สีของตัวที่เหลือต้องไม่เปลี่ยน
-- `demo.tsx` เพิ่มสไลด์ละ 1 ใบ แล้วอัปเดต `.design-sync/conventions.md` ว่ากราฟต้องใช้ L19–L23
+- `demo.tsx` เพิ่มสไลด์ละ 1 ใบ แล้วอัปเดต `.design-sync/conventions.md` ว่ากราฟต้องใช้ L19 · L21–L24
 
 ---
 
@@ -382,11 +386,11 @@ node <dataviz>/scripts/validate_palette.js "#90B4E4,#6994CF,#2A5EA0,#23436D,#163
 
 | | v3 | v4 |
 |---|---|---|
-| layout | 18 | **19** (+ สเปก 20–23) |
+| layout | 18 | **19** (+ สเปก 21–24) |
 | colour token | 26 | **31** (+ `CAT_MUTE` · `SEQ_100..400` · `DIV_WARM_L` − `TEAL_L` ที่ไม่มีใครอ่านแล้ว) · `CAT_1..4` เปลี่ยนค่า |
 | สีหมวด | น้ำเงิน 4 เฉด ห่างกัน 1.31:1 | 4 hue · ผ่าน validator (CVD 15.0 · normal 21.4) |
 | theme accent | 4 น้ำเงิน + เทา + `PAPER2` | ชุด categorical ที่ตรวจแล้ว |
-| type role | 20 | + 6 (L19–L23 เท่านั้น) |
+| type role | 20 | + 6 (L19 · L21–L24 เท่านั้น) |
 
 **ยังไม่มีใน v4** — heatmap / risk matrix (มี sequential ramp ให้แล้ว เหลือ layout) ·
 small multiples · scatter · texture สำหรับพิมพ์ขาวดำ

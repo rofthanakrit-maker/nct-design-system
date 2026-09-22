@@ -36,11 +36,11 @@ Repo-specific gotchas. Read before re-syncing.
   and a design agent under the artifact CSP has no other route to them.
 - **`preview/` is generated, not hand-made.** `python scripts/render_previews.py`
   renders both demo decks through PowerPoint COM (Windows only, read-only, never
-  saves back) and writes `layout-01..19.png`, `corp-layout-01..19.png` and the two contact sheets. It went
+  saves back) and writes `layout-01..20.png`, `corp-layout-01..20.png` and the two contact sheets. It went
   stale across a whole release when it was a manual pass; run it after any change
   that moves geometry.
 - **No Storybook.** Preview cards are authored from `web/demo/demo.tsx`, which
-  renders all 19 layouts with real proposal copy, in both brand modes. It is the reference usage example.
+  renders all 20 layouts with real proposal copy, in both brand modes. It is the reference usage example.
 - The PowerPoint side (`scripts/build.py` → `.potx`) shares `scripts/tokens.py` with
   the web package but nothing else. A token change must be rebuilt on both sides.
 - **The visual loop is `web/demo/`.** `npm run demo` bundles `demo.tsx` to the

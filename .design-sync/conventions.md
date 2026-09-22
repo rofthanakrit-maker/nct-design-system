@@ -13,7 +13,7 @@ No provider, no theme object. Two things only:
    (every `--nct-*` variable) and `slides.css`. Without it slides render unstyled
    at the wrong size — there is no inline-style fallback.
 2. Put content inside a layout component. `Slide` is the raw 1280×720 canvas
-   (13.333in × 7.5in at 96dpi); the 19 layouts wrap it. Reach for bare `Slide`
+   (13.333in × 7.5in at 96dpi); the 20 layouts wrap it. Reach for bare `Slide`
    only when no layout fits.
 
 Slides scale themselves to their container's width by default (`fit`, measured
@@ -21,13 +21,14 @@ before paint). `fit="contain"` fits width *and* height and centres the canvas �
 use it for a presenter or any box whose height is fixed; the default crops the
 foot of the slide there. Pass `fit={false}` for a fixed 1280×720 board.
 
-## The 19 layouts
+## The 20 layouts
 
 `SlideCover` 01 · `SlideSection` 02 · `SlideContent` 03 · `SlideTwoColumn` 04 ·
 `SlideThreeCards` 05 · `SlideKeyFigures` 06 · `SlideQuote` 07 · `SlideFullImage` 08 ·
 `SlideTable` 09 · `SlideClosing` 10 · `SlideSplitPanel` 11 · `SlideFourCards` 12 ·
 `SlideProcessFlow` 13 · `SlideDiagram` 14 · `SlideAgenda` 15 · `SlideDenseTable` 16 ·
-`SlidePhaseCard` 17 · `SlideEvidence` 18 · `SlideChart` 19
+`SlidePhaseCard` 17 · `SlideEvidence` 18 · `SlideChart` 19 ·
+`SlideCoverGradient` 20
 
 Compose with `Deck`. Building blocks: `BulletList`, `DataTable`, `TakeawayBand`,
 `DiagramBox`, `DiagramLink`, `DiagramGroup`, `NctLogo`, `NctMark`, `Icon`.
@@ -77,7 +78,7 @@ card with an accent outline, and on the navy bookends it would be a hole.
 
 PowerPoint gets the corp mode as a **separate file**,
 `NCT-Slide-Template-Corp.potx`, because a `.potx` layout cannot toggle its own
-chrome — the chrome is baked in. Same nineteen layouts, same numbering.
+chrome — the chrome is baked in. Same twenty layouts, same numbering.
 
 ## The styling idiom
 
@@ -117,7 +118,7 @@ does not keep.
   rows at that size once the takeaway strip has taken its 0.4in.
 - **On dark slides text is `--nct-paper` or a `--nct-on-dark-*` step — never grey,
   never a new alpha.** Three steps replaced eleven hand-picked ones.
-  Dark tones: `SlideCover`, `SlideSection`, `SlideAgenda`, `SlideClosing`,
+  Dark tones: `SlideCoverGradient`, `SlideSection`, `SlideAgenda`, `SlideClosing`,
   `SlideFullImage`, and the left panel of `SlideSplitPanel`.
 - **Status colours are data colours.** Tables and process cells only — never a
   heading, a rule or a slide background. Three statuses per slide, maximum.
@@ -159,13 +160,18 @@ does not keep.
   All three pin the strip to the foot of the body box, so the conclusion lands
   at the same y whether the grid runs four rows or ten.
 - `SlideCover` and `SlideClosing` appear once each, as the deck's bookends.
-- **`SlideCover` is the one layout where the brands are different slides.** Every
-  other layout is the same slide in different furniture; the cover is not. `web`
-  opens on the navy→teal gradient and reads left, bookending `SlideClosing`;
-  `corp` is paper, centred, with the mark watermarked behind it and the lockup as
-  the hero — and it drops both the foot bar and the corner lockup, because the
-  source draws neither on the one page whose job is to be quiet. `date` renders
-  bottom-left there; pass the whole string, the layout does not build it.
+- **Open on `SlideCover` unless you have a reason not to.** It is the corporate
+  composition in *both* brands — paper, centred, the mark watermarked behind it
+  and the lockup as the hero — because that is the page the company actually puts
+  in front of a client. It drops both the foot bar and the corner lockup: the
+  source draws neither on the one page whose job is to be quiet. Only the accent
+  moves with `brand`. `date` renders bottom-left; pass the whole string, the
+  layout does not build it.
+- **`SlideCoverGradient` (20) is the loud alternative**, not a second cover. It
+  is the navy→teal gradient that used to be layout 01 on the house side, read
+  left, bookending `SlideClosing`. A deck picks one cover and deletes the other;
+  never ship both. Like layout 10 it stays navy→teal in either brand — it is
+  house artwork, and only its chrome follows the brand.
 - **`SlidePhaseCard` is a stage of a plan, not a section divider.** `meta` carries
   the activity/participant pair the proposal template opens every phase with, one
   or two rows and no more; `number` is typed, not counted, because phases merge

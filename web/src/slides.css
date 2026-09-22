@@ -184,7 +184,7 @@
 .nct-list--on-dark .nct-list__item--3::before { color: var(--nct-accent-up); }
 .nct-list--on-dark .nct-list__item--3 { color: var(--nct-on-dark-3); }
 
-/* ---------------------------------------------------------------- 01 / 10 */
+/* ---------------------------------------------------------------- 20 / 10 */
 .nct-cover__logo { position: absolute; left: var(--nct-mx); top: 91.2px; width: 268.8px; }
 .nct-cover__title {
   position: absolute;
@@ -1109,18 +1109,27 @@
    rows it swallows must not draw one through it */
 .nct-table tbody td[rowspan] { border-bottom: 1px solid var(--nct-rule); }
 
-/* ------------------------------------------------- v3 corp cover (L01) */
-/* The one layout where the two brands are different slides, not the same slide
-   in different furniture: paper ground, centred, watermarked. The foot bar is
-   dropped here — the source draws none on the one page whose job is to be
-   quiet — so the date takes the left slot on its own. */
-.nct-cover--corp { background: var(--nct-paper); }
+/* ------------------------------------------------------- the cover (L01) */
+/* The corporate composition, in both brands: paper ground, centred, watermarked.
+   The foot bar is dropped here — the source draws none on the one page whose job
+   is to be quiet — so the date takes the left slot on its own. The gradient
+   cover it replaced is layout 20 and keeps the `open` tone's own rules. */
+.nct-cover--paper { background: var(--nct-paper); }
 /* the lockup card signs every other slide; here the lockup IS the slide, and a
    second copy in the corner would be the same mark twice */
-.nct-cover--corp .nct-corp-lock { display: none; }
-.nct-cover--corp .nct-corp-bar { display: none; }
-.nct-cover--corp .nct-corp-foot { padding-left: 24px; }
-.nct-cover--corp .nct-corp-foot__date { flex: 1; }
+.nct-cover--paper .nct-corp-lock { display: none; }
+.nct-cover--paper .nct-corp-bar { display: none; }
+.nct-cover--paper .nct-corp-foot { padding-left: 24px; }
+.nct-cover--paper .nct-corp-foot__date { flex: 1; }
+/* the house foot on the same composition: the .potx cover draws a date and a
+   page number and nothing else, so the hairline and the corner mark come off.
+   A rule across the quiet page is the one thing this cover is not. */
+.nct-cover--paper .nct-footer {
+  border-top: none;
+  left: 24px;
+  right: 24px;
+}
+.nct-cover--paper .nct-footer__mark { display: none; }
 
 /* the mark watermarked behind everything. The source does the same rather than
    inventing a pattern that means nothing — and at 4% it stays under the 3:1 the
@@ -1135,9 +1144,14 @@
 .nct-cover__wm--a { left: 180px; top: -230px; }
 .nct-cover__wm--b { left: 470px; top: 250px; }
 
-/* the decorative column down the right edge: one generated SVG of squares, all
-   --nct-mid at different alphas, stretched to the column. See
-   tokens.COVER_SCATTER — it is read out of the source artwork, not invented. */
+/* the decorative column down the right edge: one generated SVG of squares at
+   their own alphas, stretched to the column. See tokens.COVER_SCATTER — it is
+   read out of the source artwork, not invented.
+
+   The SVG is a MASK over --nct-accent, not an <img>: the artwork was emitted in
+   house --nct-mid, which put a house blue on the corp cover. A data-URI <img>
+   cannot inherit currentColor, so the alphas ride the mask and the accent does
+   the colour — the column follows the brand the way the .potx one does. */
 .nct-cover__scatter {
   position: absolute;
   right: 0;
@@ -1145,16 +1159,23 @@
   width: var(--nct-cover-scat-w);
   height: 100%;
   pointer-events: none;
+  background: var(--nct-accent);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  /* mask-image is set on the element — the artwork is a data URI in assets.ts,
+     which CSS has no way to reach */
 }
 
-.nct-cover__logo--corp {
+.nct-cover__logo--paper {
   position: absolute;
   left: 50%;
   top: var(--nct-cover-logo-y);
   width: var(--nct-cover-logo-w);
   transform: translateX(-50%);
 }
-.nct-cover__rule--corp {
+.nct-cover__rule--paper {
   position: absolute;
   left: 50%;
   top: var(--nct-cover-rule-y);
@@ -1163,7 +1184,7 @@
   transform: translateX(-50%);
   background: var(--nct-accent);
 }
-.nct-cover__title--corp {
+.nct-cover__title--paper {
   position: absolute;
   left: var(--nct-mx);
   top: var(--nct-cover-title-y);
@@ -1180,7 +1201,7 @@
   line-height: 1.15;
   color: var(--nct-ink);
 }
-.nct-cover__sub--corp {
+.nct-cover__sub--paper {
   position: absolute;
   left: var(--nct-mx);
   top: calc(var(--nct-cover-title-y) + var(--nct-cover-title-h) + 14.4px);

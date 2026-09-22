@@ -5,7 +5,7 @@ Design system ของ New Computer Technology Consulting Co., Ltd. — token �
 
 ```
 scripts/tokens.py            ← single source of truth
-   ├── scripts/build.py            → NCT-Slide-Template.potx   (19 layouts x 2 brands)
+   ├── scripts/build.py            → NCT-Slide-Template.potx   (20 layouts x 2 brands)
    └── scripts/emit_web_tokens.py  → web/src/tokens.{css,ts}   (@nct/slides)
 ```
 
@@ -19,22 +19,22 @@ scripts/tokens.py            ← single source of truth
 | [`design.md`](design.md) | brand token ต้นทาง (studied จาก nctthai.com) + ส่วนขยาย v2 / v3 |
 | [`slide-design-system.md`](slide-design-system.md) | v1 — canvas, grid, type scale, layout 01–10, กติกาการทำเด็ค |
 | [`slide-design-system-v2.md`](slide-design-system-v2.md) | v2 — token dense, status/category, layout 11–16 |
-| [`slide-design-system-v3.md`](slide-design-system-v3.md) | v3 — brand mode `corp`, chrome geometry, cover คนละใบ, layout 17–18 (แกะจาก `NCT Template.pptx`) |
-| [`slide-design-system-v4.md`](slide-design-system-v4.md) | v4 — สีข้อมูลที่ผ่าน validator ของ dataviz (`CAT_1..4` ชุดใหม่), mark spec ของกราฟ, layout 19 (สเปก 20–23 ยังไม่ทำ) |
+| [`slide-design-system-v3.md`](slide-design-system-v3.md) | v3 — brand mode `corp`, chrome geometry, cover, layout 17–18 (แกะจาก `NCT Template.pptx`) |
+| [`slide-design-system-v4.md`](slide-design-system-v4.md) | v4 — สีข้อมูลที่ผ่าน validator ของ dataviz (`CAT_1..4` ชุดใหม่), mark spec ของกราฟ, layout 19 (สเปก 21–24 ยังไม่ทำ) |
 | [`.design-sync/conventions.md`](.design-sync/conventions.md) | กติกาที่ design agent ต้องอ่านก่อนสร้างสไลด์ |
 | [`.design-sync/NOTES.md`](.design-sync/NOTES.md) | กับดักเฉพาะ repo นี้ อ่านก่อน re-sync |
 
-## Layout ทั้ง 19
+## Layout ทั้ง 20
 
 Render จาก PowerPoint จริง ไม่ต้อง clone ก็ดูได้ — ภาพในนี้คือไฟล์ใน `preview/`
 ที่ `scripts/render_previews.py` เขียนทับทุกครั้งที่ geometry หรือสีขยับ
 
 | web | corp |
 |---|---|
-| <img src="preview/all-layouts.png" alt="contact sheet ของ 19 layout brand web" width="380"> | <img src="preview/corp-all-layouts.png" alt="contact sheet ของ 19 layout brand corp" width="380"> |
+| <img src="preview/all-layouts.png" alt="contact sheet ของ 20 layout brand web" width="380"> | <img src="preview/corp-all-layouts.png" alt="contact sheet ของ 20 layout brand corp" width="380"> |
 
 <details>
-<summary>ดูทีละ layout — web (19 ภาพ)</summary>
+<summary>ดูทีละ layout — web (20 ภาพ)</summary>
 
 ![layout 01](preview/layout-01.png)
 
@@ -74,10 +74,12 @@ Render จาก PowerPoint จริง ไม่ต้อง clone ก็ด�
 
 ![layout 19](preview/layout-19.png)
 
+![layout 20](preview/layout-20.png)
+
 </details>
 
 <details>
-<summary>ดูทีละ layout — corp (19 ภาพ)</summary>
+<summary>ดูทีละ layout — corp (20 ภาพ)</summary>
 
 ![corp layout 01](preview/corp-layout-01.png)
 
@@ -117,6 +119,8 @@ Render จาก PowerPoint จริง ไม่ต้อง clone ก็ด�
 
 ![corp layout 19](preview/corp-layout-19.png)
 
+![corp layout 20](preview/corp-layout-20.png)
+
 </details>
 
 ## PowerPoint
@@ -125,11 +129,10 @@ Render จาก PowerPoint จริง ไม่ต้อง clone ก็ด�
 python scripts/build.py          # เขียนทับ .potx และ .pptx ที่ root
 ```
 
-- `NCT-Slide-Template.potx` — 1 slide master + 19 custom layouts + NCT theme
-- `NCT-Slide-Template-Demo.pptx` — เดโม 19 สไลด์ layout ละ 1
-- `NCT-Slide-Template-Corp.potx` — 19 layout เบอร์เดิม ใส่ chrome แบบฟอร์มบริษัท
-  (เส้นเต็มความกว้าง, การ์ดโลโก้มุมขวาบน, แถบสามช่วงที่ก้นสไลด์) **ยกเว้น layout 01
-  ที่เป็นคนละสไลด์** — พื้นขาว จัดกลาง watermark ตามหน้าปกที่บริษัทใช้จริง
+- `NCT-Slide-Template.potx` — 1 slide master + 20 custom layouts + NCT theme
+- `NCT-Slide-Template-Demo.pptx` — เดโม 20 สไลด์ layout ละ 1
+- `NCT-Slide-Template-Corp.potx` — 20 layout เบอร์เดิม ใส่ chrome แบบฟอร์มบริษัท
+  (เส้นเต็มความกว้าง, การ์ดโลโก้มุมขวาบน, แถบสามช่วงที่ก้นสไลด์)
   แยกไฟล์เพราะ layout ใน PowerPoint สลับ chrome ของตัวเองไม่ได้
 - `NCT-Slide-Template-Corp-Demo.pptx` — เดโมฝั่ง corp
 
@@ -141,10 +144,11 @@ python scripts/render_previews.py  # → preview/ (ต้องมี PowerPoint
 `check_template.py` ตรวจ 5 อย่าง — XML parse, shape id / placeholder idx ซ้ำ,
 shape หลุดขอบ canvas, **ข้อความล้นลงไปทับเส้น footer** (คิดความสูงบรรทัดไทยจริง
 ที่ 1.511 em ไม่ใช่ค่า spcPct ตรง ๆ) และ **สีบ้าน `#216B7F` / `#8FBACE` / navy
-`#23436D` โผล่ในไฟล์ corp** (navy ยกเว้น gradient ของ layout 10) สองข้อหลังคือ
-บั๊กที่เคยหลุดไปแล้วทั้งคู่
+`#23436D` / deep `#16324F` / mid `#1E5473` โผล่ในไฟล์ corp** (สามตัวหลังยกเว้น
+gradient bookend คือ layout 10 กับ 20) สองข้อหลังคือบั๊กที่เคยหลุดไปแล้วทั้งคู่ —
+ล่าสุดคือ L08 ที่ scrim เป็น navy บ้านอยู่ในเด็ค corp และปกที่คอลัมน์ลายเป็น `#1E5473`
 
-- `preview/` — `layout-01..19.png` (web) + `corp-layout-01..19.png` (corp)
+- `preview/` — `layout-01..20.png` (web) + `corp-layout-01..20.png` (corp)
   เรียงตามเบอร์ layout + contact sheet สองใบ (`all-layouts.png` = web,
   `corp-all-layouts.png` = corp) render จาก PowerPoint จริง
   **รันใหม่ทุกครั้งที่ geometry ขยับ**
@@ -162,7 +166,7 @@ npm run fonts                # woff2 (ต้องมี Kanit ติดตั�
 npm run assets               # โลโก้เป็น data URI
 ```
 
-19 component ตรงกับ 19 layout ใน `.potx` เลขเดียวกัน ออกแบบฝั่งเว็บแล้วมาทำต่อ
+20 component ตรงกับ 20 layout ใน `.potx` เลขเดียวกัน ออกแบบฝั่งเว็บแล้วมาทำต่อ
 ใน PowerPoint ได้โดยหยิบ layout เบอร์เดิม
 
 Icon ใช้ `<Icon icon={Truck} size="body" tone="accent" />` กับ glyph lucide ชุดที่เลือกไว้
@@ -181,10 +185,14 @@ role token ละไว้ทั้งคู่ก็ตามข้อควา
 paper, ink, tint, status และ category 4 สี โดยตั้งใจ — ตารางต้องแปลว่าเหมือนกัน
 ไม่ว่าอยู่บนหัวจดหมายไหน
 
-`SlideCover` เป็น layout เดียวที่สอง brand เป็น**คนละสไลด์** ไม่ใช่สไลด์เดียวกัน
-เปลี่ยน furniture — `web` เปิดด้วย gradient อ่านชิดซ้าย, `corp` เป็นพื้นขาว จัดกลาง
-โลโก้เป็นพระเอก และตัดแถบก้นกับการ์ดมุมทิ้ง `date` ลงมุมซ้ายล่างเป็นบรรทัด
-"Updated date" ตามต้นฉบับ
+**หน้าปกตั้งต้นเป็นแบบ corp ทั้งสอง brand** — `SlideCover` (layout 01) คือพื้นขาว
+จัดกลาง โลโก้เป็นพระเอก mark เป็น watermark ตัดแถบก้นกับการ์ดมุมทิ้ง `date` ลง
+มุมซ้ายล่างเป็นบรรทัด "Updated date" ตามต้นฉบับ เพราะนี่คือหน้าที่บริษัทเอาไปวาง
+ตรงหน้าลูกค้าจริง มีแค่ accent ที่ย้ายตาม brand (teal บ้าน / `#006666`)
+
+ปก gradient navy→teal ของเดิมย้ายไปเป็น **layout 20 `SlideCoverGradient`** — เด็คไหน
+อยากเปิดดังก็หยิบเบอร์นั้น เลือกปกเดียว ลบอีกใบทิ้ง อย่าใส่ทั้งคู่ ปกนี้เป็น artwork
+ของบ้าน เหมือน layout 10 คือ gradient ไม่ย้ายตาม brand มีแค่ chrome ที่ย้าย
 
 ```tsx
 <Deck brand="corp" date="Updated date: 2026.09.07">
@@ -225,6 +233,6 @@ scripts/                                generator ทั้งหมด (Python,
   emit_web_tokens.py build_webfonts.py emit_web_assets.py
 web/                                    @nct/slides
   src/  Slide.tsx primitives.tsx layouts.tsx  + ไฟล์ที่ generate
-  demo/ demo.tsx                        17 layout (web) + 5 สไลด์อ้างอิง corp
+  demo/ demo.tsx                        18 layout (web) + 5 สไลด์อ้างอิง corp
 assets/  fonts/  preview/               โลโก้ · ฟอนต์ต้นฉบับ · ภาพ render (generate)
 ```

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-"""The 19 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3 + 1 chart, v4)."""
+"""The 20 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3
++ 1 chart, v4 + the gradient cover, moved off 01 when the corp cover became
+the default one)."""
 import parts_master as PM
 from tokens import *
 from ooxml import *
@@ -67,7 +69,7 @@ def _rule(sid, x=MX, y=RULE_Y, color=None, alpha=None):
 
 
 def _foot_scrim(sid):
-    """L01 / L10 only: the gradients run TEAL_B into the bottom-right corner, and
+    """L10 / L20 only: the gradients run TEAL_B into the bottom-right corner, and
     TEAL_B is 4.0:1 against pure white - no footer alpha clears AA there. Darken
     the ground instead, with the same scrim the photo bands already use."""
     return shape(sid, "Footer Scrim", 0, SH - 1463040, SW, 1463040, scrim(DEEP))
@@ -106,15 +108,23 @@ def _wrap(name, typ, shapes, bgfill=None):
 
 
 # ---------------------------------------------------------------- 01 Title
-def l01_corp_cover(rid_logo_color, rid_mark_color):
-    """The corporate cover: paper, centred, the mark watermarked behind it.
+def l01_cover(rid_logo_color, rid_mark_color):
+    """The cover: paper, centred, the mark watermarked behind it.
 
-    The one layout where the two brands are different slides rather than the
-    same slide in different furniture - the house cover opens on the navy->teal
-    gradient and reads left, this one is the page the company puts in front of a
-    client. It also drops the corp foot bar and the corner lockup: the source
-    draws neither on the one slide whose job is to be quiet, and the lockup IS
-    the slide here, so a second copy in the corner would be the same mark twice.
+    This is layout 01 in BOTH brands. The corporate composition is the one the
+    company actually puts in front of a client, so it is the cover you get by
+    default; the navy->teal gradient that used to be the house cover is still
+    here, as layout 20, for a deck that wants to open loud. A cover is a
+    composition, not a dress, which is why moving it meant a new layout number
+    rather than a flag - the two are not the same slide.
+
+    It drops the corp foot bar and the corner lockup: the source draws neither on
+    the one slide whose job is to be quiet, and the lockup IS the slide here, so
+    a second copy in the corner would be the same mark twice.
+
+    The rule and the decorative column read accent(), so the web build opens on
+    house teal and the corp build on #006666. The column was MID in both, which
+    put a house blue on a corp cover - the leak check_template now names.
     """
     logo_h = int(COVER_LOGO_W * LOGO_AR)
     wm = 7315200                                  # 8.00in - the watermark, twice
@@ -129,12 +139,12 @@ def l01_corp_cover(rid_logo_color, rid_mark_color):
     for i, (x, y, w, h, a) in enumerate(COVER_SCATTER):
         s.append(shape(sid, "Scatter %d" % (i + 1), scat_x + round(x * sx),
                        round(y * sy), round(w * sx), round(h * sy),
-                       solid(MID, a)))
+                       solid(accent(), a)))
         sid += 1
     s += [pic(sid, "NCT Logo", rid_logo_color, (SW - COVER_LOGO_W) // 2,
               COVER_LOGO_Y, COVER_LOGO_W, logo_h),
           shape(sid + 1, "Accent Rule", (SW - COVER_RULE_W) // 2, COVER_RULE_Y,
-                COVER_RULE_W, COVER_RULE_H, solid(CORP)),
+                COVER_RULE_W, COVER_RULE_H, solid(accent())),
           placeholder(sid + 2, "Title Placeholder", "ctrTitle", MX, COVER_TITLE_Y,
                       CW, COVER_TITLE_H,
                       [S("PROPOSAL", sz=T_DISPLAY, color=INK, bold=True, font="mj",
@@ -150,25 +160,6 @@ def l01_corp_cover(rid_logo_color, rid_mark_color):
                       [S("", sz=T_FOOT, color=INK2)], idx=10, anchor="ctr"),
           PM.sldnum_sp(sid + 5, False, x=SW - 228600 - 1371600, y=SH - 457200)]
     return _wrap("01 Title Slide", "title", s, bgfill=solid(PAPER))
-
-
-def l01_title(rid_logo, rid_mark):
-    if PM.BRAND == "corp":
-        return l01_corp_cover(rid_logo, rid_mark)
-    rid_logo_white, rid_mark_white = rid_logo, rid_mark
-    s = [_diamond(10, SW - 3657600, -914400, 4572000, 9),
-         _diamond(11, SW - 2286000, 2743200, 2743200, 7),
-         _logo(12, rid_logo_white, MX, 868680, 2560320),
-         placeholder(13, "Title Placeholder", "ctrTitle", MX, 2560320, 8229600, 1463040,
-                     [S("ชื่อเรื่องงานนำเสนอ", sz=T_DISPLAY, color=PAPER, bold=True,
-                        font="mj", line=106000)], anchor="b"),
-         _rule(14, y=4206240, color=PAPER, alpha=ON_DARK_3),
-         placeholder(15, "Subtitle", "subTitle", MX, 4480560, 7315200, 731520,
-                     [S("คำโปรย / ชื่อลูกค้า / วันที่", sz=T_LEAD, color=PAPER,
-                        alpha=ON_DARK_2, line=130000)], idx=1),
-         _foot_scrim(16)]
-    s += chrome(dark=True, mark_rid=rid_mark_white)
-    return _wrap("01 Title Slide", "title", s, bgfill=grad(NAVY, TEAL_B, 45, c_mid=MID))
 
 
 # ---------------------------------------------------------------- 02 Section
@@ -285,7 +276,7 @@ def l07_quote(rid_mark_color):
 # ---------------------------------------------------------------- 08 Full Image
 def l08_image(rid_mark_white):
     s = [pic_placeholder(10, "Picture Placeholder", 0, 0, SW, SH, 1),
-         shape(11, "Scrim", 0, SH // 2, SW, SH // 2, scrim(DEEP)),
+         shape(11, "Scrim", 0, SH // 2, SW, SH // 2, scrim(PM.deep())),
          placeholder(12, "Title Placeholder", "title", MX, 4297680, 8229600, 914400,
                      [S("ชื่อภาพ / หัวข้อ", sz=T_SECTION, color=PAPER, bold=True,
                         font="mj", line=108000)], anchor="b"),
@@ -293,7 +284,7 @@ def l08_image(rid_mark_white):
                      [S("คำบรรยายภาพหนึ่งบรรทัด", sz=T_BODY3, color=PAPER,
                         alpha=ON_DARK_2, line=130000)], idx=2)]
     s += chrome(dark=True, mark_rid=rid_mark_white)
-    return _wrap("08 Full Image", "picTx", s, bgfill=solid(DEEP))
+    return _wrap("08 Full Image", "picTx", s, bgfill=solid(PM.deep()))
 
 
 # ---------------------------------------------------------------- 09 Table
@@ -740,3 +731,31 @@ def l19_chart(rid_mark_color):
     s += _takeaway(17, 6)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("19 Chart + Insight", "chartAndTx", s, bgfill=solid(PAPER))
+
+
+# ---------------------------------------------------------------- 20 Title Slide Gradient
+def l20_cover_gradient(rid_logo_white, rid_mark_white):
+    """The loud cover: the navy->teal gradient, read left, bookending L10's close.
+
+    It was layout 01 on the house side until the corporate cover became the
+    default for both brands. Nothing about the slide changed, only its number -
+    so a deck that opened on it keeps opening on it, by picking 20.
+
+    Like L10 it is a house bookend in either brand: the gradient stays navy->teal
+    on a corp deck, and check_template lets NAVY, MID and DEEP through here for
+    that reason. Only the chrome follows the brand.
+    """
+    s = [_diamond(10, SW - 3657600, -914400, 4572000, 9),
+         _diamond(11, SW - 2286000, 2743200, 2743200, 7),
+         _logo(12, rid_logo_white, MX, 868680, 2560320),
+         placeholder(13, "Title Placeholder", "ctrTitle", MX, 2560320, 8229600, 1463040,
+                     [S("ชื่อเรื่องงานนำเสนอ", sz=T_DISPLAY, color=PAPER, bold=True,
+                        font="mj", line=106000)], anchor="b"),
+         _rule(14, y=4206240, color=PAPER, alpha=ON_DARK_3),
+         placeholder(15, "Subtitle", "subTitle", MX, 4480560, 7315200, 731520,
+                     [S("คำโปรย / ชื่อลูกค้า / วันที่", sz=T_LEAD, color=PAPER,
+                        alpha=ON_DARK_2, line=130000)], idx=1),
+         _foot_scrim(16)]
+    s += chrome(dark=True, mark_rid=rid_mark_white)
+    return _wrap("20 Title Slide Gradient", "title", s,
+                 bgfill=grad(NAVY, TEAL_B, 45, c_mid=MID))

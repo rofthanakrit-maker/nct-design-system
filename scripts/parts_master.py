@@ -78,6 +78,14 @@ def dark():
     return CORP_DEEP if BRAND == "corp" else NAVY
 
 
+def deep():
+    """The scrim / shadow ground - the step below dark(). DEEP is the house one;
+    corp has no separate shadow tone, so CORP_DEEP does both jobs there. L08 named
+    DEEP directly and shipped a house-navy full-image slide inside the corp deck,
+    which is the same bug dark() exists to stop, one role over."""
+    return CORP_DEEP if BRAND == "corp" else DEEP
+
+
 def _levels():
     """BODY_LEVELS with the one brand-sensitive value filled in."""
     lv = [dict(kw) for kw in BODY_LEVELS]

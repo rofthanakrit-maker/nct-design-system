@@ -28,34 +28,59 @@ export interface SlideCoverProps extends Base {
 /**
  * 01 · Title Slide. The deck's cover — use once.
  *
- * The one layout where the two brands are different slides rather than the same
- * slide in different furniture. `web` opens on the navy→teal gradient and reads
- * left, bookending the `close` gradient on layout 10. `corp` is the cover the
- * company puts in front of a client: paper ground, the mark watermarked behind
- * it, the lockup centred and large, and the title centred under a rule. Neither
- * is a dress on the other, so `brand` picks the composition, not just the
- * accent — and the corp cover drops the foot bar, because the source draws none
- * on the one page whose job is to be quiet.
+ * The corporate composition, in both brands: paper ground, the mark watermarked
+ * behind it, the lockup centred and large, and the title centred under a rule.
+ * It is the page the company actually opens a bid with, so it is the cover you
+ * get by default. Only the accent moves with `brand` — the rule and the
+ * decorative column read `--nct-accent`, house teal or `#006666`.
  *
- * `date` renders bottom-left on the corp cover, which is where the source puts
- * its "Updated date" line. Pass the whole string; the layout does not build it.
+ * The navy→teal gradient that used to be the house cover is
+ * {@link SlideCoverGradient}, layout 20. A cover is a composition, not a dress,
+ * which is why the two are separate layouts rather than one with a flag.
+ *
+ * It drops the corp foot bar, because the source draws none on the one page
+ * whose job is to be quiet. `date` renders bottom-left, where the source puts
+ * its "Updated date" line — pass the whole string; the layout does not build it.
  */
 export function SlideCover({ title, subtitle, ...chrome }: SlideCoverProps) {
-  if (chrome.brand === "corp") {
-    return (
-      <Slide tone="light" className="nct-cover--corp" {...chrome}>
-        {/* the mark at 4% — the source watermarks its own logo rather than
-            introducing a pattern that means nothing */}
-        <img className="nct-cover__wm nct-cover__wm--a" src={markColor} alt="" />
-        <img className="nct-cover__wm nct-cover__wm--b" src={markColor} alt="" />
-        <img className="nct-cover__scatter" src={coverScatter} alt="" />
-        <NctLogo className="nct-cover__logo--corp" width={420} />
-        <div className="nct-cover__rule--corp" />
-        <h1 className="nct-cover__title--corp">{title}</h1>
-        {subtitle && <p className="nct-cover__sub--corp">{subtitle}</p>}
-      </Slide>
-    );
-  }
+  return (
+    <Slide tone="light" className="nct-cover--paper" {...chrome}>
+      {/* the mark at 4% — the source watermarks its own logo rather than
+          introducing a pattern that means nothing */}
+      <img className="nct-cover__wm nct-cover__wm--a" src={markColor} alt="" />
+      <img className="nct-cover__wm nct-cover__wm--b" src={markColor} alt="" />
+      <div
+        className="nct-cover__scatter"
+        aria-hidden="true"
+        style={{
+          // single quotes: the SVG's own attribute quotes are double ones,
+          // and they close a url("...") early - the mask then never loads and
+          // the column paints as a solid accent block
+          maskImage: `url('${coverScatter}')`,
+          WebkitMaskImage: `url('${coverScatter}')`,
+        }}
+      />
+      <NctLogo className="nct-cover__logo--paper" width={420} />
+      <div className="nct-cover__rule--paper" />
+      <h1 className="nct-cover__title--paper">{title}</h1>
+      {subtitle && <p className="nct-cover__sub--paper">{subtitle}</p>}
+    </Slide>
+  );
+}
+
+/* ---------------------------------------------------------------- 20 */
+/**
+ * 20 · Title Slide Gradient. The loud cover — the navy→teal gradient, read left,
+ * bookending the `close` gradient on layout 10.
+ *
+ * This was layout 01 on the house side until {@link SlideCover} became the
+ * default for both brands. Nothing about the slide changed, only its number, so
+ * a deck that opened on it keeps opening on it by naming this component.
+ *
+ * Like layout 10 it is a house bookend in either brand: the gradient stays
+ * navy→teal on a corp deck, and only the chrome follows the brand.
+ */
+export function SlideCoverGradient({ title, subtitle, ...chrome }: SlideCoverProps) {
   return (
     <Slide tone="open" {...chrome}>
       <div className="nct-decor nct-decor--cover-a" />

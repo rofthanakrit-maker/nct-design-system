@@ -78,20 +78,27 @@ for name, fname, mime in PHOTOS:
     lines.append("")
     print("  %-11s %4dx%-4d %7.1f KB raw" % (name, size[0], size[1], len(raw) / 1024))
 
-# The corp cover's decorative column. One hue at many alphas, so it is an SVG
-# built from tokens.COVER_SCATTER rather than the source deck's 472x1080 PNG -
-# same artwork, ~1 KB instead of ~40, and it recolours with the token.
+# The cover's decorative column. One hue at many alphas, so it is an SVG built
+# from tokens.COVER_SCATTER rather than the source deck's 472x1080 PNG - same
+# artwork, ~1 KB instead of ~40, and it recolours with the token.
+#
+# The squares are BLACK, and slides.css uses this as a mask over --nct-accent:
+# the fill-opacity becomes mask alpha, so the column takes the brand's accent
+# the way the .potx column does. It was MID, which put a house blue on the corp
+# cover - the same leak check_template.py now names on the PowerPoint side. A
+# data-URI <img> cannot inherit currentColor, which is why this is a mask.
 import tokens as T                                          # noqa: E402
 
 _sw, _sh = T.COVER_SCAT_BOX
 _rects = "".join(
-    '<rect x="%d" y="%d" width="%d" height="%d" fill="%%23%s" fill-opacity="%.2f"/>'
-    % (x, y, w, h, T.MID, a / 100.0)
+    '<rect x="%d" y="%d" width="%d" height="%d" fill="%%23000" fill-opacity="%.2f"/>'
+    % (x, y, w, h, a / 100.0)
     for x, y, w, h, a in T.COVER_SCATTER)
 _svg = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" '
         'preserveAspectRatio="none">%s</svg>' % (_sw, _sh, _rects))
-lines.append("/** corp cover scatter - %d squares of MID, generated from "
-             "tokens.COVER_SCATTER */" % len(T.COVER_SCATTER))
+lines.append("/** cover scatter MASK - %d squares at their own alpha, generated "
+             "from tokens.COVER_SCATTER. Paint it with --nct-accent. */"
+             % len(T.COVER_SCATTER))
 lines.append("export const coverScatter: string = "
              "'data:image/svg+xml,%s';" % _svg.replace("'", "%27"))
 lines.append("")

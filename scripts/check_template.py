@@ -29,7 +29,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 OUT = os.path.dirname(HERE)
 
-from tokens import SH, SW, NAVY, TEAL, TEAL_UP  # noqa: E402
+from tokens import SH, SW, NAVY, TEAL, TEAL_UP, DEEP, MID  # noqa: E402
 import build as B  # noqa: E402
 
 A = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
@@ -225,8 +225,16 @@ def _brand_leaks(path, z, names):
 
     NAVY is checked the same way, for the same bug one role over: it was every
     header band, dark panel and card heading in both brands, and CORP_DEEP sat
-    declared and unread. The one exception is L10, whose navy->teal gradient is
-    the house bookend in either brand, so its photo fade has to meet that navy.
+    declared and unread.
+
+    DEEP and MID joined them after the previews were read at full size: L08 named
+    DEEP for its scrim and shipped a house-navy full-image slide inside the corp
+    deck, and the cover's decorative column was MID in both brands. Both are the
+    accent()/dark() bug spelled with a different constant.
+
+    The exception is the gradient bookends - L10 and L20 - whose navy->teal is
+    the house artwork in either brand, so their fade, scrim and stops have to
+    meet that navy.
     """
     if "-Corp" not in os.path.basename(path):
         return []
@@ -243,14 +251,15 @@ def _brand_leaks(path, z, names):
         if tree is None:
             continue
         csld = root.find(".//%scSld" % P)
-        bookend = csld is not None and (csld.get("name") or "").startswith("10 ")
+        bookend = csld is not None and (csld.get("name") or "").startswith(("10 ", "20 "))
         for ch in list(tree):
             nv = ch.find(".//%scNvPr" % P)
             name = nv.get("name") if nv is not None else "?"
             xml = ET.tostring(ch, encoding="unicode")
             for house, fix in ((TEAL, "accent()"), (TEAL_UP, "accent_up()"),
-                               (NAVY, "heading() / dark()")):
-                if house == NAVY and bookend:
+                               (NAVY, "heading() / dark()"), (DEEP, "deep()"),
+                               (MID, "accent()")):
+                if house in (NAVY, DEEP, MID) and bookend:
                     continue
                 if house in xml:
                     out.append("%s: %r carries house colour %s in a corp build - "

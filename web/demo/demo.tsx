@@ -17,6 +17,7 @@ import {
   SlideClosing,
   SlideContent,
   SlideCover,
+  SlideCoverGradient,
   SlideDenseTable,
   SlideDiagram,
   SlideEvidence,
@@ -40,7 +41,7 @@ import {
 /* The demo is the file everyone copies, so it runs in argument order, not in
    layout-number order: cover, agenda, the problem, what changes, how the work
    is done, what is in scope, who is doing it, what it costs, what happens next.
-   Each of the nineteen layouts still appears exactly once — the 1:1 parity with
+   Each of the twenty layouts still appears exactly once — the 1:1 parity with
    NCT-Slide-Template.potx is the point of the deck. Chrome and page numbers
    come from <Deck>; nothing here types a page number by hand. */
 
@@ -56,12 +57,19 @@ function App() {
   );
 }
 
-/** The house deck: layouts 01–16 and 19, web brand. 17–18 are in the corp deck. */
+/** The house deck: layouts 01–16, 19 and 20, web brand. 17–18 are in the corp deck. */
 function WebDeck() {
   return (
     <Deck footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569">
       {/* 01 · cover. Unnumbered: a cover is not page 1 of anything. */}
       <SlideCover
+        hideFooter
+        title="ข้อเสนอโครงการวางระบบบัญชีอัตโนมัติ"
+        subtitle={<>{en("New Computer Technology Consulting Co., Ltd.")} · 2569</>}
+      />
+      {/* 20 · the other cover, same words. It sits next to the default because
+          the choice is made once, at the front: keep one, delete the other. */}
+      <SlideCoverGradient
         hideFooter
         title="ข้อเสนอโครงการวางระบบบัญชีอัตโนมัติ"
         subtitle={<>{en("New Computer Technology Consulting Co., Ltd.")} · 2569</>}
@@ -293,8 +301,8 @@ function WebDeck() {
 function CorpDeck() {
   return (
     <Deck brand="corp" date="Updated date: 2026.09.07">
-      {/* 01 · the corp cover — a different slide from the house cover, not the
-          same one in different furniture */}
+      {/* 01 · the cover. Same composition as the house deck now — only the
+          accent moves. The gradient one is layout 20. */}
       <SlideCover
         title={
           <>

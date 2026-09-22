@@ -29,13 +29,17 @@ IMG = {
 # cover is a gradient with the knockout pair - so its images depend on PM.BRAND,
 # which build() sets before it walks this list.
 def layouts():
-    l01 = ((lambda: PL.l01_title("rId2", "rId3"), ["logo-color.png", "mark-color.png"])
-           if PM.BRAND == "corp" else
-           (lambda: PL.l01_title("rId2", "rId3"), ["logo-white.png", "mark-white.png"]))
-    return [l01] + _LAYOUTS_02_18
+    # 01 is the corporate cover in both brands - the page the company actually
+    # opens a bid with. The gradient cover it replaced is layout 20, so a deck
+    # that wants to open loud picks that number instead of a flag.
+    return ([(lambda: PL.l01_cover("rId2", "rId3"),
+              ["logo-color.png", "mark-color.png"])]
+            + _LAYOUTS_02_19
+            + [(lambda: PL.l20_cover_gradient("rId2", "rId3"),
+                ["logo-white.png", "mark-white.png"])])
 
 
-_LAYOUTS_02_18 = [
+_LAYOUTS_02_19 = [
     (lambda: PL.l02_section("rId2", "rId3"), ["mark-white.png", "photo-section.jpg"]),
     (lambda: PL.l03_content("rId2"),       ["mark-color.png"]),
     (lambda: PL.l04_two("rId2"),           ["mark-color.png"]),
@@ -469,11 +473,17 @@ def demo_slides():
     exactly once - the 1:1 parity with the .potx is the point.
     """
     S = []
+    COVER_T = "ข้อเสนอโครงการวางระบบบัญชีอัตโนมัติ"
+    COVER_S = "New Computer Technology Consulting Co., Ltd. · 2569"
     # ---------------------------------------------------------------- 1 · cover
-    S.append((1, [sp_text(2, "Title", "ctrTitle", None,
-                          ["ข้อเสนอโครงการวางระบบบัญชีอัตโนมัติ"]),
-                  sp_text(3, "Subtitle", "subTitle", 1,
-                          ["New Computer Technology Consulting Co., Ltd. · 2569"])]))
+    S.append((1, [sp_text(2, "Title", "ctrTitle", None, [COVER_T]),
+                  sp_text(3, "Subtitle", "subTitle", 1, [COVER_S])]))
+    # ------------------------------------------------- 1b · the other cover (L20)
+    # Same words, the loud composition. It sits next to the default rather than
+    # in an appendix because the choice is made once, at the front of the deck:
+    # keep one cover, delete the other.
+    S.append((20, [sp_text(2, "Title", "ctrTitle", None, [COVER_T]),
+                   sp_text(3, "Subtitle", "subTitle", 1, [COVER_S])]))
     # ---------------------------------------------------------------- 2 · agenda (L15)
     # six lines, the documented ceiling, on the corrected list y
     S.append((15, [sp_text(2, "Num", "body", 1, ["00"]),

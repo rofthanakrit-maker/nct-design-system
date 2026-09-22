@@ -143,6 +143,7 @@ export {
   SlidePhaseCard,
   SlideEvidence,
   SlideChart,
+  SlideCoverGradient,
 } from "./layouts";
 export { Chart } from "./chart";
 export type { ChartProps, ChartSeries, ChartSeriesList } from "./chart";
