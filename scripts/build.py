@@ -473,17 +473,20 @@ def demo_slides():
     exactly once - the 1:1 parity with the .potx is the point.
     """
     S = []
-    COVER_T = "ข้อเสนอโครงการวางระบบบัญชีอัตโนมัติ"
-    COVER_S = "New Computer Technology Consulting Co., Ltd. · 2569"
     # ---------------------------------------------------------------- 1 · cover
-    S.append((1, [sp_text(2, "Title", "ctrTitle", None, [COVER_T]),
-                  sp_text(3, "Subtitle", "subTitle", 1, [COVER_S])]))
+    S.append((1, [sp_text(2, "Title", "ctrTitle", None,
+                          ["ข้อเสนอโครงการวางระบบบัญชีอัตโนมัติ"]),
+                  sp_text(3, "Subtitle", "subTitle", 1,
+                          ["New Computer Technology Consulting Co., Ltd. · 2569"])]))
     # ------------------------------------------------- 1b · the other cover (L20)
-    # Same words, the loud composition. It sits next to the default rather than
-    # in an appendix because the choice is made once, at the front of the deck:
-    # keep one cover, delete the other.
-    S.append((20, [sp_text(2, "Title", "ctrTitle", None, [COVER_T]),
-                   sp_text(3, "Subtitle", "subTitle", 1, [COVER_S])]))
+    # A real deck ships ONE cover. Both appear here because the demo's job is to
+    # show every layout once, and they carry different copy so the pair reads as
+    # a choice rather than a duplicate: the paper cover fronts a bid, the loud
+    # one fronts a talk. Whichever you copy, delete the other.
+    S.append((20, [sp_text(2, "Title", "ctrTitle", None,
+                           ["เปลี่ยนงานบัญชีให้ระบบทำแทน"]),
+                   sp_text(3, "Subtitle", "subTitle", 1,
+                           ["NCT · สัมมนาลูกค้า 2569"])]))
     # ---------------------------------------------------------------- 2 · agenda (L15)
     # six lines, the documented ceiling, on the corrected list y
     S.append((15, [sp_text(2, "Num", "body", 1, ["00"]),

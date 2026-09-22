@@ -67,12 +67,13 @@ function WebDeck() {
         title="ข้อเสนอโครงการวางระบบบัญชีอัตโนมัติ"
         subtitle={<>{en("New Computer Technology Consulting Co., Ltd.")} · 2569</>}
       />
-      {/* 20 · the other cover, same words. It sits next to the default because
-          the choice is made once, at the front: keep one, delete the other. */}
+      {/* 20 · the other cover. A real deck ships one; both are here because the
+          demo shows every layout once. Different copy on purpose, so the pair
+          reads as a choice: paper fronts a bid, this one fronts a talk. */}
       <SlideCoverGradient
         hideFooter
-        title="ข้อเสนอโครงการวางระบบบัญชีอัตโนมัติ"
-        subtitle={<>{en("New Computer Technology Consulting Co., Ltd.")} · 2569</>}
+        title="เปลี่ยนงานบัญชีให้ระบบทำแทน"
+        subtitle={<>{en("NCT")} · สัมมนาลูกค้า 2569</>}
       />
       {/* 15 · agenda — six lines, the documented ceiling */}
       <SlideAgenda
