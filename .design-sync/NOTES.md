@@ -229,12 +229,19 @@ Repo-specific gotchas. Read before re-syncing.
   `sideEffects: ["*.css"]`, which lets the bundler drop a side-effect-only module;
   the IIFE-initialised export survives regardless. Delete it and 26 slide pages, 3
   templates and 52 cards resolve `undefined`.
-- **Their `Icon` took a string, ours takes the component.** `readme.md` and
-  `components/icons/Icon.prompt.md` in the project document
-  `<Icon icon="Truck" />`; the real library is `<Icon icon={Truck} />` with the glyph
-  imported. Our bundle is now the one that runs, so any string-name usage in
-  `slides/` or `templates/` renders nothing. Not fixed this run — it is their
-  content, and fixing it means editing files this sync did not create.
+- **Their `Icon` took a string, ours takes the component — fixed 2026-09-22.**
+  Nothing in `slides/` or `templates/` was affected: every one of those pages is
+  static HTML built from the `.nct-*` classes, with no React and no call into the
+  namespace at all (`ds-base.js` only links `styles.css` and the bundle). The one
+  runtime consumer was `components/icons/card.html`, which destructured `Icon`
+  from `window.NCTDesignSystem_7648d8` and passed glyph NAMES; it now looks each
+  glyph up on that same namespace (`icon={NS.ShieldCheck}`). Verified in headless
+  chromium against the real bundle: one `<svg>` rendered, no pageerror.
+  `components/icons/Icon.prompt.md` and `readme.md` were rewritten to teach the
+  component form (readme also now lists the twenty layout components, which it
+  previously said were not components here); `SKILL.md` never mentioned icons.
+  `components/icons/Icon.jsx` — the hand port with inlined path data and the
+  string API — is left in place but is inert: the bundle defines `Icon`, not it.
 - **Two component trees now coexist**: theirs at `components/<group>/<Name>.jsx`
   (14 primitives, one `card.html` per group) and ours at
   `components/<group>/<Name>/<Name>.*` (34, one card each). Groups `brand` and
