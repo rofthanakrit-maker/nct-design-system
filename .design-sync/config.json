@@ -1,10 +1,220 @@
 {
   "pkg": "@nct/slides",
-  "globalName": "NctSlides",
+  "globalName": "NCTDesignSystem_7648d8",
   "shape": "package",
   "buildCmd": "npm run build --workspace @nct/slides",
   "srcDir": "src",
   "tsconfig": "tsconfig.json",
-  "cssEntry": "src/styles.css",
-  "readmeHeader": ".design-sync/conventions.md"
+  "cssEntry": "src/slides.css",
+  "readmeHeader": ".design-sync/conventions.md",
+  "tokensPkg": "@nct/slides",
+  "tokensGlob": "src/tokens.css",
+  "extraFonts": [
+    "src/fonts.css"
+  ],
+  "componentSrcMap": {
+    "AlarmClock": null,
+    "BadgeCheck": null,
+    "Banknote": null,
+    "Bot": null,
+    "Building2": null,
+    "Calculator": null,
+    "Calendar": null,
+    "CalendarCheck": null,
+    "CalendarClock": null,
+    "CalendarRange": null,
+    "ChartColumn": null,
+    "ChartGantt": null,
+    "ChartLine": null,
+    "CircleAlert": null,
+    "CircleCheck": null,
+    "CircleX": null,
+    "ClipboardCheck": null,
+    "Clock": null,
+    "Cloud": null,
+    "Code": null,
+    "Coins": null,
+    "Cpu": null,
+    "CreditCard": null,
+    "Database": null,
+    "Eye": null,
+    "EyeOff": null,
+    "FileInput": null,
+    "FileText": null,
+    "FingerprintPattern": null,
+    "Folder": null,
+    "Globe": null,
+    "HandCoins": null,
+    "Handshake": null,
+    "HardDrive": null,
+    "History": null,
+    "Hourglass": null,
+    "KeyRound": null,
+    "Landmark": null,
+    "Laptop": null,
+    "Layers": null,
+    "Lightbulb": null,
+    "Lock": null,
+    "LockKeyhole": null,
+    "Mail": null,
+    "MapPin": null,
+    "Milestone": null,
+    "Network": null,
+    "Phone": null,
+    "PiggyBank": null,
+    "Plug": null,
+    "Receipt": null,
+    "Rocket": null,
+    "Search": null,
+    "Server": null,
+    "Settings": null,
+    "Shield": null,
+    "ShieldAlert": null,
+    "ShieldCheck": null,
+    "ShieldUser": null,
+    "Smartphone": null,
+    "Target": null,
+    "Terminal": null,
+    "Timer": null,
+    "TrendingDown": null,
+    "TrendingUp": null,
+    "Truck": null,
+    "User": null,
+    "UserCheck": null,
+    "Users": null,
+    "Wallet": null,
+    "Wifi": null,
+    "Workflow": null,
+    "Wrench": null,
+    "Zap": null
+  },
+  "docsDir": "docs",
+  "guidelinesGlob": [
+    "docs/guides/**/*.md"
+  ],
+  "overrides": {
+    "SlideCover": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideSection": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideContent": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideTwoColumn": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideThreeCards": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideKeyFigures": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideQuote": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideFullImage": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideTable": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideClosing": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideSplitPanel": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideFourCards": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideProcessFlow": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideDiagram": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideAgenda": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideDenseTable": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlidePhaseCard": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideEvidence": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideChart": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideCoverGradient": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "Slide": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "SlideTitle": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "Deck": {
+      "cardMode": "column",
+      "viewport": "1024x1260"
+    },
+    "BulletList": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "DataTable": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "TakeawayBand": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "CategoryKey": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "Chart": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
+    "Icon": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    }
+  },
+  "dtsPropsFor": {
+    "Chart": "  /** Periods or names. Column holds 12, bar 8 — past that, split the slide. */\n  categories: string[];\n  /** Axis unit, shown once above the plot (\"วันทำการ\", \"ล้านบาท\"), never on every tick. */\n  unit?: string;\n  format?: (n: number) => string;\n  /** Mark form. `column`/`bar` take ONE series; `line`/`stacked` take one to four. */\n  kind: \"column\" | \"bar\" | \"line\" | \"stacked\";\n  /** `{ name, values, slot? }`. `slot` 1–4 pins the colour; `\"mute\"` is the folded \"Other\" tail, always last in a stack. */\n  series: ChartSeries | ChartSeries[];\n  /** Index to emphasise: it takes cat-1, everything else goes mute. Column/bar emphasise a CATEGORY, line a SERIES. Not available on `stacked`. */\n  highlight?: number;\n  /** REQUIRED. The chart box in px on the 1280×720 canvas — the SVG has no intrinsic size and collapses without it. Layout 19 uses 806×365. */\n  width: number;\n  /** REQUIRED. See `width`. */\n  height: number;"
+  },
+  "projectId": "7648d84e-49ff-423b-9ab8-9f4d4d74bf44",
+  "extraEntries": [
+    "../../../.design-sync/global-alias.mjs"
+  ]
 }

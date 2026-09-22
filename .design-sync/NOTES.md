@@ -117,3 +117,127 @@ Repo-specific gotchas. Read before re-syncing.
   `sourceHashes` entry as the first 12 hex digits of sha256 over the source, and the
   card added to `cards`. Re-read both from the project before patching again; they
   are the base, not a local copy.
+
+## Converter run, 2026-09-22 (first full design-sync build)
+
+- **Uploaded 2026-09-22 into `NCT Design System` (7648d84e-49ff-423b-9ab8-9f4d4d74bf44),
+  ADDITIVELY — nothing was deleted.** That project is not the small hand-port the
+  older note above describes: it is a parallel hand-built system with 26 slide
+  example pages, 3 deck templates, 16 guideline pages, 52 cards and its own 14
+  `.jsx` primitives. The user chose to merge rather than replace, so the plan
+  went up with `deletes: []` and every one of those files is still there.
+  Overwritten on purpose: `_ds_bundle.js`, `fonts/*.woff2` (identical bytes) and
+  `styles.css` (merged, see below). `README.md` was deliberately NOT uploaded —
+  the project already has a `readme.md` that documents it well, and a
+  case-insensitive store would have clobbered it.
+- **`globalName` is the PROJECT name, not `NctSlides`.** `package-build.mjs`
+  normalizes it exactly the way the claude.ai/design app derives a namespace
+  (`toNamespace`: alnum runs PascalCased), so `NCTDesignSystem_7648d8` lands on
+  `window.NCTDesignSystem7648d8` — the same global the app would compute for that
+  project. Do not "fix" the missing underscore.
+- **Build wiring that this repo needs** (all in config.json now): `cssEntry` is
+  `src/slides.css`, not `src/styles.css` — the converter copies the entry verbatim
+  and does not follow its `@import`s, so pointing at the four-line stub shipped a
+  bundle CSS of three dead imports. `tokens.css` comes via `tokensPkg`/`tokensGlob`
+  (the package is its own tokens package here), and `fonts.css` via `extraFonts`,
+  which parses the `@font-face` rules and copies the ten woff2 into `fonts/`.
+- **`npm ci` nests `web/`'s deps in `web/node_modules`** and leaves only `react` +
+  `lucide-react` at the root, so neither directory has both `react` and `react-dom`
+  — which `--node-modules` requires (it reads `react/umd` and `react-dom/umd` for
+  `_vendor/react.js`). Copy `web/node_modules/react-dom` and `.../scheduler` into
+  the root `node_modules` before building; it is gitignored and same-version.
+- **Playwright: install `playwright@1.62.1`.** That release pins chromium 1234,
+  which is already in `~/AppData/Local/ms-playwright`. A different version fails
+  with `Executable doesn't exist`.
+- **The 74 lucide glyph re-exports are excluded from component cards**
+  (`componentSrcMap` nulls). They stay in the bundle and importable — 74 cards whose
+  `.d.ts` is lucide's ref/style-system noise would bury the 34 real components, and
+  `conventions.md` already lists every glyph by category. Add a glyph → list it in
+  `web/src/index.ts`, in `conventions.md`, and add a `componentSrcMap` null.
+- **Groups come from `web/docs/<Name>.md` frontmatter**, generated once from the
+  JSDoc in `dist/index.d.ts`: Layouts / Deck frame / Content blocks / Diagram /
+  Brand. The package shape has no other grouping knob. Each file is also the
+  component's `.prompt.md` body, so editing the doc is how you improve what the
+  design agent reads.
+
+### Findings this run (real, unfixed in the library)
+
+- **`Chart`'s exported `ChartProps` is not the component's prop type.** The
+  component is `ChartProps & { width: number; height: number }` and `highlight`
+  lives inside the union, so the extracted `.d.ts` dropped all three — the first
+  authored preview collapsed to a zero-height SVG because of it. Worked around with
+  `cfg.dtsPropsFor.Chart`. The library fix is to export the intersection as the
+  public props type.
+- **`.nct-title` is hard-set to `var(--nct-heading)` with no dark-tone rule**, so
+  `<Slide tone="dark"><SlideTitle>` renders an invisible heading (the rule under it
+  still draws). No shipped layout combines the two — 02/15 use `.nct-section__title`
+  — but nothing stops a design agent from doing it. The `Slide`/`BulletList`
+  dark previews deliberately carry no `SlideTitle`.
+- **Typography is scoped to `.nct-slide`.** Anything rendered outside a slide gets
+  the browser's default serif at default size; the first `Icon` preview did exactly
+  that. Every block preview composes inside a `Slide` for that reason.
+- **`SlidePhaseCard number="03–04"` overflows its tab.** The JSDoc documents merged
+  ranges as a real value, but the pill is sized for two characters and the range
+  wraps onto two lines over the card border. Preview uses `"03"`.
+- **Shared prop types do not survive per-component extraction.** `BulletItem`,
+  `TableRow`/`TableCell`, `FigureItem`, `CardItem`, `NumberedCard`, `FlowStep`,
+  `PhaseMeta`, `EvidenceFigure`, `AgendaItems`, `ChartSeries` appear in the emitted
+  `.d.ts` as bare names. `web/docs/guides/prop-types.md` carries the bodies and
+  ships to the project as a guideline (`guidelinesGlob`).
+
+### Known render warns
+
+- None. The final `package-validate.mjs` run is clean: 34/34 previews render, no
+  `[RENDER_*]` lines. A warn on a later run is new.
+
+### Re-sync risks
+
+- **No `_ds_sync.json` anchor exists remotely** until the first successful upload,
+  so the next run re-verifies everything. That is the documented safe state, not a
+  bug. Grades in `.design-sync/.cache/review/` are gitignored and machine-local:
+  on another machine the whole set re-captures.
+- **`web/docs/*.md` was generated from JSDoc once.** It does not regenerate. A
+  component whose JSDoc changes keeps the old doc — and therefore the old
+  `.prompt.md` — until someone edits the file. Same for a NEW component: it gets no
+  doc, lands in `misc`, and needs a `web/docs/<Name>.md` with a `category`.
+- **`componentSrcMap` is a hand-maintained list of the 74 glyphs.** A glyph added to
+  `web/src/index.ts` without a matching null reappears as a card.
+- **`cfg.dtsPropsFor.Chart` is a hand-written copy of the chart API.** It will rot
+  the day `chart.tsx` changes; diff it against `web/src/chart.tsx` on re-sync.
+- **Previews hard-code real proposal copy from `web/demo/demo.tsx`.** They do not
+  track the demo: a copy change there leaves the cards showing the old wording.
+- The `partnerMark` prop is passed in the `Slide` CorpChrome preview but does not
+  visibly render a badge in the corner lockup at card size — not chased this run.
+
+### The merge into `NCT Design System` — what a re-sync must not undo
+
+- **The project's `styles.css` is hand-merged and the build does not produce it.**
+  It is the project's own six imports (`tokens/*.css`, `slides.css`) followed by
+  `./tokens/tokens.css`, `./fonts/fonts.css`, `./_ds_bundle.css` — ours last so the
+  v4 role tokens and the package's real component CSS win. `ds-bundle/styles.css`
+  has only our three. **A plain re-sync uploads ours and drops the project's half.**
+  Re-apply the merge by hand (write it with inline `data`, not `localPath`), and
+  expect `upload.styling` to be true on every diff because the anchor's `styleSha`
+  can never match what is actually up there.
+- **`.design-sync/global-alias.mjs` is load-bearing.** The project was built against
+  `window.NCTDesignSystem_7648d8`; `toNamespace` drops the underscore, so the bundle
+  publishes `NCTDesignSystem7648d8`. The alias module (wired via `extraEntries`,
+  path `../../../.design-sync/global-alias.mjs` — relative to `PKG_DIR`, which is
+  `node_modules/@nct/slides`) defines a lazy getter for the old name. Verified in
+  headless chromium: `window.NCTDesignSystem_7648d8 === window.NCTDesignSystem7648d8`,
+  121 exports. It lives outside `web/` because that package declares
+  `sideEffects: ["*.css"]`, which lets the bundler drop a side-effect-only module;
+  the IIFE-initialised export survives regardless. Delete it and 26 slide pages, 3
+  templates and 52 cards resolve `undefined`.
+- **Their `Icon` took a string, ours takes the component.** `readme.md` and
+  `components/icons/Icon.prompt.md` in the project document
+  `<Icon icon="Truck" />`; the real library is `<Icon icon={Truck} />` with the glyph
+  imported. Our bundle is now the one that runs, so any string-name usage in
+  `slides/` or `templates/` renders nothing. Not fixed this run — it is their
+  content, and fixing it means editing files this sync did not create.
+- **Two component trees now coexist**: theirs at `components/<group>/<Name>.jsx`
+  (14 primitives, one `card.html` per group) and ours at
+  `components/<group>/<Name>/<Name>.*` (34, one card each). Groups `brand` and
+  `diagram` hold both. Nothing collides on a path, but the DS pane shows both sets
+  of cards. Deleting theirs is a separate decision, and their `card.html` files are
+  what the "Components" group cards point at.

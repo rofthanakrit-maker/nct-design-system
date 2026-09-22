@@ -2,7 +2,6 @@ __pycache__/
 *.pyc
 node_modules/
 web/dist/
-.design-sync/.cache/
 .backup-v1/
 web/demo/demo.js
 node_modules/
@@ -22,3 +21,10 @@ AI-in-daily-work-NCT.pptx
 
 # Office lock files - appear whenever a deck in this folder is open
 ~$*
+
+# design-sync machine state (staged converter, build output, caches)
+.ds-sync/
+ds-bundle/
+.design-sync/.cache/
+.design-sync/learnings/
+.design-sync/node_modules
