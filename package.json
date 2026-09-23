@@ -10,8 +10,8 @@
     "serve": "python scripts/serve.py || py -3 scripts/serve.py",
     "demo:watch": "npm run demo:watch --workspace @nct/slides",
     "build:potx": "python scripts/build.py || py -3 scripts/build.py",
-    "tokens": "python scripts/emit_web_tokens.py || py -3 scripts/emit_web_tokens.py",
-    "fonts": "python scripts/build_webfonts.py || py -3 scripts/build_webfonts.py",
+    "tokens": "npm run tokens --workspace @nct/slides",
+    "fonts": "npm run fonts --workspace @nct/slides",
     "assets": "python scripts/emit_web_assets.py || py -3 scripts/emit_web_assets.py"
   }
 }

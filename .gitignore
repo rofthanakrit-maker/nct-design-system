@@ -4,7 +4,6 @@ node_modules/
 web/dist/
 .backup-v1/
 web/demo/demo.js
-node_modules/
 # raw image drops - 56 MB of PNG; scripts/prepare_images.py writes the
 # committed derivatives into assets/
 icon and images/
