@@ -6,7 +6,7 @@ const en = (s: string) => <span lang="en">{s}</span>;
     page numbers are counted from position — nothing types a number by hand.
     The cover passes `hideFooter` of its own, and a slide prop still wins. */
 export const HouseDeck = () => (
-  <Deck footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569">
+  <Deck brand="web" footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569">
     <SlideCover
       hideFooter
       title="ข้อเสนอโครงการวางระบบบัญชีอัตโนมัติ"
@@ -23,7 +23,7 @@ export const HouseDeck = () => (
   </Deck>
 );
 
-/** `brand="corp"` on the Deck — every slide inherits the mandatory chrome, and
+/** The default brand, corp — every slide inherits the mandatory chrome, and
     the page count restarts from this deck's own first slide. */
 export const CorpDeck = () => (
   <Deck brand="corp" date="Updated date: 2026.09.07">

@@ -24,11 +24,8 @@ export const color = {
   cat_3: '#0D9298',
   cat_4: '#6C4289',
   cat_mute: '#A4A4A4',
-  corp: '#006666',
-  corp_deep: '#193B36',
-  corp_up: '#8CC2C2',
   corp_dim: '#E1E1E1',
-  corp_bar_mid: '#A9C2C2',
+  corp_bar_mid: '#B1C4C9',
 } as const;
 
 /** slide canvas in px at 96dpi - the .potx is 13.333in x 7.5in */

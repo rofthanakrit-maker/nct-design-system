@@ -112,8 +112,8 @@ flows, status columns). These extend the system — they don't replace anything 
 ## v3 — corporate proposal chrome (studied from `NCT Template.pptx`, slides 33–43)
 The second brand set. Everything above dresses narrative decks, studied from the
 website. The template the company requires on every bid is a different animal:
-anchored on a different teal, with its own furniture. Both are real, and both now
-ship — chosen per deck, never mixed on one slide.
+its own furniture, on the same colours as the website. Both are real, and both
+ship — chrome chosen per deck, never mixed on one slide.
 
 Studied 2026-09-07 from the company's own `NCT Template.pptx` (OOXML read
 directly, plus the PDF rendered per page, so both the exact values and the
@@ -121,31 +121,21 @@ rhythm are observed rather than estimated).
 
 ```css
 :root {
-  --nct-corp:          #006666;  /* anchor: full-bleed rule, phase tab, card outline.
-                                    6.8:1 on paper both ways — safe as fill and as text */
-  --nct-corp-up:       #8CC2C2;  /* the same teal lifted to read ON DARK: 5.1:1 on navy,
-                                    6.2:1 on corp-deep. 2.0:1 on paper — never there.
-                                    --nct-corp itself is 1.5:1 on navy and unusable */
-  --nct-corp-deep:     #193B36;  /* deep companion: second header band, on-dark panel */
   --nct-corp-dim:      #E1E1E1;  /* foot-bar spent segment — DECORATION ONLY, 1.2:1 */
-  --nct-corp-bar-mid:  #A9C2C2;  /* foot-bar middle segment — decoration only */
+  --nct-corp-bar-mid:  #B1C4C9;  /* foot-bar middle segment (teal under dim at 75%) */
 
-  /* the roles that move between modes; slides.css reads these everywhere it
-     used to name --nct-teal / --nct-navy, so repointing them carries the deck */
-  --nct-accent:    var(--nct-teal);      /* .nct-slide--corp → var(--nct-corp)      */
-  --nct-accent-up: var(--nct-teal-up);   /* .nct-slide--corp → var(--nct-corp-up)   */
-  --nct-heading:   var(--nct-navy);      /* .nct-slide--corp → var(--nct-ink)       */
-  --nct-dark:      var(--nct-navy);      /* .nct-slide--corp → var(--nct-corp-deep) */
+  /* the role tokens every layout reads - the same values in both modes */
+  --nct-accent:    var(--nct-teal);
+  --nct-accent-up: var(--nct-teal-up);
+  --nct-heading:   var(--nct-navy);
+  --nct-dark:      var(--nct-navy);
 }
 ```
 
-**Heading and dark follow the mode too (2026-09-11).** Until then only the accent
-pair moved, so every header band, dark panel and card heading stayed house navy
-under a `#006666` rule, and `--nct-corp-deep` was declared and read by nothing.
-Corp headings take `--nct-ink` (the title rule, extended) and dark fills take
-`--nct-corp-deep`. The L10 closing gradient keeps navy in both modes: it is the
-house bookend. `check_template.py` fails a corp build that carries navy anywhere
-else.
+**Corp wears the website palette (2026-09-23).** It used to carry its own teal —
+`#006666` accent, `#8CC2C2` on dark, `#193B36` dark fill, ink headings. Those are
+gone: a corp deck now takes teal, navy and deep exactly like a web deck, and
+differs only in chrome geometry (full-bleed rule, corner lockup, foot bar).
 
 **No corp tint.** The source used `#C9D9D4` as a card and zebra fill, but `INK2`
 reads 4.37:1 on it and `OK_T` sits 1.05:1 against it — the exact

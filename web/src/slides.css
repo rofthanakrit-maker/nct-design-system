@@ -884,23 +884,10 @@
 /* ================================================================ v3 corp chrome
    The second brand mode. `brand="corp"` on the Deck swaps the furniture the
    company requires on every bid - full-bleed rule, outlined corner lockup,
-   three-segment foot bar - and repoints --nct-accent. Nothing about the grid
-   moves: the rule stays at --nct-rule-y and the body box keeps its top, so a
-   deck can switch modes without a single layout re-flowing. */
-/* heading and dark move too. The source sets its title near-black, so every
-   heading follows it to --nct-ink; the header band, dark panel and system box
-   take --nct-corp-deep, the source's own deep band. Before this, only the title
-   moved, and a corp table sat a house-navy header under a #006666 rule. */
-.nct-slide--corp {
-  --nct-accent: var(--nct-corp);
-  --nct-accent-up: var(--nct-corp-up);
-  --nct-heading: var(--nct-ink);
-  --nct-dark: var(--nct-corp-deep);
-}
-/* ...except on the closing gradient, which is the house bookend in either brand
-   and ends in navy: a photo band fading to corp-deep over it would show a seam.
-   After the corp rule on purpose - same specificity, source order decides. */
-.nct-slide--close { --nct-dark: var(--nct-navy); }
+   three-segment foot bar. Colours are the website palette in both modes:
+   nothing here repoints --nct-accent, --nct-heading or --nct-dark. Nothing about
+   the grid moves either: the rule stays at --nct-rule-y and the body box keeps
+   its top, so a deck can switch modes without a single layout re-flowing. */
 .nct-slide--corp .nct-rule {
   left: 0;
   width: 100%;

@@ -42,9 +42,6 @@ COLORS = [
     ("cat-3", T.CAT_3, "category / series 3 - all-pairs charts stop here"),
     ("cat-4", T.CAT_4, "category / series 4"),
     ("cat-mute", T.CAT_MUTE, "Other / de-emphasised / baseline - MARKS ONLY, never text"),
-    ("corp", T.CORP, "v3 corp chrome anchor - rule, phase tab, card outline"),
-    ("corp-deep", T.CORP_DEEP, "v3 corp deep - second header band, on-dark panel"),
-    ("corp-up", T.CORP_UP, "v3 corp accent lifted to read ON DARK - never on paper"),
     ("corp-dim", T.CORP_DIM, "v3 corp foot-bar spent segment - DECORATION ONLY"),
     ("corp-bar-mid", T.CORP_BAR_MID, "v3 corp foot-bar middle segment - decoration only"),
 ]
@@ -109,20 +106,14 @@ def css():
     for name, hexv, note in COLORS:
         out.append("  --nct-%-12s #%s;%s" % (name + ":", hexv, "  /* %s */" % note))
     out.append("")
-    out.append("  /* The accent pair, and the only thing that moves between the two brand")
-    out.append("     modes. slides.css reads these everywhere it used to name --nct-teal /")
-    out.append("     --nct-teal-up, so .nct-slide--corp repointing them carries the whole")
-    out.append("     deck - rule, bullets, band labels, card tabs, recommended column. The")
-    out.append("     -up half exists for the same reason its default does: the accent is")
-    out.append("     1.5:1 on navy and has to be lifted to survive a dark panel. Category")
-    out.append("     colours are literal hex and deliberately do NOT follow - a table and a")
-    out.append("     chart about the same four categories have to mean the same thing in")
-    out.append("     both modes. */")
+    out.append("  /* The accent pair. slides.css reads these everywhere it would name")
+    out.append("     --nct-teal / --nct-teal-up - rule, bullets, band labels, card tabs,")
+    out.append("     recommended column. The -up half exists because the accent is 2.8:1")
+    out.append("     on navy and has to be lifted to survive a dark panel. Both brand modes")
+    out.append("     share them: corp swaps chrome geometry, never colour. */")
     out.append("  --nct-accent:    var(--nct-teal);")
     out.append("  --nct-accent-up: var(--nct-teal-up);")
-    out.append("  /* heading ink and dark fill, the other two roles the brand moves -")
-    out.append("     tokens.py HEADING / DARK. .nct-slide--corp repoints them to ink and")
-    out.append("     --nct-corp-deep; nothing in slides.css names --nct-navy for either. */")
+    out.append("  /* heading ink and dark fill - parts_master heading() / dark(). */")
     out.append("  --nct-heading:   var(--nct-navy);")
     out.append("  --nct-dark:      var(--nct-navy);")
     out.append("")

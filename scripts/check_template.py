@@ -29,7 +29,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 OUT = os.path.dirname(HERE)
 
-from tokens import SH, SW, NAVY, TEAL, TEAL_UP, DEEP, MID  # noqa: E402
+from tokens import SH, SW  # noqa: E402
 import build as B  # noqa: E402
 
 A = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
@@ -210,63 +210,6 @@ def _slide_overruns(slide, layout):
                    % (name, int(top + h), rule_y - FOOT_GAP, rule_y))
 
 
-def _brand_leaks(path, z, names):
-    """A corp build may not contain the house accent anywhere.
-
-    design.md: the two brands are chosen per deck and never mixed on one slide.
-    That held on the web, where every rule reads --nct-accent, and did not hold
-    here: accent() existed and eleven layouts named TEAL anyway, so a corp deck
-    drew a #006666 full-bleed rule over #216B7F step chips two inches below it.
-    Nothing caught it, because a hardcoded constant is a legal colour.
-
-    Layouts and master only, not the demo slides' content. There is no category
-    exception any more: v2 had CAT_2 = TEAL and had to wave L12's cards and L16's
-    key through; the v4 category palette shares no hex with either house accent.
-
-    NAVY is checked the same way, for the same bug one role over: it was every
-    header band, dark panel and card heading in both brands, and CORP_DEEP sat
-    declared and unread.
-
-    DEEP and MID joined them after the previews were read at full size: L08 named
-    DEEP for its scrim and shipped a house-navy full-image slide inside the corp
-    deck, and the cover's decorative column was MID in both brands. Both are the
-    accent()/dark() bug spelled with a different constant.
-
-    The exception is the gradient bookends - L10 and L20 - whose navy->teal is
-    the house artwork in either brand, so their fade, scrim and stops have to
-    meet that navy.
-    """
-    if "-Corp" not in os.path.basename(path):
-        return []
-    out = []
-    table = "ppt/tableStyles.xml"
-    if table in names and NAVY in z.read(table).decode("utf-8"):
-        out.append("%s: header band is house navy %s in a corp build - use "
-                   "PM.dark()" % (table, NAVY))
-    for n in sorted(x for x in names
-                    if x.startswith("ppt/slideLayouts/slideLayout")
-                    or x.startswith("ppt/slideMasters/slideMaster")):
-        root = ET.fromstring(z.read(n))
-        tree = root.find(".//%scSld/%sspTree" % (P, P))
-        if tree is None:
-            continue
-        csld = root.find(".//%scSld" % P)
-        bookend = csld is not None and (csld.get("name") or "").startswith(("10 ", "20 "))
-        for ch in list(tree):
-            nv = ch.find(".//%scNvPr" % P)
-            name = nv.get("name") if nv is not None else "?"
-            xml = ET.tostring(ch, encoding="unicode")
-            for house, fix in ((TEAL, "accent()"), (TEAL_UP, "accent_up()"),
-                               (NAVY, "heading() / dark()"), (DEEP, "deep()"),
-                               (MID, "accent()")):
-                if house in (NAVY, DEEP, MID) and bookend:
-                    continue
-                if house in xml:
-                    out.append("%s: %r carries house colour %s in a corp build - "
-                               "use %s" % (n, name, house, fix))
-    return out
-
-
 def check(path):
     errs = []
     z = zipfile.ZipFile(path)
@@ -303,7 +246,6 @@ def check(path):
         if n.startswith("ppt/slideLayouts/slideLayout"):
             for msg in _footer_collisions(root):
                 errs.append("%s: %s" % (n, msg))
-    errs += _brand_leaks(path, z, names)
     # every idx a slide fills has to exist on the layout it points at
 
     for n in sorted(x for x in names if x.startswith("ppt/slides/slide")

@@ -60,7 +60,7 @@ function App() {
 /** The house deck: layouts 01–16, 19 and 20, web brand. 17–18 are in the corp deck. */
 function WebDeck() {
   return (
-    <Deck footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569">
+    <Deck brand="web" footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569">
       {/* 01 · cover. Unnumbered: a cover is not page 1 of anything. */}
       <SlideCover
         hideFooter

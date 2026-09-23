@@ -69,38 +69,16 @@ SEQ_100, SEQ_200, SEQ_300, SEQ_400 = "DBE9FC", "B7D0F2", "90B4E4", "6994CF"
 DIV_WARM_L = "D6A67C"  # CAT_2's hue at SEQ_300's weight: 2.19:1 against its 2.14:1
 
 # ---- v3: corporate proposal chrome (studied from NCT Template.pptx sl. 33-43) ----
-# The second brand set. The website palette above dresses narrative decks; the
-# proposal template the company requires on every bid is anchored on a different
-# teal, and both are real. They are chosen per deck and never mix on one slide:
-# corp mode swaps the CHROME (rule, corner lockup, foot bar) and repoints the
-# --nct-accent pair, which slides.css reads everywhere it used to name TEAL, so
-# the whole deck follows. What does NOT follow is the content palette - paper,
-# ink, tints, status and the four category colours are shared by both modes, so
-# a table means the same thing whichever brand is on the slide.
-CORP      = "006666"   # the anchor: full-bleed rule, phase tab, card outline
-                        # 6.8:1 on PAPER both ways - safe as fill and as text
-CORP_DEEP = "193B36"   # the deep companion: second header band, on-dark panel
-                        # 12.2:1 on PAPER both ways. It is the corp half of
-                        # DARK below - for a year it was declared and read by
-                        # nothing, and a corp table header came out house NAVY
-# The two roles that move with the brand besides the accent pair. NAVY did both
-# jobs in both brands, so a corp deck set #006666 rules over #23436D table heads
-# and panels - two unrelated blues on one slide, the mix design.md forbids.
-#   HEADING - ink for headings below the title: card, dense, figure, quote.
-#             Corp follows the title rule the source sets: near-black INK.
-#   DARK    - fill of a header band, a dark panel, a dark slide, a system box.
-# Resolve them with parts_master.heading() / dark(); slides.css reads
-# --nct-heading / --nct-dark. L01's and L10's gradients are not DARK: they are
-# the house bookends and keep NAVY in either brand.
-CORP_UP   = "8CC2C2"   # the same corp teal lifted until it reads on a dark
-                        # ground: 5.1:1 on NAVY, 6.2:1 on CORP_DEEP. ON DARK
-                        # ONLY - it is 2.0:1 on PAPER. Same trap, same rule as
-                        # TEAL_UP; CORP itself is 1.5:1 on NAVY and unusable there.
+# The second brand set. Corp mode swaps the CHROME only - full-bleed rule, corner
+# lockup, three-segment foot bar - and wears the website palette above, the same
+# as a web deck: accent TEAL, accent-on-dark TEAL_UP, headings and dark fills
+# NAVY, scrim DEEP. It used its own teal (#006666 / #193B36 / #8CC2C2) until
+# 2026-09-23; the chrome geometry stayed, the colours were folded into the web set
+# so the two brands differ in furniture, never in colour.
 CORP_DIM  = "E1E1E1"   # foot-bar spent segment. DECORATION ONLY - 1.2:1 on
                         # PAPER, it can never carry text or a border
-# No corp tint. The source used C9D9D4 as a card/zebra fill, but INK2 reads
-# 4.37:1 on it and OK_T sits 1.05:1 against it - the exact status-fill-vanishes
-# bug the v2 note above exists to prevent. Corp surfaces are PAPER2, same as v1.
+# Corp surfaces are PAPER2, same as v1. The source's C9D9D4 card fill stays out:
+# INK2 reads 4.37:1 on it and OK_T sits 1.05:1 against it.
 
 # ---- on-dark ink: PAPER at alpha, the only text colour on a dark ground ----
 # Eleven alphas had drifted in (70 72 75 78 80 82 88 92 on text, 22 32 on rules),
@@ -164,10 +142,10 @@ CORP_LOCK_H = 548640                  # 0.60in
 CORP_LOCK_R = 91440                   # 0.10in - its two bottom corners
 CORP_BAR_SEG = 822960                 # 0.90in - one foot-bar segment, x3
 CORP_BAR_H  = 137160                  # 0.15in
-# The source draws three foot segments with two shapes: a CORP bar under a
+# The source draws three foot segments with two shapes: an accent bar under a
 # 75%-alpha CORP_DIM bar offset by one segment, so the overlap mixes the middle
 # one. Three explicit segments say the same thing without the alpha trick.
-CORP_BAR_MID = "A9C2C2"               # = CORP under CORP_DIM at 75%, precomputed
+CORP_BAR_MID = "B1C4C9"               # = TEAL under CORP_DIM at 75%, precomputed
 
 # ---- v3: phase card (L17) ----
 # The numbered tab straddles the card's top border. The source protrudes it left

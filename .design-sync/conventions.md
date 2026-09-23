@@ -58,14 +58,16 @@ icon-only cards, no centred icon grid, no icons inside `DiagramBox`.
 
 ## Two brand modes
 
+**Build every deck in corp unless asked otherwise** — it is the default, so a
+plain `<Deck>` is corp; pass `brand="web"` only when the user asks for the
+house look. In PowerPoint start from `NCT-Slide-Template-Corp.potx`.
+
 `<Deck brand="corp">` wears the chrome the company requires on every bid, studied
 from `NCT Template.pptx` — a full-bleed rule edge to edge instead of the 0.6in
 stub, the outlined lockup card bled off the top-right corner, and a
-three-segment bar at the foot instead of the hairline. It also repoints
-`--nct-accent` / `--nct-accent-up`, `--nct-heading` (navy → ink, as the source
-sets its titles) and `--nct-dark` (navy → `--nct-corp-deep`, for header bands,
-dark panels and system boxes), which every layout reads, so the whole deck
-follows. The closing gradient stays navy in both: it is the house bookend.
+three-segment bar at the foot instead of the hairline. Colours do not change:
+corp wears the website palette, so `--nct-accent`, `--nct-heading` and
+`--nct-dark` are teal / navy / navy in both modes.
 
 What does **not** move is the content palette: paper, ink, tints, status and the
 four category colours are shared, so a table means the same thing in either
@@ -89,9 +91,9 @@ your own layout glue, use the CSS variables:
 | Family | Real names |
 |---|---|
 | Colour | `--nct-paper` `--nct-paper-2` `--nct-ink` `--nct-ink-2` `--nct-rule` `--nct-navy` `--nct-teal` `--nct-teal-up` `--nct-deep` `--nct-mid` `--nct-teal-b` |
-| Brand-switched roles | `--nct-accent` `--nct-accent-up` `--nct-heading` `--nct-dark` — read these, not `--nct-teal` / `--nct-navy`, in anything new |
+| Role tokens | `--nct-accent` `--nct-accent-up` `--nct-heading` `--nct-dark` — read these, not `--nct-teal` / `--nct-navy`, in anything new |
 | On-dark ink | `--nct-on-dark-1` (body) `--nct-on-dark-2` (secondary) `--nct-on-dark-3` (footer, floor) `--nct-on-dark-rule` (hairlines) |
-| Corp brand | `--nct-corp` `--nct-corp-up` `--nct-corp-deep` `--nct-corp-dim` `--nct-corp-bar-mid` |
+| Corp chrome (decoration only) | `--nct-corp-dim` `--nct-corp-bar-mid` |
 | Status (data cells only) | `--nct-ok` `--nct-ok-tint` `--nct-warn` `--nct-warn-tint` `--nct-risk` `--nct-risk-tint` |
 | Category / chart series (max 4, in order) | `--nct-cat-1` … `--nct-cat-4` · `--nct-cat-mute` ("Other" / de-emphasis — marks only, never text, and every muted mark carries its value: 2.5:1 is under the 3:1 a data mark needs) |
 | Type | `--nct-fs-display` `--nct-fs-section` `--nct-fs-h1` `--nct-fs-stat` `--nct-fs-quote` `--nct-fs-lead` `--nct-fs-body` `--nct-fs-body-2` `--nct-fs-body-3` `--nct-fs-label` `--nct-fs-foot` `--nct-fs-densehead` `--nct-fs-densebody` `--nct-fs-tblhead` `--nct-fs-densecell` `--nct-fs-secnum` `--nct-fs-quotemark` |
@@ -253,7 +255,7 @@ import { CategoryKey, Deck, SlideSplitPanel, SlideDenseTable, SlideClosing } fro
 import '@nct/slides/styles.css';
 
 // chrome and page numbers live on Deck, once - and so does the brand
-<Deck footer="NCT · ข้อเสนอโครงการ" date="2569">   {/* brand="corp" for a bid */}
+<Deck footer="NCT · ข้อเสนอโครงการ" date="2569">   {/* corp by default; brand="web" for the house chrome */}
   <SlideSplitPanel
     title="สภาพระบบบัญชีปัจจุบัน"
     context={['คีย์เอกสารซ้ำสามระบบ', { text: 'เฉลี่ย 1,200 ใบต่อเดือน', level: 2 }]}

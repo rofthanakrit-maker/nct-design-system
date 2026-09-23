@@ -31,8 +31,8 @@ export interface SlideCoverProps extends Base {
  * The corporate composition, in both brands: paper ground, the mark watermarked
  * behind it, the lockup centred and large, and the title centred under a rule.
  * It is the page the company actually opens a bid with, so it is the cover you
- * get by default. Only the accent moves with `brand` — the rule and the
- * decorative column read `--nct-accent`, house teal or `#006666`.
+ * get by default. The rule and the decorative column read `--nct-accent`,
+ * house teal in both brands.
  *
  * The navy→teal gradient that used to be the house cover is
  * {@link SlideCoverGradient}, layout 20. A cover is a composition, not a dress,

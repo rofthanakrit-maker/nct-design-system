@@ -47,12 +47,10 @@ status/category token, กติกาการทำเด็คทั้งห
 | | `web` (default) | `corp` |
 |---|---|---|
 | ที่มา | nctthai.com | `NCT Template.pptx` |
-| accent | `TEAL #216B7F` | `CORP #006666` |
-| accent on dark | `TEAL_UP #8FBACE` | `CORP_UP #8CC2C2` |
+| สี | palette เว็บ | **palette เว็บเหมือนกัน** (ตั้งแต่ 2026-09-23 — เดิม `#006666`) |
 | เส้นใต้หัวเรื่อง | stub 0.600in ที่ margin | **เต็มความกว้าง 13.333in** |
 | มุมขวาบน | ไม่มี | **การ์ดโลโก้ ขอบ accent** |
 | ก้นสไลด์ | hairline + date + footer + page | **แถบ 3 ช่วง** + footer + page |
-| สีหัวเรื่อง | `NAVY` | `INK` |
 | **layout 01** | gradient navy→teal อ่านชิดซ้าย | **คนละสไลด์** — พื้นขาว จัดกลาง ดู §4 |
 
 **สิ่งที่ไม่ตามโหมด** — `PAPER` `PAPER2` `INK` `INK2` `RULE` status ทั้ง 3 คู่
@@ -66,10 +64,9 @@ taxonomy ที่เปลี่ยนสีตามหัวจดหมา�
 <Deck brand="corp" footer="NCT · ข้อเสนอโครงการ">…</Deck>
 ```
 
-ฝั่ง React สลับได้ใน deck เดียว เพราะ `.nct-slide--corp` แค่ repoint
-`--nct-accent` / `--nct-accent-up` ซึ่ง `slides.css` อ่านทุกที่ที่เคยเขียน
-`--nct-teal` ตรง ๆ (แทนไปแล้ว 17 + 8 จุด) **ของใหม่ทุกชิ้นต้องอ่าน
-`--nct-accent` ห้ามเรียก `--nct-teal` ตรง ๆ อีก**
+ฝั่ง React สลับได้ใน deck เดียว เพราะ `.nct-slide--corp` เปลี่ยนแค่ chrome
+สีใช้ role token ชุดเดียวกับเว็บ **ของใหม่ทุกชิ้นยังต้องอ่าน `--nct-accent`
+ห้ามเรียก `--nct-teal` ตรง ๆ**
 
 ฝั่ง PowerPoint **แยกไฟล์** — `NCT-Slide-Template-Corp.potx` เพราะ layout ใน
 PowerPoint สลับ chrome ตัวเองไม่ได้ chrome ฝังอยู่ใน layout `build.py` ตั้ง
@@ -79,14 +76,10 @@ PowerPoint สลับ chrome ตัวเองไม่ได้ chrome ฝ�
 
 | token | ค่า | contrast | ใช้ที่ |
 |---|---|---|---|
-| `CORP` | `#006666` | 6.8:1 บน `PAPER` ทั้งสองทาง | เส้น, tab, ขอบการ์ด, หัวตาราง |
-| `CORP_UP` | `#8CC2C2` | 5.1:1 บน `NAVY` · 6.2:1 บน `CORP_DEEP` | **บนพื้นเข้มเท่านั้น** — 2.0:1 บน `PAPER` |
-| `CORP_DEEP` | `#193B36` | 12.2:1 บน `PAPER` ทั้งสองทาง | แถบหัวชั้นสอง, พาเนลเข้ม |
 | `CORP_DIM` | `#E1E1E1` | 1.2:1 | **ตกแต่งเท่านั้น** — ช่วงที่ผ่านไปแล้วของแถบก้น |
-| `CORP_BAR_MID` | `#A9C2C2` | — | **ตกแต่งเท่านั้น** — ช่วงกลางของแถบก้น |
+| `CORP_BAR_MID` | `#B1C4C9` | — | **ตกแต่งเท่านั้น** — ช่วงกลางของแถบก้น |
 
-`CORP` เองได้ 1.5:1 บน `NAVY` ใช้บนพื้นเข้มไม่ได้ ต้องยก — เหตุผลเดียวกับที่
-`TEAL_UP` มีอยู่ กับดักเดียวกัน กติกาเดียวกัน
+`CORP` / `CORP_UP` / `CORP_DEEP` ถูกลบ 2026-09-23 — corp ใช้ `TEAL` / `TEAL_UP` / `NAVY` / `DEEP` เหมือนเว็บ
 
 **ไม่มี corp tint** ต้นฉบับใช้ `#C9D9D4` เป็นพื้นการ์ดและ zebra แต่ `INK2` ได้
 4.37:1 บนมัน และ `OK_T` ได้ 1.05:1 — คือบั๊ก status fill หายที่ v2 §3.2 เขียน
@@ -103,10 +96,10 @@ PowerPoint สลับ chrome ตัวเองไม่ได้ chrome ฝ�
 
 | ชิ้น | x | y | w | h | สเปก |
 |---|---|---|---|---|---|
-| Accent Rule | 0.000 | 1.500 | 13.333 | **0.075** | fill `CORP` เต็มความกว้าง |
-| Corner Lockup | 11.533 | −0.300 | 1.800 | 0.900 | `round2SameRect` **rot 180°** · fill `PAPER` · ln 1pt `CORP` · มุมล่าง 0.100 |
+| Accent Rule | 0.000 | 1.500 | 13.333 | **0.075** | fill `TEAL` เต็มความกว้าง |
+| Corner Lockup | 11.533 | −0.300 | 1.800 | 0.900 | `round2SameRect` **rot 180°** · fill `PAPER` · ln 1pt `TEAL` · มุมล่าง 0.100 |
 | NCT Mark | 12.133 | 0.109 | 0.600 | 0.382 | `mark-color.png` |
-| Foot Bar 1 | 0.000 | 7.300 | 0.900 | 0.150 | fill `CORP` |
+| Foot Bar 1 | 0.000 | 7.300 | 0.900 | 0.150 | fill `TEAL` |
 | Foot Bar 2 | 0.900 | 7.300 | 0.900 | 0.150 | fill `CORP_BAR_MID` |
 | Foot Bar 3 | 1.800 | 7.300 | 0.900 | 0.150 | fill `CORP_DIM` |
 | Footer PH | 2.950 | 7.000 | 5.000 | 0.300 | 10 pt `INK2` (idx 11) |

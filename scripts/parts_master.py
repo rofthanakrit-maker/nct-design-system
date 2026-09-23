@@ -38,52 +38,34 @@ def txstyles():
 
 
 def accent():
-    """The brand's accent, resolved at call time because BRAND is set after import.
-
-    Every layout reads this instead of naming TEAL, the same way slides.css reads
-    --nct-accent. It used to be layouts 17-18 only, so a corp deck drew a CORP
-    full-bleed rule over TEAL step chips two inches below it - the one thing
-    design.md says the two brands must never do.
-
-    It lives here rather than in parts_layouts because the master's own body
-    levels need it too: level 1's bullet had no bullet_color, so it fell through
-    to ooxml's house default and every corp deck's outline bullets came out
-    #216B7F under a #006666 rule. parts_layouts re-exports it.
+    """The accent every layout reads instead of naming TEAL, the way slides.css
+    reads --nct-accent. Both brands wear the website palette, so it is TEAL in
+    either; corp differs in chrome geometry only. parts_layouts re-exports it.
 
     What does NOT read this: the four category colours on L12. A taxonomy that
-    changes colour with the letterhead is not one. check_template.py fails a corp
-    build on any other stray TEAL, because a rule this easy to break by typing a
-    constant needs a check and not a convention.
-    """
-    return CORP if BRAND == "corp" else TEAL
+    changes colour with the letterhead is not one."""
+    return TEAL
 
 
 def accent_up():
-    """The accent lifted until it reads on a dark panel. Both brands' anchors
-    fail there - TEAL is 2.8:1 on NAVY and CORP is 1.5:1 - so both keep a
-    lifted twin, and both are unusable on paper."""
-    return CORP_UP if BRAND == "corp" else TEAL_UP
+    """The accent lifted until it reads on a dark panel - TEAL is 2.8:1 on NAVY.
+    Unusable on paper."""
+    return TEAL_UP
 
 
 def heading():
-    """Heading ink below and including the title. The corporate template sets its
-    titles near-black, and a card heading in house navy under an INK title was
-    the same two-brands-on-one-slide mix accent() exists to stop."""
-    return INK if BRAND == "corp" else NAVY
+    """Heading ink below and including the title - house navy in both brands."""
+    return NAVY
 
 
 def dark():
-    """Fill of a header band, dark panel, dark slide or system box. CORP_DEEP was
-    declared for exactly this and read by nothing - see tokens.py."""
-    return CORP_DEEP if BRAND == "corp" else NAVY
+    """Fill of a header band, dark panel, dark slide or system box."""
+    return NAVY
 
 
 def deep():
-    """The scrim / shadow ground - the step below dark(). DEEP is the house one;
-    corp has no separate shadow tone, so CORP_DEEP does both jobs there. L08 named
-    DEEP directly and shipped a house-navy full-image slide inside the corp deck,
-    which is the same bug dark() exists to stop, one role over."""
-    return CORP_DEEP if BRAND == "corp" else DEEP
+    """The scrim / shadow ground - the step below dark()."""
+    return DEEP
 
 
 def _levels():
@@ -139,7 +121,7 @@ def _corp_chrome(dark, mark_rid, first_id):
     c = PAPER if dark else INK2
     alpha = ON_DARK_3 if dark else None
     bar_y = SH - CORP_BAR_H - 45720
-    for i, col in enumerate((CORP, CORP_BAR_MID, CORP_DIM)):
+    for i, col in enumerate((accent(), CORP_BAR_MID, CORP_DIM)):
         out.append(shape(first_id + i, "Foot Bar %d" % (i + 1), i * CORP_BAR_SEG,
                          bar_y, CORP_BAR_SEG, CORP_BAR_H, solid(col)))
     # the footer slot survives so a deck can still carry a job name; it starts
@@ -160,7 +142,7 @@ def _corp_chrome(dark, mark_rid, first_id):
                          prst="round2SameRect", rot=10800000,
                          adj='<a:gd name="adj1" fmla="val 12000"/>'
                              '<a:gd name="adj2" fmla="val 0"/>',
-                         line='<a:ln w="12700">%s</a:ln>' % solid(CORP)))
+                         line='<a:ln w="12700">%s</a:ln>' % solid(accent())))
         # only the lower half of the card is on canvas, so the mark is centred
         # in CORP_LOCK_H, not in the shape's own box
         mw = 548640
@@ -206,7 +188,7 @@ def slide_master(mark_rid, n_layouts=16):
                             bold=True, font="mj", line=108000)], anchor="b"))
     s.append(shape(3, "Title Rule", 0 if corp else MX, RULE_Y,
                    SW if corp else RULE_W, CORP_RULE_H if corp else RULE_H,
-                   solid(CORP if corp else TEAL)))
+                   solid(accent())))
     s.append(placeholder(4, "Text Placeholder", "body", MX, BODY_Y, CW, BODY_H,
                          body_specs(["แก้ไขรูปแบบข้อความต้นแบบ", "ระดับที่สอง", "ระดับที่สาม"]),
                          idx=1))

@@ -42,8 +42,6 @@ def _diamond(sid, x, y, s, alpha=8):
 
 
 def _title(sid, prompt="ชื่อสไลด์"):
-    # the corporate template sets its title in near-black, not the house navy;
-    # that is chrome, so it moves with the brand
     return placeholder(sid, "Title Placeholder", "title", MX, TITLE_Y, CW, TITLE_H,
                        [S(prompt, sz=T_H1, color=heading(), bold=True, font="mj",
                           line=108000)],
@@ -63,7 +61,7 @@ def _rule(sid, x=MX, y=RULE_Y, color=None, alpha=None):
     """
     if color is None:
         if PM.BRAND == "corp":
-            return shape(sid, "Accent Rule", 0, y, SW, CORP_RULE_H, solid(CORP))
+            return shape(sid, "Accent Rule", 0, y, SW, CORP_RULE_H, solid(accent()))
         color = accent()
     return shape(sid, "Accent Rule", x, y, RULE_W, RULE_H, solid(color, alpha))
 
@@ -122,9 +120,7 @@ def l01_cover(rid_logo_color, rid_mark_color):
     the one slide whose job is to be quiet, and the lockup IS the slide here, so
     a second copy in the corner would be the same mark twice.
 
-    The rule and the decorative column read accent(), so the web build opens on
-    house teal and the corp build on #006666. The column was MID in both, which
-    put a house blue on a corp cover - the leak check_template now names.
+    The rule and the decorative column read accent(), house teal in both brands.
     """
     logo_h = int(COVER_LOGO_W * LOGO_AR)
     wm = 7315200                                  # 8.00in - the watermark, twice
@@ -741,9 +737,8 @@ def l20_cover_gradient(rid_logo_white, rid_mark_white):
     default for both brands. Nothing about the slide changed, only its number -
     so a deck that opened on it keeps opening on it, by picking 20.
 
-    Like L10 it is a house bookend in either brand: the gradient stays navy->teal
-    on a corp deck, and check_template lets NAVY, MID and DEEP through here for
-    that reason. Only the chrome follows the brand.
+    Like L10 it is a house bookend in either brand. Only the chrome follows the
+    brand.
     """
     s = [_diamond(10, SW - 3657600, -914400, 4572000, 9),
          _diamond(11, SW - 2286000, 2743200, 2743200, 7),

@@ -5,9 +5,9 @@
  * design built here can be rebuilt in PowerPoint by picking the layout with the
  * matching number. Import "@nct/slides/styles.css" once at the app root.
  *
- * Nineteen layouts and two brand modes. `<Deck brand="corp">` swaps in the
- * chrome the company requires on every bid - full-bleed rule, corner lockup,
- * three-segment foot bar - and repoints the accent; PowerPoint gets that as a
+ * Nineteen layouts and two brand modes. Corp is the default: the chrome the
+ * company requires on every bid - full-bleed rule, corner lockup, three-segment
+ * foot bar; `<Deck brand="web">` gives the house chrome. PowerPoint gets corp as a
  * separate NCT-Slide-Template-Corp.potx, because a .potx layout cannot toggle
  * its own chrome.
  */

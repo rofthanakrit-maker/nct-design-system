@@ -78,8 +78,8 @@ export function isDarkTone(tone: SlideTone): boolean {
  * edge to edge, the outlined lockup card in the top-right corner, and a
  * three-segment bar at the foot instead of the hairline.
  *
- * Only the chrome and `--nct-accent` change. Paper, ink, tints, status and
- * category colours are shared, so a table renders identically in either mode.
+ * `corp` is the default. Only the chrome changes - both modes wear the same
+ * colours, so a table renders identically in either.
  */
 export type SlideBrand = "web" | "corp";
 
@@ -93,8 +93,8 @@ export interface SlideChromeProps {
   /** Hide the whole footer band (cover slides sometimes want this). */
   hideFooter?: boolean;
   /**
-   * `"corp"` swaps in the mandatory proposal chrome. Set it once on `Deck` and
-   * every slide inherits it. Defaults to `"web"`.
+   * `"corp"` is the mandatory proposal chrome and the default. Pass `"web"`
+   * on `Deck` for the house chrome; every slide inherits it.
    */
   brand?: SlideBrand;
   /**
@@ -136,7 +136,7 @@ export function Slide({
   date,
   pageNumber,
   hideFooter,
-  brand = "web",
+  brand = "corp",
   partnerMark,
   className,
   style,

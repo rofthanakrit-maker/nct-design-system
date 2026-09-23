@@ -25,26 +25,17 @@
   --nct-cat-3:       #0D9298;  /* category / series 3 - all-pairs charts stop here */
   --nct-cat-4:       #6C4289;  /* category / series 4 */
   --nct-cat-mute:    #A4A4A4;  /* Other / de-emphasised / baseline - MARKS ONLY, never text */
-  --nct-corp:        #006666;  /* v3 corp chrome anchor - rule, phase tab, card outline */
-  --nct-corp-deep:   #193B36;  /* v3 corp deep - second header band, on-dark panel */
-  --nct-corp-up:     #8CC2C2;  /* v3 corp accent lifted to read ON DARK - never on paper */
   --nct-corp-dim:    #E1E1E1;  /* v3 corp foot-bar spent segment - DECORATION ONLY */
-  --nct-corp-bar-mid: #A9C2C2;  /* v3 corp foot-bar middle segment - decoration only */
+  --nct-corp-bar-mid: #B1C4C9;  /* v3 corp foot-bar middle segment - decoration only */
 
-  /* The accent pair, and the only thing that moves between the two brand
-     modes. slides.css reads these everywhere it used to name --nct-teal /
-     --nct-teal-up, so .nct-slide--corp repointing them carries the whole
-     deck - rule, bullets, band labels, card tabs, recommended column. The
-     -up half exists for the same reason its default does: the accent is
-     1.5:1 on navy and has to be lifted to survive a dark panel. Category
-     colours are literal hex and deliberately do NOT follow - a table and a
-     chart about the same four categories have to mean the same thing in
-     both modes. */
+  /* The accent pair. slides.css reads these everywhere it would name
+     --nct-teal / --nct-teal-up - rule, bullets, band labels, card tabs,
+     recommended column. The -up half exists because the accent is 2.8:1
+     on navy and has to be lifted to survive a dark panel. Both brand modes
+     share them: corp swaps chrome geometry, never colour. */
   --nct-accent:    var(--nct-teal);
   --nct-accent-up: var(--nct-teal-up);
-  /* heading ink and dark fill, the other two roles the brand moves -
-     tokens.py HEADING / DARK. .nct-slide--corp repoints them to ink and
-     --nct-corp-deep; nothing in slides.css names --nct-navy for either. */
+  /* heading ink and dark fill - parts_master heading() / dark(). */
   --nct-heading:   var(--nct-navy);
   --nct-dark:      var(--nct-navy);
 
