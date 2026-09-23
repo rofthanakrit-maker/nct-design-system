@@ -49,6 +49,7 @@ export const PreparationPhase = () => (
     renders in either mode even though the source deck is corp. */
 export const MergedPhaseHouse = () => (
   <SlidePhaseCard
+    brand="web"
     title="แผนงานรอบที่ 2"
     number="03"
     phase="พัฒนาและทดสอบ"

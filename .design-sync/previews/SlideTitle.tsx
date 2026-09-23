@@ -7,7 +7,7 @@ const en = (s: string) => <span lang="en">{s}</span>;
 
 /** The house title: Kanit at the h1 step, the accent rule immediately under it. */
 export const House = () => (
-  <Slide footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569" pageNumber={3}>
+  <Slide brand="web" footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569" pageNumber={3}>
     <SlideTitle>ขอบเขตบริการของ NCT</SlideTitle>
     <div className="nct-body">
       <BulletList items={["หัวเรื่องหนึ่งบรรทัดคือค่ามาตรฐาน"]} />

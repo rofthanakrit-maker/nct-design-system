@@ -6,6 +6,7 @@ const en = (s: string) => <span lang="en">{s}</span>;
 /** 06 in the house brand: three numbers, baseline-aligned, one source line. */
 export const House = () => (
   <SlideKeyFigures
+    brand="web"
     title="ตัวเลขที่บอกเรื่องเรา"
     figures={[
       { value: "12", label: "ปีที่ให้บริการองค์กรไทย" },

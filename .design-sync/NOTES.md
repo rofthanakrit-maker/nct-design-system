@@ -248,3 +248,30 @@ Repo-specific gotchas. Read before re-syncing.
   `diagram` hold both. Nothing collides on a path, but the DS pane shows both sets
   of cards. Deleting theirs is a separate decision, and their `card.html` files are
   what the "Components" group cards point at.
+
+## Re-sync, 2026-09-23 (corp wears the web palette; corp is the default brand)
+
+- **Run the driver without `--entry`.** With `--entry ./web/dist/index.js` the
+  `extraEntries` alias path (`../../../.design-sync/global-alias.mjs`, relative to
+  `node_modules/@nct/slides`) resolves outside the repo and is skipped with a `!`
+  line, so the bundle loses `window.NCTDesignSystem_7648d8`. Let it resolve through
+  `--node-modules ./node_modules`.
+- **Save the remote anchor verbatim, `sourceHashes` included.** A hand-trimmed
+  `remote-sync.json` without it reads as `anchor: malformed` and the whole set
+  re-verifies. Copy the `get_file` content as-is.
+- **Flipping `brand`'s default touches every card.** It changes the bundle, so all
+  34 render hashes move and every component re-grades. Preview cells whose name
+  says the brand (`House`, `HouseDeck`, `MergedPhaseHouse`, `TwoFramesHouse`) now
+  pass `brand="web"` explicitly; unnamed cells follow the default (corp).
+- **The project's hand-built half needs its own patch when colour roles move.**
+  Its `slides/`, `templates/` and guideline cards read `tokens/colors.css` and
+  their own `slides.css` (`[data-nct-brand="corp"]`), not the bundle. This run
+  wrote five project files from `ds-bundle/.project-patch/` (dot-prefixed, stays
+  local, uploaded by `localPath`): `tokens/colors.css` (corp tokens are now
+  aliases of teal / navy / teal-up), `styles.css` (the merge plus one override:
+  corp `.nct-title` reads `--nct-heading`, because their `slides.css` hard-sets
+  ink and rewriting that 25 KB file by hand was not worth the risk),
+  `readme.md` (corp-default rule at the top — the design agent reads this, not
+  our README.md), `guidelines/colors-corp.html`, `guidelines/brand-modes.html`.
+  A plain re-sync overwrites `styles.css` with ours and drops that override too.
+- **Known render warns:** none this run either.

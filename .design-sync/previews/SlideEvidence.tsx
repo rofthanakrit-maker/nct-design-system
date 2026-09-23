@@ -42,6 +42,7 @@ export const TrainingCorp = () => (
 /** Two frames and a bullet claim, house brand — the minimum the strip takes. */
 export const TwoFramesHouse = () => (
   <SlideEvidence
+    brand="web"
     title="ผลการทดสอบระบบกับเอกสารจริง"
     kicker="หลักฐานจากรอบนำร่อง"
     takeaway="อ่านฟิลด์ถูกต้อง 96% จากเอกสารจริง 400 ใบ ที่เหลือเข้าคิวตรวจด้วยคน"

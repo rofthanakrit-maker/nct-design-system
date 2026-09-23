@@ -6,6 +6,7 @@ const en = (s: string) => <span lang="en">{s}</span>;
     title centred under the rule. `hideFooter` — a cover is not page 1 of anything. */
 export const House = () => (
   <SlideCover
+    brand="web"
     hideFooter
     title="ข้อเสนอโครงการวางระบบบัญชีอัตโนมัติ"
     subtitle={<>{en("New Computer Technology Consulting Co., Ltd.")} · 2569</>}

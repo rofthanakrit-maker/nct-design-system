@@ -6,6 +6,7 @@ const en = (s: string) => <span lang="en">{s}</span>;
     the line it qualifies. */
 export const House = () => (
   <SlideContent
+    brand="web"
     title="ขอบเขตบริการของ NCT"
     items={[
       "วางระบบโครงสร้างพื้นฐานไอทีสำหรับองค์กร",
