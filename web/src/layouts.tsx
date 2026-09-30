@@ -26,13 +26,17 @@ export interface SlideCoverProps extends Base {
 }
 
 /**
- * 01 · Title Slide. The deck's cover — use once.
+ * 01 · Title Slide. The deck's cover — use once. The composition follows `brand`.
  *
- * The corporate composition, in both brands: paper ground, the mark watermarked
- * behind it, the lockup centred and large, and the title centred under a rule.
- * It is the page the company actually opens a bid with, so it is the cover you
- * get by default. The rule and the decorative column read `--nct-accent`,
- * house teal in both brands.
+ * `corp` (the default): paper ground, the mark watermarked behind it, the lockup
+ * centred and large, and the title centred under a rule. It is the page the
+ * company actually opens a bid with.
+ *
+ * `web`: a Swiss split. Paper on the left carries the lockup, a left-set title,
+ * the 0.6in teal rule and the subtitle; the photo band's slot on the right is the
+ * navy→teal gradient with the corp cover's scatter column in white on it. The
+ * web closing (layout 10) mirrors it. Only `date` shows in the foot, bottom-left
+ * — the page number would land on the panel.
  *
  * The navy→teal gradient that used to be the house cover is
  * {@link SlideCoverGradient}, layout 20. A cover is a composition, not a dress,
@@ -42,24 +46,38 @@ export interface SlideCoverProps extends Base {
  * whose job is to be quiet. `date` renders bottom-left, where the source puts
  * its "Updated date" line — pass the whole string; the layout does not build it.
  */
+// single quotes: the SVG's own attribute quotes are double ones, and they close
+// a url("...") early - the mask then never loads and the column paints as a
+// solid block
+const scatterMask: CSSProperties = {
+  maskImage: `url('${coverScatter}')`,
+  WebkitMaskImage: `url('${coverScatter}')`,
+};
+
 export function SlideCover({ title, subtitle, ...chrome }: SlideCoverProps) {
+  if (chrome.brand === "web") {
+    return (
+      <Slide tone="light" className="nct-cover--split" {...chrome}>
+        <div className="nct-cover__panel" aria-hidden="true" />
+        <div
+          className="nct-cover__scatter nct-cover__scatter--light"
+          aria-hidden="true"
+          style={scatterMask}
+        />
+        <NctLogo className="nct-cover__logo--split" width={240} />
+        <h1 className="nct-cover__title--split">{title}</h1>
+        <div className="nct-cover__rule--split" />
+        {subtitle && <p className="nct-cover__sub--split">{subtitle}</p>}
+      </Slide>
+    );
+  }
   return (
     <Slide tone="light" className="nct-cover--paper" {...chrome}>
       {/* the mark at 4% — the source watermarks its own logo rather than
           introducing a pattern that means nothing */}
       <img className="nct-cover__wm nct-cover__wm--a" src={markColor} alt="" />
       <img className="nct-cover__wm nct-cover__wm--b" src={markColor} alt="" />
-      <div
-        className="nct-cover__scatter"
-        aria-hidden="true"
-        style={{
-          // single quotes: the SVG's own attribute quotes are double ones,
-          // and they close a url("...") early - the mask then never loads and
-          // the column paints as a solid accent block
-          maskImage: `url('${coverScatter}')`,
-          WebkitMaskImage: `url('${coverScatter}')`,
-        }}
-      />
+      <div className="nct-cover__scatter" aria-hidden="true" style={scatterMask} />
       <NctLogo className="nct-cover__logo--paper" width={420} />
       <div className="nct-cover__rule--paper" />
       <h1 className="nct-cover__title--paper">{title}</h1>
@@ -384,24 +402,92 @@ export interface SlideClosingProps extends Base {
   decisionBy?: ReactNode;
   /** Contact lines — phone, email, site. */
   contact?: ReactNode[];
-  /** Photograph for the right 40%. It takes the place of the top-right diamond. */
+  /** Label over `contact` on the web closing's card. */
+  contactLabel?: string;
+  /**
+   * Photograph. `corp`: the right 40%, in place of the top-right diamond.
+   * `web`: the head of the contact card, placed at 16:9 — `photoHandshake` is
+   * prepared at exactly that.
+   */
   image?: string;
   imageAlt?: string;
   /**
-   * How `image` is placed. "band" is the right-hand strip layouts 02 and 15 use.
-   * "full" runs the photograph across the whole slide behind a scrim — for a
-   * subject that needs room to read, where a 40% strip would crop it to mush.
+   * How `image` is placed on the `corp` closing. "band" is the right-hand strip
+   * layouts 02 and 15 use. "full" runs the photograph across the whole slide
+   * behind a scrim — for a subject that needs room to read, where a 40% strip
+   * would crop it to mush. The `web` closing ignores it: its card is 16:9.
    */
   imageMode?: "band" | "full";
 }
 
-/** 10 · Closing / Contact. Teal→navy, the bookend to layout 01. Use once. */
-export function SlideClosing({
+/**
+ * 10 · Closing / Contact. The bookend to layout 01 — use once. The composition
+ * follows `brand`.
+ *
+ * `corp` (the default): teal→navy, the ask down the left, the photo band right.
+ *
+ * `web`: the web cover's split, mirrored. Flat navy carries the ask - title,
+ * next steps, and the deadline in its own callout - and a paper card stands in
+ * the panel's slot with the photograph, `contact` and the lockup. The two labels
+ * share a line, and the callout's foot is the card's foot.
+ */
+export function SlideClosing(props: SlideClosingProps) {
+  return props.brand === "web" ? <ClosingCard {...props} /> : <ClosingBand {...props} />;
+}
+
+function ClosingCard({
   title = "ขอบคุณครับ",
   nextSteps = [],
   nextStepsLabel = "ขั้นตอนถัดไป",
   decisionBy,
   contact = [],
+  contactLabel = "ติดต่อ",
+  image,
+  imageAlt = "",
+  imageMode: _imageMode,
+  ...chrome
+}: SlideClosingProps) {
+  return (
+    <Slide tone="dark" className="nct-closing--card" {...chrome}>
+      <div className="nct-decor nct-decor--close-a" />
+      <h2 className="nct-closing__title nct-closing__title--card">{title}</h2>
+      <div className="nct-closing__rule nct-closing__rule--card" />
+      {nextSteps.length > 0 && (
+        <>
+          <div className="nct-closing__ask-label nct-closing__ask-label--card">
+            {nextStepsLabel}
+          </div>
+          <ol className="nct-closing__ask nct-closing__ask--card">
+            {nextSteps.map((step, i) => (
+              <li key={i}>{step}</li>
+            ))}
+          </ol>
+        </>
+      )}
+      {decisionBy && <div className="nct-closing__callout">{decisionBy}</div>}
+      <div className="nct-contact-card">
+        {image && <img className="nct-contact-card__photo" src={image} alt={imageAlt} />}
+        <div className="nct-contact-card__body">
+          <div className="nct-contact-card__label">{contactLabel}</div>
+          <div className="nct-contact-card__contact">
+            {contact.map((line, i) => (
+              <div key={i}>{line}</div>
+            ))}
+          </div>
+          <NctLogo className="nct-contact-card__logo" width={182.4} />
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+function ClosingBand({
+  title = "ขอบคุณครับ",
+  nextSteps = [],
+  nextStepsLabel = "ขั้นตอนถัดไป",
+  decisionBy,
+  contact = [],
+  contactLabel: _contactLabel,
   image,
   imageAlt = "",
   imageMode = "band",

@@ -68,6 +68,20 @@ export const space = {
   cover_title_y: 390.05,
   cover_title_h: 216,
   cover_scat_w: 312,
+  wcover_logo_w: 240,
+  wcover_logo_y: 76.8,
+  wcover_title_y: 249.6,
+  wcover_title_h: 211.2,
+  wcover_rule_y: 480,
+  wcover_sub_y: 499.2,
+  wcover_tw: 633.6,
+  card_w: 384,
+  card_x: 800,
+  card_y: 96,
+  card_h: 532.8,
+  card_photo_h: 216,
+  card_pad: 33.6,
+  close_tw: 656,
 } as const;
 
 export const fontSize = {

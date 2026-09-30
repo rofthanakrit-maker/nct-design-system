@@ -73,6 +73,14 @@ SPACE = [
     ("cover-rule-y", T.COVER_RULE_Y), ("cover-rule-w", T.COVER_RULE_W),
     ("cover-rule-h", T.COVER_RULE_H), ("cover-title-y", T.COVER_TITLE_Y),
     ("cover-title-h", T.COVER_TITLE_H), ("cover-scat-w", T.COVER_SCAT_W),
+    # web bookends (L01 / L10 under brand="web")
+    ("wcover-logo-w", T.WCOVER_LOGO_W), ("wcover-logo-y", T.WCOVER_LOGO_Y),
+    ("wcover-title-y", T.WCOVER_TITLE_Y), ("wcover-title-h", T.WCOVER_TITLE_H),
+    ("wcover-rule-y", T.WCOVER_RULE_Y), ("wcover-sub-y", T.WCOVER_SUB_Y),
+    ("wcover-tw", T.WCOVER_TW),
+    ("card-w", T.CARD_W), ("card-x", T.CARD_X), ("card-y", T.CARD_Y),
+    ("card-h", T.CARD_H), ("card-photo-h", T.CARD_PHOTO_H), ("card-pad", T.CARD_PAD),
+    ("close-tw", T.CLOSE_TW),
 ]
 
 TYPE = [

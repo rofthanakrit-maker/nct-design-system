@@ -82,6 +82,20 @@
   --nct-cover-title-y: 390.05px;
   --nct-cover-title-h: 216px;
   --nct-cover-scat-w: 312px;
+  --nct-wcover-logo-w: 240px;
+  --nct-wcover-logo-y: 76.8px;
+  --nct-wcover-title-y: 249.6px;
+  --nct-wcover-title-h: 211.2px;
+  --nct-wcover-rule-y: 480px;
+  --nct-wcover-sub-y: 499.2px;
+  --nct-wcover-tw:   633.6px;
+  --nct-card-w:      384px;
+  --nct-card-x:      800px;
+  --nct-card-y:      96px;
+  --nct-card-h:      532.8px;
+  --nct-card-photo-h: 216px;
+  --nct-card-pad:    33.6px;
+  --nct-close-tw:    656px;
 
   /* ---- type scale (pt in the deck, px here) ---- */
   --nct-fs-display:   58.67px;  /* 44pt - title slide */

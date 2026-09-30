@@ -105,13 +105,57 @@ def _wrap(name, typ, shapes, bgfill=None):
             % (NS_P, t, spTree(name, shapes, bgfill=bgfill)))
 
 
-# ---------------------------------------------------------------- 01 Title
-def l01_cover(rid_logo_color, rid_mark_color):
-    """The cover: paper, centred, the mark watermarked behind it.
+def _scatter(sid, color):
+    """The decorative column down the right edge, read out of the source deck's
+    own artwork. Accent on the corp cover's paper, PAPER on the web cover's panel."""
+    x0 = SW - COVER_SCAT_W
+    sx, sy = COVER_SCAT_W / COVER_SCAT_BOX[0], SH / COVER_SCAT_BOX[1]
+    return [shape(sid + i, "Scatter %d" % (i + 1), x0 + round(x * sx), round(y * sy),
+                  round(w * sx), round(h * sy), solid(color, a))
+            for i, (x, y, w, h, a) in enumerate(COVER_SCATTER)]
 
-    This is layout 01 in BOTH brands. The corporate composition is the one the
-    company actually puts in front of a client, so it is the cover you get by
-    default; the navy->teal gradient that used to be the house cover is still
+
+# ---------------------------------------------------------------- 01 Title
+def l01_cover_split(rid_logo_color):
+    """The web cover: paper on the left, the gradient panel on the right.
+
+    Swiss, asymmetric, left-set - the opposite of the corp cover's centred stack,
+    and the same split the closing mirrors. The panel stands in the photo band's
+    slot (BAND_X), so the cover, the chapter openers and the closing all break at
+    one x. The scatter column rides the panel in PAPER: the corp cover's own
+    artwork, turned into light on navy, so the two brands still share it.
+
+    Nothing on the panel is text, which is why TEAL_B may end the gradient there.
+    The foot is the date alone, bottom-left: a cover is not page 1 of anything,
+    and a page number would land on the panel.
+    """
+    s = [shape(10, "Cover Panel", BAND_X, 0, BAND_W, SH,
+               grad(NAVY, TEAL_B, 45, c_mid=MID))]
+    s += _scatter(11, PAPER)
+    sid = 11 + len(COVER_SCATTER)
+    s += [_logo(sid, rid_logo_color, MX, WCOVER_LOGO_Y, WCOVER_LOGO_W),
+          placeholder(sid + 1, "Title Placeholder", "ctrTitle", MX, WCOVER_TITLE_Y,
+                      WCOVER_TW, WCOVER_TITLE_H,
+                      [S("ชื่อเรื่องงานนำเสนอ", sz=T_DISPLAY, color=heading(), bold=True,
+                         font="mj", line=106000)], anchor="b"),
+          shape(sid + 2, "Accent Rule", MX, WCOVER_RULE_Y, RULE_W, RULE_H,
+                solid(accent())),
+          placeholder(sid + 3, "Subtitle", "subTitle", MX, WCOVER_SUB_Y, WCOVER_TW,
+                      731520,
+                      [S("คำโปรย / ชื่อลูกค้า", sz=T_LEAD, color=INK2, line=130000)],
+                      idx=1),
+          placeholder(sid + 4, "Date Placeholder", "dt", MX, FOOT_Y, WCOVER_TW, 274320,
+                      [S("", sz=T_FOOT, color=INK2)], idx=10, anchor="ctr")]
+    return _wrap("01 Title Slide", "title", s, bgfill=solid(PAPER))
+
+
+def l01_cover(rid_logo_color, rid_mark_color):
+    """The corp cover: paper, centred, the mark watermarked behind it.
+
+    This is layout 01 under BRAND="corp"; the web brand opens on
+    l01_cover_split. The corporate composition is the one the company actually
+    puts in front of a client, so it is the cover you get by default; the
+    navy->teal gradient that used to be the house cover is still
     here, as layout 20, for a deck that wants to open loud. A cover is a
     composition, not a dress, which is why moving it meant a new layout number
     rather than a flag - the two are not the same slide.
@@ -124,19 +168,12 @@ def l01_cover(rid_logo_color, rid_mark_color):
     """
     logo_h = int(COVER_LOGO_W * LOGO_AR)
     wm = 7315200                                  # 8.00in - the watermark, twice
-    scat_x = SW - COVER_SCAT_W
-    sx, sy = COVER_SCAT_W / COVER_SCAT_BOX[0], SH / COVER_SCAT_BOX[1]
     s = [pic(10, "Watermark A", rid_mark_color, 1371600, -2103120, wm,
              int(wm * MARK_AR), alpha=3.5),
          pic(11, "Watermark B", rid_mark_color, 4114800, 2286000, wm,
              int(wm * MARK_AR), alpha=3.5)]
-    sid = 12
-    # the decorative column, read out of the source deck's own artwork
-    for i, (x, y, w, h, a) in enumerate(COVER_SCATTER):
-        s.append(shape(sid, "Scatter %d" % (i + 1), scat_x + round(x * sx),
-                       round(y * sy), round(w * sx), round(h * sy),
-                       solid(accent(), a)))
-        sid += 1
+    s += _scatter(12, accent())
+    sid = 12 + len(COVER_SCATTER)
     s += [pic(sid, "NCT Logo", rid_logo_color, (SW - COVER_LOGO_W) // 2,
               COVER_LOGO_Y, COVER_LOGO_W, logo_h),
           shape(sid + 1, "Accent Rule", (SW - COVER_RULE_W) // 2, COVER_RULE_Y,
@@ -296,7 +333,8 @@ def l09_table(rid_mark_color):
 
 # ---------------------------------------------------------------- 10 Closing
 def l10_closing(rid_mark_white, rid_photo):
-    """The ask, not a thank-you.
+    """The corp closing - the web brand closes on l10_closing_card. The ask,
+    not a thank-you.
 
     A proposal's last slide is the one the room remembers, and the old one said
     "ขอบคุณครับ" over three contact lines - no next step, no owner, no date. The
@@ -361,6 +399,62 @@ def l10_closing(rid_mark_white, rid_photo):
          _foot_scrim(21)]
     s += chrome(dark=True, mark_rid=rid_mark_white)
     return _wrap("10 Closing / Contact", "obj", s, bgfill=grad(TEAL_B, NAVY, 45, c_mid=MID))
+
+
+def l10_closing_card(rid_mark_white, rid_logo_color, rid_photo):
+    """The web closing: the cover's split, mirrored.
+
+    Flat navy where the cover is paper, and a paper card where the cover's panel
+    was. The left column is the ask; the card is who to call. That puts the two
+    jobs of the slide in two places instead of one stack - on the photo-band
+    closing the contact block sat under the deadline and the two collided as
+    soon as the deadline wrapped.
+
+    Solid NAVY, not the teal->navy gradient: every line of the ask is on one
+    ground, so TEAL_UP is legal for the label and the numbers (4.8:1) and no veil
+    or foot scrim is needed. The deadline stands in its own DEEP callout with a
+    TEAL_UP bar - the loudest line, and now also the only boxed one.
+
+    The card's photograph is the handshake, which is prepared at 16:9 and so is
+    placed uncropped; the facade stays on the corp closing.
+    """
+    ix, iw = CARD_X + CARD_PAD, CARD_W - 2 * CARD_PAD
+    lab_y = CARD_Y + CARD_PHOTO_H + CARD_PAD
+    logo_w = 1737360                              # 1.90in
+    logo_h = int(logo_w * LOGO_AR)
+    dec_h = 1005840                               # 1.10in
+    dec_y = CARD_Y + CARD_H - dec_h               # its foot is the card's foot
+    label = txbody([para("ติดต่อ", sz=T_LABEL, color=accent(), bold=True, spc=120,
+                         line=100000)], anchor="ctr")
+    s = [_diamond(10, -1371600, SH - 2743200, 3657600, 9),
+         placeholder(11, "Title Placeholder", "title", MX, 1737360, CLOSE_TW, 1005840,
+                     [S("ขอบคุณครับ", sz=T_SECTION, color=PAPER, bold=True,
+                        font="mj", line=108000)], anchor="b"),
+         _rule(12, y=2926080, color=accent_up()),
+         placeholder(13, "Next Steps Label", "body", MX, lab_y, 2743200, 228600,
+                     [S("ขั้นตอนถัดไป", sz=T_LABEL, color=accent_up(), bold=True,
+                        spc=120, line=100000)], idx=1, anchor="ctr"),
+         placeholder(14, "Next Steps", "body", MX, lab_y + 320040, CLOSE_TW,
+                     dec_y - lab_y - 320040 - 137160,
+                     [S("สิ่งที่ต้องเกิดขึ้นต่อ พร้อมผู้รับผิดชอบ", sz=T_BODY2, color=PAPER,
+                        alpha=ON_DARK_1, bullet=True, bullet_auto=True,
+                        bullet_color=accent_up(), indent=320040, marL=320040,
+                        line=lnspc(1.40), space_before=400)], idx=2),
+         shape(15, "Decision Callout", MX, dec_y, CLOSE_TW, dec_h, solid(DEEP)),
+         shape(16, "Decision Bar", MX, dec_y, 54864, dec_h, solid(accent_up())),
+         placeholder(17, "Decision By", "body", MX + CARD_PAD, dec_y,
+                     CLOSE_TW - 2 * CARD_PAD, dec_h,
+                     [S("ต้องการคำตอบภายในวันที่ ...", sz=T_LEAD, color=PAPER,
+                        bold=True, font="mj", line=115000)], idx=3, anchor="ctr"),
+         shape(18, "Contact Card", CARD_X, CARD_Y, CARD_W, CARD_H, solid(PAPER)),
+         pic(19, "Card Photo", rid_photo, CARD_X, CARD_Y, CARD_W, CARD_PHOTO_H),
+         shape(20, "Contact Label", ix, lab_y, iw, 228600, nofill(), body=label),
+         placeholder(21, "Contact", "body", ix, lab_y + 320040, iw, 914400,
+                     [S("โทร · 0X-XXX-XXXX", sz=T_BODY3, color=INK,
+                        line=lnspc(1.5))], idx=4),
+         _logo(22, rid_logo_color, ix, CARD_Y + CARD_H - CARD_PAD - logo_h, logo_w)]
+    s += chrome(dark=True, mark_rid=rid_mark_white)
+    return _wrap("10 Closing / Contact", "obj", s, bgfill=solid(NAVY))
 
 
 # ---------------------------------------------------------------- 11 Split Panel

@@ -26,7 +26,7 @@ export const Band = () => (
 );
 
 /** `imageMode="full"` runs the photograph edge to edge behind a DEEP scrim —
-    web only, for a subject the 560×720 band would read as a blur. */
+    React only (the .potx has no such variant), for a subject the 560×720 band would read as a blur. */
 export const FullBleed = () => (
   <SlideClosing
     image={photoHandshake}
@@ -61,5 +61,29 @@ export const NoImage = () => (
     contact={["โทร · 02-XXX-XXXX", <>อีเมล · {en("contact@nctthai.com")}</>]}
     date="Updated date: 2026.09.07"
     pageNumber={12}
+  />
+);
+
+/** The house closing: the web cover's split mirrored — the ask on flat navy,
+    the handshake heading a paper contact card. */
+export const House = () => (
+  <SlideClosing
+    brand="web"
+    image={photoHandshake}
+    imageAlt="จับมือปิดดีลในห้องประชุม"
+    nextSteps={[
+      "ยืนยันแพ็กเกจและขอบเขตงานรายกระบวนการ",
+      "เปิดสิทธิ์เข้าระบบให้ทีมสำรวจ 2 รายการที่ยังติดข้อจำกัด",
+      "ลงนามสัญญาและเริ่มรอบที่ 1 ภายใน 30 วัน",
+    ]}
+    decisionBy="ต้องการคำตอบภายใน 30 กันยายน 2569 เพื่อเริ่มรอบแรกในไตรมาสนี้"
+    contact={[
+      "โทร · 02-XXX-XXXX",
+      <>อีเมล · {en("contact@nctthai.com")}</>,
+      <>เว็บไซต์ · {en("nctthai.com")}</>,
+    ]}
+    footer="NCT · ข้อเสนอโครงการระบบบัญชี"
+    date="2569"
+    pageNumber={18}
   />
 );

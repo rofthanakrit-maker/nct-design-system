@@ -1097,7 +1097,8 @@
 .nct-table tbody td[rowspan] { border-bottom: 1px solid var(--nct-rule); }
 
 /* ------------------------------------------------------- the cover (L01) */
-/* The corporate composition, in both brands: paper ground, centred, watermarked.
+/* The corporate composition (corp brand; web opens on the split at the end of
+   this file): paper ground, centred, watermarked.
    The foot bar is dropped here — the source draws none on the one page whose job
    is to be quiet — so the date takes the left slot on its own. The gradient
    cover it replaced is layout 20 and keeps the `open` tone's own rules. */
@@ -1248,3 +1249,147 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* ------------------------------------------- web bookends (L01 / L10, web) */
+/* The house deck opens on a Swiss split and closes on its mirror. Geometry is
+   the WCOVER_* / CARD_* tokens, which l01_cover_split and l10_closing_card in
+   parts_layouts.py read too - change the token, not the px. */
+.nct-cover__panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: var(--nct-band-w);
+  height: 100%;
+  background: var(--nct-grad-open);
+}
+/* the corp cover's scatter, turned to light on the panel */
+.nct-cover__scatter--light { background: var(--nct-paper); }
+.nct-cover__logo--split {
+  position: absolute;
+  left: var(--nct-mx);
+  top: var(--nct-wcover-logo-y);
+}
+.nct-cover__title--split {
+  position: absolute;
+  left: var(--nct-mx);
+  top: var(--nct-wcover-title-y);
+  width: var(--nct-wcover-tw);
+  height: var(--nct-wcover-title-h);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  font-family: var(--nct-font-display);
+  font-weight: 700;
+  font-size: var(--nct-fs-display);
+  line-height: 1.06;
+  color: var(--nct-heading);
+}
+.nct-cover__rule--split {
+  position: absolute;
+  left: var(--nct-mx);
+  top: var(--nct-wcover-rule-y);
+  width: var(--nct-rule-w);
+  height: var(--nct-rule-h);
+  background: var(--nct-accent);
+}
+.nct-cover__sub--split {
+  position: absolute;
+  left: var(--nct-mx);
+  top: var(--nct-wcover-sub-y);
+  width: var(--nct-wcover-tw);
+  margin: 0;
+  font-size: var(--nct-fs-lead);
+  line-height: 1.3;
+  color: var(--nct-ink-2);
+}
+/* date only, on the paper side: a cover is not page 1 of anything, and the
+   page number and corner mark would land on the panel */
+.nct-cover--split .nct-footer {
+  border-top: none;
+  right: calc(var(--nct-band-w) + var(--nct-mx));
+}
+.nct-cover--split .nct-footer__text,
+.nct-cover--split .nct-footer__mark,
+.nct-cover--split .nct-footer__page { display: none; }
+
+/* the closing: flat navy, so accent-up is legal for every label and number */
+.nct-closing__title--card {
+  top: 182.4px;
+  height: 105.6px;
+  width: var(--nct-close-tw);
+  display: flex;
+  align-items: flex-end;
+}
+.nct-closing__rule--card { background: var(--nct-accent-up); }
+/* on one line with the card's own label */
+.nct-closing__ask-label--card {
+  top: calc(var(--nct-card-y) + var(--nct-card-photo-h) + var(--nct-card-pad));
+  height: 24px;
+  line-height: 24px;
+  color: var(--nct-accent-up);
+}
+.nct-closing__ask--card {
+  top: calc(var(--nct-card-y) + var(--nct-card-photo-h) + 2 * var(--nct-card-pad));
+  width: var(--nct-close-tw);
+}
+.nct-closing__ask--card li::before { color: var(--nct-accent-up); }
+/* the deadline, boxed: its foot is the card's foot */
+.nct-closing__callout {
+  position: absolute;
+  left: var(--nct-mx);
+  top: calc(var(--nct-card-y) + var(--nct-card-h) - 105.6px);
+  width: var(--nct-close-tw);
+  height: 105.6px;
+  box-sizing: border-box;
+  padding: 0 var(--nct-card-pad) 0 calc(var(--nct-card-pad) - 5.76px);
+  display: flex;
+  align-items: center;
+  border-left: 5.76px solid var(--nct-accent-up);
+  background: var(--nct-deep);
+  font-family: var(--nct-font-display);
+  font-size: var(--nct-fs-lead);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--nct-paper);
+}
+.nct-contact-card {
+  position: absolute;
+  left: var(--nct-card-x);
+  top: var(--nct-card-y);
+  width: var(--nct-card-w);
+  height: var(--nct-card-h);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--nct-paper);
+  color: var(--nct-ink);
+}
+.nct-contact-card__photo {
+  display: block;
+  flex: none;
+  width: 100%;
+  height: var(--nct-card-photo-h);
+  object-fit: cover;
+}
+.nct-contact-card__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--nct-card-pad);
+}
+.nct-contact-card__label {
+  height: 24px;
+  line-height: 24px;
+  font-size: var(--nct-fs-label);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--nct-accent);
+}
+.nct-contact-card__contact {
+  margin-top: 9.6px;
+  font-size: var(--nct-fs-body-3);
+  line-height: 1.5;
+}
+.nct-contact-card__logo { margin-top: auto; }

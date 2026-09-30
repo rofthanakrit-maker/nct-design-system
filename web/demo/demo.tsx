@@ -61,7 +61,7 @@ function App() {
 function WebDeck() {
   return (
     <Deck brand="web" footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569">
-      {/* 01 · cover. Unnumbered: a cover is not page 1 of anything. */}
+      {/* 01 · cover — the web split. Unnumbered: a cover is not page 1 of anything. */}
       <SlideCover
         hideFooter
         title="ข้อเสนอโครงการวางระบบบัญชีอัตโนมัติ"
@@ -273,10 +273,10 @@ function WebDeck() {
           [{ value: "ค่าบริการต่อเดือน", bold: true }, { value: "18,000 บาท", align: "center", bold: true }, { value: "32,000 บาท", align: "center", bold: true }, { value: "65,000 บาท", align: "center", bold: true }],
         ]}
       />
-      {/* the ask. The thank-you is the title; the content is what happens next. */}
+      {/* the ask. The thank-you is the title; the content is what happens next.
+          Web brand: the cover's split mirrored, the handshake heads the contact card. */}
       <SlideClosing
         image={photoHandshake}
-        imageMode="full"
         imageAlt="จับมือปิดดีลในห้องประชุม"
         nextSteps={[
           "ยืนยันแพ็กเกจและขอบเขตงานรายกระบวนการ",
@@ -302,8 +302,8 @@ function WebDeck() {
 function CorpDeck() {
   return (
     <Deck brand="corp" date="Updated date: 2026.09.07">
-      {/* 01 · the cover. Same composition as the house deck now — only the
-          accent moves. The gradient one is layout 20. */}
+      {/* 01 · the corp cover: centred and watermarked. The house deck opens on
+          the split instead; the gradient one is layout 20 in both. */}
       <SlideCover
         title={
           <>

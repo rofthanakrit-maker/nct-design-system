@@ -2,8 +2,8 @@ import { SlideCover } from "@nct/slides";
 
 const en = (s: string) => <span lang="en">{s}</span>;
 
-/** 01 in the house brand: paper ground, the mark watermarked behind the lockup,
-    title centred under the rule. `hideFooter` — a cover is not page 1 of anything. */
+/** 01 in the house brand: the Swiss split — paper left with the lockup and a
+    left-set title, the gradient panel right. `hideFooter` — a cover is not page 1. */
 export const House = () => (
   <SlideCover
     brand="web"
@@ -13,8 +13,8 @@ export const House = () => (
   />
 );
 
-/** The same composition under corp: only the accent and the chrome move. The
-    three-line title is how the source template sets a proposal cover. */
+/** The corp cover: centred and watermarked. The three-line title is how the
+    source template sets a proposal cover. */
 export const Corp = () => (
   <SlideCover
     brand="corp"

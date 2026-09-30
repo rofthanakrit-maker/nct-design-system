@@ -193,6 +193,26 @@ COVER_SCATTER = [
     (370, 987, 48, 50, 75),
 ]
 
+# ---- web bookends: L01 / L10 under BRAND="web" ----
+# The house deck opens and closes on one split, mirrored. The cover is paper on
+# the left with the gradient panel in the photo band's slot on the right; the
+# closing is navy with the contact card standing where that panel was. Corp keeps
+# the centred cover and the photo-band closing.
+WCOVER_LOGO_W  = 2286000              # 2.50in - a signature, not the hero
+WCOVER_LOGO_Y  = 731520               # 0.80in
+WCOVER_TITLE_Y = 2377440              # 2.60in
+WCOVER_TITLE_H = 2011680              # 2.20in - three lines of T_DISPLAY, anchored low
+WCOVER_RULE_Y  = 4572000              # 5.00in
+WCOVER_SUB_Y   = 4754880              # 5.20in
+WCOVER_TW      = BAND_X - MX - 2*GUT  # 6.60in - stops 0.40in short of the panel
+CARD_W = 3657600                      # 4.00in - the closing's contact card
+CARD_X = SW - MX - CARD_W             # 8.333in
+CARD_Y = MX                           # 1.00in
+CARD_H = 5074920                      # 5.55in - ends 0.20in above the footer rule
+CARD_PHOTO_H = CARD_W * 9 // 16       # 2.25in - photo-handshake is already 16:9
+CARD_PAD = 320040                     # 0.35in - same inset as every other card
+CLOSE_TW = CARD_X - MX - 457200       # 6.833in - the ask column
+
 # ---- leading: the one number that does NOT mean the same thing on both surfaces ----
 # CSS line-height is a multiple of the FONT SIZE. OOXML spcPct is a multiple of
 # the FONT'S LINE BOX, and NotoSansThai-Regular.ttf declares that box at 1.511 em

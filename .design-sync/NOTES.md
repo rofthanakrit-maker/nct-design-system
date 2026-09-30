@@ -68,8 +68,17 @@ Repo-specific gotchas. Read before re-syncing.
   02 `photo-section.jpg`, 15 `photo-tower.jpg`, 10 `photo-facade.jpg`. All three are
   architecture. Same geometry both sides: `SEC_PHOTO_*` in parts_layouts.py
   mirrors `.nct-section__photo` in slides.css - change one, change the other.
-- **`SlideClosing imageMode="full"` exists on the web only - this is deliberate,
-  not drift.** The band crops its subject to about 560x720; a handshake read as a
+  That paragraph describes the **corp** closing. Since 2026-09-30 the web brand
+  opens and closes on its own pair: L01 `l01_cover_split` (paper left, gradient
+  panel in the band's slot with the scatter in white) and L10 `l10_closing_card`
+  (flat navy, the ask left, a paper contact card right with `photo-handshake.jpg`
+  at its 16:9 head). `build.layouts()` picks them by `PM.BRAND`; React picks them
+  by `brand` inside `SlideCover` / `SlideClosing`. Geometry is `WCOVER_*` /
+  `CARD_*` in tokens.py. The corp previews did not move - check that
+  `preview/corp-layout-01.png` and `-10.png` stay unchanged after touching either.
+- **`SlideClosing imageMode="full"` exists in React only, on the corp closing -
+  this is deliberate, not drift.** (The web closing ignores `imageMode`: its card
+  photo is 16:9, which is what the handshake is prepared at.) The band crops its subject to about 560x720; a handshake read as a
   blur at that size, so the full-bleed variant runs the photograph edge to edge
   behind a `DEEP` scrim. PowerPoint has no props: mirroring it would mean either
   losing the band on layout 10 or adding a seventeenth layout, and the 1:1

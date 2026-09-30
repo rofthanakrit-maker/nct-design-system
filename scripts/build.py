@@ -20,26 +20,31 @@ IMG = {
     "photo-section.jpg": "photo-section.jpg",
     "photo-facade.jpg": "photo-facade.jpg",
     "photo-tower.jpg": "photo-tower.jpg",
+    "photo-handshake.jpg": "photo-handshake.jpg",
 }
 
 # per-layout: (builder, [image files in rId2, rId3 ... order])
 #
-# A function, not a constant: layout 01 is a different slide in each brand - the
-# corp cover is paper with a colour lockup and a colour mark watermark, the house
-# cover is a gradient with the knockout pair - so its images depend on PM.BRAND,
-# which build() sets before it walks this list.
+# A function, not a constant: layouts 01 and 10 are different slides in each
+# brand - corp opens on the centred, watermarked cover and closes on the photo
+# band; web opens on the paper/gradient split and closes on its mirror, navy with
+# a contact card - so their images depend on PM.BRAND, which build() sets before
+# it walks this list. The gradient cover is layout 20 in both.
 def layouts():
-    # 01 is the corporate cover in both brands - the page the company actually
-    # opens a bid with. The gradient cover it replaced is layout 20, so a deck
-    # that wants to open loud picks that number instead of a flag.
-    return ([(lambda: PL.l01_cover("rId2", "rId3"),
-              ["logo-color.png", "mark-color.png"])]
-            + _LAYOUTS_02_19
+    if PM.BRAND == "corp":
+        cover = (lambda: PL.l01_cover("rId2", "rId3"), ["logo-color.png", "mark-color.png"])
+        close = (lambda: PL.l10_closing("rId2", "rId3"),
+                 ["mark-white.png", "photo-facade.jpg"])
+    else:
+        cover = (lambda: PL.l01_cover_split("rId2"), ["logo-color.png"])
+        close = (lambda: PL.l10_closing_card("rId2", "rId3", "rId4"),
+                 ["mark-white.png", "logo-color.png", "photo-handshake.jpg"])
+    return ([cover] + _LAYOUTS_02_09 + [close] + _LAYOUTS_11_19
             + [(lambda: PL.l20_cover_gradient("rId2", "rId3"),
                 ["logo-white.png", "mark-white.png"])])
 
 
-_LAYOUTS_02_19 = [
+_LAYOUTS_02_09 = [
     (lambda: PL.l02_section("rId2", "rId3"), ["mark-white.png", "photo-section.jpg"]),
     (lambda: PL.l03_content("rId2"),       ["mark-color.png"]),
     (lambda: PL.l04_two("rId2"),           ["mark-color.png"]),
@@ -48,7 +53,9 @@ _LAYOUTS_02_19 = [
     (lambda: PL.l07_quote("rId2"),         ["mark-color.png"]),
     (lambda: PL.l08_image("rId2"),         ["mark-white.png"]),
     (lambda: PL.l09_table("rId2"),         ["mark-color.png"]),
-    (lambda: PL.l10_closing("rId2", "rId3"), ["mark-white.png", "photo-facade.jpg"]),
+]
+
+_LAYOUTS_11_19 = [
     # --- v2: dense / proposal-deck layouts ---
     (lambda: PL.l11_split("rId2"),         ["mark-color.png"]),
     (lambda: PL.l12_cards_band("rId2"),    ["mark-color.png"]),
