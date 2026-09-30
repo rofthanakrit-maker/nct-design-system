@@ -162,18 +162,19 @@ does not keep.
   All three pin the strip to the foot of the body box, so the conclusion lands
   at the same y whether the grid runs four rows or ten.
 - `SlideCover` and `SlideClosing` appear once each, as the deck's bookends.
-- **Open on `SlideCover` unless you have a reason not to.** It is the corporate
-  composition in *both* brands — paper, centred, the mark watermarked behind it
-  and the lockup as the hero — because that is the page the company actually puts
-  in front of a client. It drops both the foot bar and the corner lockup: the
-  source draws neither on the one page whose job is to be quiet. Only the accent
-  moves with `brand`. `date` renders bottom-left; pass the whole string, the
-  layout does not build it.
+- **Open on `SlideCover` unless you have a reason not to.** Its composition
+  follows `brand`. `corp` (the default): paper, centred, the mark watermarked
+  behind it and the lockup as the hero — the page the company actually puts in
+  front of a client; no foot bar, no corner lockup. `web`: a split — paper left
+  with the lockup, a left-set title (three lines max), the teal rule and a
+  one-line subtitle; the right 40% is the navy→teal panel with white squares.
+  `date` renders bottom-left in both; pass the whole string, the layout does not
+  build it.
 - **`SlideCoverGradient` (20) is the loud alternative**, not a second cover. It
   is the navy→teal gradient that used to be layout 01 on the house side, read
   left, bookending `SlideClosing`. A deck picks one cover and deletes the other;
-  never ship both. Like layout 10 it stays navy→teal in either brand — it is
-  house artwork, and only its chrome follows the brand.
+  never ship both. It stays navy→teal in either brand — it is house artwork,
+  and only its chrome follows the brand.
 - **`SlidePhaseCard` is a stage of a plan, not a section divider.** `meta` carries
   the activity/participant pair the proposal template opens every phase with, one
   or two rows and no more; `number` is typed, not counted, because phases merge
@@ -191,8 +192,12 @@ does not keep.
 - **`SlideClosing` is the ask, not a thank-you.** Pass `nextSteps` (two to four
   actions, each with an owner) and `decisionBy`. `ขอบคุณครับ` is the title above
   them. A proposal whose last slide asks for nothing has spent the peak-end slot
-  on politeness. With both an ask and a photograph the full lockup is dropped —
-  the left column is full and the corner mark already signs the slide.
+  on politeness. Its composition follows `brand`: `corp` runs the ask down a
+  teal→navy left column with the photo band right (with both an ask and a
+  photograph the full lockup is dropped); `web` mirrors the web cover — the ask
+  on flat navy with `decisionBy` in a boxed callout, and a paper contact card on
+  the right carrying `image` (16:9, top), `contactLabel`, `contact` and the
+  lockup. Keep `decisionBy` to two lines.
 - **Price lives on `SlideTable`.** Put the investment in as a bold last row and
   set `recommended` to the column the takeaway argues for. Three columns of equal
   weight plus a sentence underneath is not a recommendation, and a comparison
@@ -218,7 +223,7 @@ does not keep.
 - Card heights are fixed. Trim the copy; never stretch a card.
 - **Photographs: architecture and abstract only, never people at work.** Smiling
   meetings, handshakes and stacked hands are the templated-AI tell this system
-  exists to avoid. `SlideSection`, `SlideAgenda` and `SlideClosing` take an
+  exists to avoid. `SlideSection`, `SlideAgenda` and the corp `SlideClosing` take an
   optional `image` for the right 40% of the slide - `photoSection`, `photoFacade`
   and `photoTower` are the three house frames, and the band fades into the panel on
   its own. There are only two architecture sources behind them, so `photoSection`
@@ -229,19 +234,22 @@ does not keep.
   stock. The mascot (`mascot`) is brand art, not photography - it is welcome
   wherever a slide has room for a light touch.
 - **One exception, decided by the system's owner: the closing slide.**
-  `SlideClosing` may run `photoHandshake` with `imageMode="full"` - the photograph
-  edge to edge behind a scrim rather than cropped into the 40% band. It is the
-  only people-at-work photograph the system uses, and it is web-only: `.potx`
-  layout 10 keeps the architectural band, so a deck headed for PowerPoint stays on
-  the default `imageMode="band"`.
-- **The band is one geometry, spent four ways.** `--nct-band-w` (40% of the
-  canvas) and `--nct-band-text-w` are tokens; layouts 02, 15, 10 and
+  `photoHandshake` is the only people-at-work photograph the system uses, and only
+  on `SlideClosing`. Under `brand="web"` it heads the contact card (the `.potx`
+  web layout 10 bakes the same frame in); `imageMode` is ignored there. Under
+  `corp` it may run with `imageMode="full"` - edge to edge behind a scrim - which
+  is React-only: corp `.potx` layout 10 keeps the architectural band, so a corp
+  deck headed for PowerPoint stays on the default `imageMode="band"`.
+- **The band is one geometry, spent five ways.** `--nct-band-w` (40% of the
+  canvas) and `--nct-band-text-w` are tokens; layouts 02, 15, corp 10, the web
+  cover's panel and
   `SlideFullImage variant="fade"` all sit on them. Never retype the pixel values,
-  and never introduce a fifth width.
+  and never introduce a sixth width.
 - **`.potx` parity is 19↔19 by count, and by rendering everywhere but two.**
-  `SlideFullImage variant="fade"` and `SlideClosing imageMode="full"` are web-only
-  treatments; PowerPoint layout 08 stays full-bleed and layout 10 keeps the 40%
-  band. Every other layout renders the same on both sides. State it that way —
+  `SlideFullImage variant="fade"` and the corp `SlideClosing imageMode="full"` are
+  React-only treatments; PowerPoint layout 08 stays full-bleed and corp layout 10
+  keeps the 40% band. Layouts 01 and 10 differ by brand on both sides alike.
+  Every other layout renders the same on both sides. State it that way —
   "1:1" on its own has been read as "identical", which is false for those two.
 - **Imagery is inlined, not linked.** `photoSection`, `photoFacade`, `photoTower`,
   `photoHandshake`, `mascot` and the logo exports are data URIs; an external `src`

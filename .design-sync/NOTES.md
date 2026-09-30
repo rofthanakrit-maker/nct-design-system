@@ -284,3 +284,23 @@ Repo-specific gotchas. Read before re-syncing.
   our README.md), `guidelines/colors-corp.html`, `guidelines/brand-modes.html`.
   A plain re-sync overwrites `styles.css` with ours and drops that override too.
 - **Known render warns:** none this run either.
+
+## Re-sync, 2026-09-30 (web brand gets its own cover and closing)
+
+- **Scope was two components.** `SlideCover` and `SlideClosing` changed (both now
+  branch on `brand`); the other 32 carried forward on the anchor. Grades: 6/6 cells
+  good, including the new `House` cell of `SlideClosing`.
+- **`styles.css` and `README.md` were left out of the upload on purpose** - the
+  plan's writes named neither. Remote `styles.css` is still the hand merge (it
+  already `@import`s our three files, so the new CSS reaches designs through
+  `_ds_bundle.css`), and `README.md` would collide with the project's `readme.md`.
+  Do the same next time unless the merge itself has to change.
+- **The conventions header does not reach the design agent here.** It is stitched
+  into `README.md`, which this project never receives; the agent reads the
+  project's own `readme.md`. So a conventions change needs a matching `readme.md`
+  patch: this run edited three sentences in it (brand modes, backgrounds,
+  imagery) from `ds-bundle/.project-patch/readme.md` and uploaded that as
+  `readme.md`. Re-read the remote file before patching again; it is the base.
+- **The project's static `slides/01-cover.html` and `slides/10-closing.html` were
+  not touched** and do not show the web split. `readme.md` now says so.
+- **Known render warns:** none.
