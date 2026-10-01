@@ -24,6 +24,7 @@ export const color = {
   cat_3: '#0D9298',
   cat_4: '#6C4289',
   cat_mute: '#A4A4A4',
+  seq_300: '#90B4E4',
   corp_dim: '#E1E1E1',
   corp_bar_mid: '#B1C4C9',
 } as const;

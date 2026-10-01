@@ -1393,3 +1393,40 @@
   line-height: 1.5;
 }
 .nct-contact-card__logo { margin-top: auto; }
+
+/* ---------------------------------------------------------------- 21 */
+/* label + duration (1.90 + 0.80in), a 0.20in gap, then the plot - the .potx
+   placeholders' x. Rows sit on the 0.425in pitch the bars are drawn on. */
+.nct-plan {
+  display: grid;
+  grid-template-columns: 259.2px 1fr;
+  grid-template-rows: 28.8px auto;
+  column-gap: 19.2px;
+  row-gap: 9.6px;
+}
+.nct-plan__periods {
+  grid-column: 2;
+  display: grid;
+  align-items: end;
+  text-align: center;
+  font-size: var(--nct-fs-label);
+  font-weight: 700;
+  color: var(--nct-ink-2);
+}
+.nct-plan__rows { margin: 0; padding: 0; list-style: none; }
+.nct-plan__rows li { display: flex; align-items: center; height: 40.8px; }
+.nct-plan__label { flex: 1; font-size: var(--nct-fs-body-3); color: var(--nct-ink); }
+.nct-plan__label b { font-family: var(--nct-font-display); }
+.nct-plan__dur {
+  width: 76.8px;
+  text-align: right;
+  font-size: var(--nct-fs-label);
+  color: var(--nct-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.nct-plan svg { display: block; overflow: visible; }
+.nct-plan__mark { font-size: var(--nct-fs-densecell); fill: var(--nct-ink-2); }
+/* the key's glyphs are marks, so they take the mark colours; the words stay ink */
+.nct-plan__key { display: inline-flex; gap: 19.2px; }
+.nct-plan__glyph { font-style: normal; color: var(--nct-cat-1); }
+.nct-plan__glyph--mark { color: var(--nct-cat-2); }

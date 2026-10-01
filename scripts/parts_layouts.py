@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""The 20 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3
+"""The 21 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3
 + 1 chart, v4 + the gradient cover, moved off 01 when the corp cover became
-the default one)."""
+the default one + the plan timeline, v4)."""
 import parts_master as PM
 from tokens import *
 from ooxml import *
@@ -856,3 +856,60 @@ def l20_cover_gradient(rid_logo_white, rid_mark_white):
     s += chrome(dark=True, mark_rid=rid_mark_white)
     return _wrap("20 Title Slide Gradient", "title", s,
                  bgfill=grad(NAVY, TEAL_B, 45, c_mid=MID))
+
+
+# ---------------------------------------------------------------- 21 Plan Timeline (v4)
+PLAN_ROWS, PLAN_PERIODS = 8, 12
+PLAN_X = 3566160                          # 3.90in - the plot, and the period header over it
+PLAN_W = MX + CW - PLAN_X                 # 8.433in, so a period is exactly PLAN_W / 12
+PLAN_Y = 2057400                          # 2.25in - the first row
+PLAN_ROW_H = 388620                       # 0.425in - eight rows end at 5.65in, over the note
+PLAN_LABEL_W = 1737360                    # 1.90in - "3. พัฒนาและตั้งค่าระบบ" is 1.71in
+PLAN_DUR_X, PLAN_DUR_W = 2651760, 731520  # 2.90in / 0.80in: "10 สัปดาห์" wraps in 0.60
+
+
+def l21_plan(rid_mark_color):
+    """The whole plan on one slide; L17 is one phase of it, and the phase numbers
+    have to match.
+
+    The rows and periods are placeholders, not chart labels, so the phase name and
+    its duration sit on the same 0.425in pitch as the bars: the demo chart's plot
+    area is pinned to the placeholder (manualLayout) and always carries eight
+    categories, blank ones included, so a row never drifts off its label.
+    Twelve periods is the ceiling - more and the unit changes (weeks -> months ->
+    quarters); fewer and the trailing headers stay empty.
+    """
+    slot = PLAN_W // PLAN_PERIODS
+    s = [_title(10), _rule(11),
+         chart_placeholder(12, "Chart Placeholder", PLAN_X, PLAN_Y, PLAN_W,
+                           PLAN_ROWS * PLAN_ROW_H, 1)]
+    sid, idx = 13, PH_FREE
+    for i in range(PLAN_PERIODS):
+        s.append(placeholder(sid, "Period %d" % (i + 1), "body", PLAN_X + i * slot, BODY_Y,
+                             slot, NOTE_H,
+                             [S("ด.%d" % (i + 1), sz=T_LABEL, color=INK2, bold=True,
+                                algn="ctr", line=100000)], idx=idx, anchor="b"))
+        sid += 1
+        idx += 1
+    for r in range(PLAN_ROWS):
+        y = PLAN_Y + r * PLAN_ROW_H
+        s.append(placeholder(sid, "Row %d Label" % (r + 1), "body", MX, y, PLAN_LABEL_W,
+                             PLAN_ROW_H,
+                             [S("%d. ชื่อเฟส" % (r + 1), sz=T_BODY3, color=INK,
+                                line=100000)], idx=idx, anchor="ctr"))
+        s.append(placeholder(sid + 1, "Row %d Duration" % (r + 1), "body", PLAN_DUR_X, y,
+                             PLAN_DUR_W, PLAN_ROW_H,
+                             [S("0 สัปดาห์", sz=T_LABEL, color=INK2, algn="r",
+                                line=100000)], idx=idx + 1, anchor="ctr"))
+        sid += 2
+        idx += 2
+    s += [placeholder(sid, "Key", "body", MX, NOTE_Y, CW // 2, NOTE_H,
+                      [S("■ ช่วงงาน   ◆ ส่งมอบ / ตรวจรับ", sz=T_DENSECELL, color=INK2,
+                         line=130000)], idx=2),
+          placeholder(sid + 1, "Assumption", "body", MX + CW // 2, NOTE_Y, CW - CW // 2,
+                      NOTE_H,
+                      [S("นับจากวันลงนามสัญญา", sz=T_DENSECELL, color=INK2, algn="r",
+                         line=130000)], idx=3)]
+    s += _takeaway(sid + 2, 4)
+    s += chrome(dark=False, mark_rid=rid_mark_color)
+    return _wrap("21 Plan Timeline", "chart", s, bgfill=solid(PAPER))

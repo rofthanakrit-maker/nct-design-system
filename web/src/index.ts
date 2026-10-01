@@ -144,6 +144,7 @@ export {
   SlideEvidence,
   SlideChart,
   SlideCoverGradient,
+  SlidePlan,
 } from "./layouts";
 export { Chart } from "./chart";
 export type { ChartProps, ChartSeries, ChartSeriesList } from "./chart";
@@ -178,6 +179,9 @@ export type {
   EvidenceFigures,
   SlideChartProps,
   ChartInsights,
+  SlidePlanProps,
+  PlanRow,
+  PlanRows,
 } from "./layouts";
 
 /* Stock imagery, inlined as data URIs so it survives a CSP that blocks external

@@ -5,7 +5,7 @@ Design system ของ New Computer Technology Consulting Co., Ltd. — token �
 
 ```
 scripts/tokens.py            ← single source of truth
-   ├── scripts/build.py            → NCT-Slide-Template.potx   (20 layouts x 2 brands)
+   ├── scripts/build.py            → NCT-Slide-Template.potx   (21 layouts x 2 brands)
    └── scripts/emit_web_tokens.py  → web/src/tokens.{css,ts}   (@nct/slides)
 ```
 
@@ -20,21 +20,21 @@ scripts/tokens.py            ← single source of truth
 | [`slide-design-system.md`](slide-design-system.md) | v1 — canvas, grid, type scale, layout 01–10, กติกาการทำเด็ค |
 | [`slide-design-system-v2.md`](slide-design-system-v2.md) | v2 — token dense, status/category, layout 11–16 |
 | [`slide-design-system-v3.md`](slide-design-system-v3.md) | v3 — brand mode `corp`, chrome geometry, cover, layout 17–18 (แกะจาก `NCT Template.pptx`) |
-| [`slide-design-system-v4.md`](slide-design-system-v4.md) | v4 — สีข้อมูลที่ผ่าน validator ของ dataviz (`CAT_1..4` ชุดใหม่), mark spec ของกราฟ, layout 19 (สเปก 21–24 ยังไม่ทำ) |
+| [`slide-design-system-v4.md`](slide-design-system-v4.md) | v4 — สีข้อมูลที่ผ่าน validator ของ dataviz (`CAT_1..4` ชุดใหม่), mark spec ของกราฟ, layout 19 · 21 (สเปก 22–24 ยังไม่ทำ) |
 | [`.design-sync/conventions.md`](.design-sync/conventions.md) | กติกาที่ design agent ต้องอ่านก่อนสร้างสไลด์ |
 | [`.design-sync/NOTES.md`](.design-sync/NOTES.md) | กับดักเฉพาะ repo นี้ อ่านก่อน re-sync |
 
-## Layout ทั้ง 20
+## Layout ทั้ง 21
 
 Render จาก PowerPoint จริง ไม่ต้อง clone ก็ดูได้ — ภาพในนี้คือไฟล์ใน `preview/`
 ที่ `scripts/render_previews.py` เขียนทับทุกครั้งที่ geometry หรือสีขยับ
 
 | web | corp |
 |---|---|
-| <img src="preview/all-layouts.png" alt="contact sheet ของ 20 layout brand web" width="380"> | <img src="preview/corp-all-layouts.png" alt="contact sheet ของ 20 layout brand corp" width="380"> |
+| <img src="preview/all-layouts.png" alt="contact sheet ของ 21 layout brand web" width="380"> | <img src="preview/corp-all-layouts.png" alt="contact sheet ของ 21 layout brand corp" width="380"> |
 
 <details>
-<summary>ดูทีละ layout — web (20 ภาพ)</summary>
+<summary>ดูทีละ layout — web (21 ภาพ)</summary>
 
 ![layout 01](preview/layout-01.png)
 
@@ -76,10 +76,12 @@ Render จาก PowerPoint จริง ไม่ต้อง clone ก็ด�
 
 ![layout 20](preview/layout-20.png)
 
+![layout 21](preview/layout-21.png)
+
 </details>
 
 <details>
-<summary>ดูทีละ layout — corp (20 ภาพ)</summary>
+<summary>ดูทีละ layout — corp (21 ภาพ)</summary>
 
 ![corp layout 01](preview/corp-layout-01.png)
 
@@ -121,6 +123,8 @@ Render จาก PowerPoint จริง ไม่ต้อง clone ก็ด�
 
 ![corp layout 20](preview/corp-layout-20.png)
 
+![corp layout 21](preview/corp-layout-21.png)
+
 </details>
 
 ## PowerPoint
@@ -129,9 +133,9 @@ Render จาก PowerPoint จริง ไม่ต้อง clone ก็ด�
 python scripts/build.py          # เขียนทับ .potx และ .pptx ที่ root
 ```
 
-- `NCT-Slide-Template.potx` — 1 slide master + 20 custom layouts + NCT theme
-- `NCT-Slide-Template-Demo.pptx` — เดโม 20 สไลด์ layout ละ 1
-- `NCT-Slide-Template-Corp.potx` — 20 layout เบอร์เดิม ใส่ chrome แบบฟอร์มบริษัท
+- `NCT-Slide-Template.potx` — 1 slide master + 21 custom layouts + NCT theme
+- `NCT-Slide-Template-Demo.pptx` — เดโม 21 สไลด์ layout ละ 1
+- `NCT-Slide-Template-Corp.potx` — 21 layout เบอร์เดิม ใส่ chrome แบบฟอร์มบริษัท
   (เส้นเต็มความกว้าง, การ์ดโลโก้มุมขวาบน, แถบสามช่วงที่ก้นสไลด์)
   แยกไฟล์เพราะ layout ใน PowerPoint สลับ chrome ของตัวเองไม่ได้
 - `NCT-Slide-Template-Corp-Demo.pptx` — เดโมฝั่ง corp

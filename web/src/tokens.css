@@ -25,6 +25,7 @@
   --nct-cat-3:       #0D9298;  /* category / series 3 - all-pairs charts stop here */
   --nct-cat-4:       #6C4289;  /* category / series 4 */
   --nct-cat-mute:    #A4A4A4;  /* Other / de-emphasised / baseline - MARKS ONLY, never text */
+  --nct-seq-300:     #90B4E4;  /* v4 L21: the bars beside the highlighted one - labelled rows only */
   --nct-corp-dim:    #E1E1E1;  /* v3 corp foot-bar spent segment - DECORATION ONLY */
   --nct-corp-bar-mid: #B1C4C9;  /* v3 corp foot-bar middle segment - decoration only */
 

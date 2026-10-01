@@ -13,7 +13,7 @@ No provider, no theme object. Two things only:
    (every `--nct-*` variable) and `slides.css`. Without it slides render unstyled
    at the wrong size — there is no inline-style fallback.
 2. Put content inside a layout component. `Slide` is the raw 1280×720 canvas
-   (13.333in × 7.5in at 96dpi); the 20 layouts wrap it. Reach for bare `Slide`
+   (13.333in × 7.5in at 96dpi); the 21 layouts wrap it. Reach for bare `Slide`
    only when no layout fits.
 
 Slides scale themselves to their container's width by default (`fit`, measured
@@ -21,14 +21,14 @@ before paint). `fit="contain"` fits width *and* height and centres the canvas �
 use it for a presenter or any box whose height is fixed; the default crops the
 foot of the slide there. Pass `fit={false}` for a fixed 1280×720 board.
 
-## The 20 layouts
+## The 21 layouts
 
 `SlideCover` 01 · `SlideSection` 02 · `SlideContent` 03 · `SlideTwoColumn` 04 ·
 `SlideThreeCards` 05 · `SlideKeyFigures` 06 · `SlideQuote` 07 · `SlideFullImage` 08 ·
 `SlideTable` 09 · `SlideClosing` 10 · `SlideSplitPanel` 11 · `SlideFourCards` 12 ·
 `SlideProcessFlow` 13 · `SlideDiagram` 14 · `SlideAgenda` 15 · `SlideDenseTable` 16 ·
 `SlidePhaseCard` 17 · `SlideEvidence` 18 · `SlideChart` 19 ·
-`SlideCoverGradient` 20
+`SlideCoverGradient` 20 · `SlidePlan` 21
 
 Compose with `Deck`. Building blocks: `BulletList`, `DataTable`, `TakeawayBand`,
 `DiagramBox`, `DiagramLink`, `DiagramGroup`, `NctLogo`, `NctMark`, `Icon`.
@@ -95,7 +95,7 @@ your own layout glue, use the CSS variables:
 | On-dark ink | `--nct-on-dark-1` (body) `--nct-on-dark-2` (secondary) `--nct-on-dark-3` (footer, floor) `--nct-on-dark-rule` (hairlines) |
 | Corp chrome (decoration only) | `--nct-corp-dim` `--nct-corp-bar-mid` |
 | Status (data cells only) | `--nct-ok` `--nct-ok-tint` `--nct-warn` `--nct-warn-tint` `--nct-risk` `--nct-risk-tint` |
-| Category / chart series (max 4, in order) | `--nct-cat-1` … `--nct-cat-4` · `--nct-cat-mute` ("Other" / de-emphasis — marks only, never text, and every muted mark carries its value: 2.5:1 is under the 3:1 a data mark needs) |
+| Category / chart series (max 4, in order) | `--nct-cat-1` … `--nct-cat-4` · `--nct-cat-mute` ("Other" / de-emphasis — marks only, never text, and every muted mark carries its value: 2.5:1 is under the 3:1 a data mark needs) · `--nct-seq-300` (the bars beside `SlidePlan`'s highlighted one — legal only because every row is labelled) |
 | Type | `--nct-fs-display` `--nct-fs-section` `--nct-fs-h1` `--nct-fs-stat` `--nct-fs-quote` `--nct-fs-lead` `--nct-fs-body` `--nct-fs-body-2` `--nct-fs-body-3` `--nct-fs-label` `--nct-fs-foot` `--nct-fs-densehead` `--nct-fs-densebody` `--nct-fs-tblhead` `--nct-fs-densecell` `--nct-fs-secnum` `--nct-fs-quotemark` |
 | Family | `--nct-font-display` (Kanit, headings) `--nct-font-body` (Noto Sans Thai, copy) |
 | Grid | `--nct-mx` `--nct-cw` `--nct-gut` `--nct-fifth` `--nct-third` `--nct-evidence-h` `--nct-phase-tab-h` |
@@ -151,6 +151,15 @@ does not keep.
   says where the full table lives. Charts never go on a dark slide, never take a
   second y-axis, and never use a pie — part-to-whole is a `stacked` column with
   the tail folded into `slot: "mute"`.
+- **A plan is `SlidePlan`, never a table with coloured cells.** `periods` count
+  from the start ("ด.1" …, the real date is unknown at proposal time), twelve at
+  most — past that change the unit; `rows` are one to eight, each `{ label, start,
+  end, duration, milestone? }` in periods from 0. The row number is its position
+  and must match the phase number on `SlidePhaseCard`. `highlight` keeps one bar
+  in cat-1 and turns the rest seq-300; omit it when no one phase is the story. A
+  `milestone` is a sign-off or deliverable, not a task. `assumption` (what period
+  one counts from) and `takeaway` are required. No text in bars, no dependency
+  arrows — order of work is `SlideProcessFlow` / `SlideDiagram`.
 - **Values are selective.** The chart labels the highlighted bar (or the largest),
   the line ends when they sit apart, and the last stack total. It never prints a
   number on every mark; the axis, the hidden table and each mark's hover title

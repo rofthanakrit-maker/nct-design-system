@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Assemble NCT-Slide-Template.potx (+ a demo .pptx) as raw OOXML."""
-import os, zipfile, datetime, math
+import io, os, zipfile, datetime, math
 from tokens import *
 from ooxml import *
 import parts_theme as PT
@@ -41,7 +41,8 @@ def layouts():
                  ["mark-white.png", "logo-color.png", "photo-handshake.jpg"])
     return ([cover] + _LAYOUTS_02_09 + [close] + _LAYOUTS_11_19
             + [(lambda: PL.l20_cover_gradient("rId2", "rId3"),
-                ["logo-white.png", "mark-white.png"])])
+                ["logo-white.png", "mark-white.png"]),
+               (lambda: PL.l21_plan("rId2"), ["mark-color.png"])])
 
 
 _LAYOUTS_02_09 = [
@@ -279,6 +280,8 @@ def content_types(n_slides, is_template, n_charts=0):
             '<Default Extension="xml" ContentType="application/xml"/>'
             '<Default Extension="png" ContentType="image/png"/>'
             '<Default Extension="jpg" ContentType="image/jpeg"/>'
+            '<Default Extension="xlsx" ContentType="application/vnd.openxmlformats-'
+            'officedocument.spreadsheetml.sheet"/>'
             '%s</Types>' % (CT, "".join(ov)))
 
 
@@ -462,6 +465,149 @@ def chart_frame(sid, name, idx, x, y, w, h, rid):
             '<a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/chart">'
             '<c:chart %s r:id="%s"/></a:graphicData></a:graphic></p:graphicFrame>'
             % (sid, name, idx, x, y, w, h, NS_C, rid))
+
+
+def _esc(t):
+    return t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def xlsx(table):
+    """The smallest workbook Excel opens without a repair prompt: one sheet of
+    inline strings and numbers, no styles. `table` is rows of str / number / None."""
+    def cell(ref, v):
+        if v is None:
+            return ""
+        if isinstance(v, str):
+            return '<c r="%s" t="inlineStr"><is><t>%s</t></is></c>' % (ref, _esc(v))
+        return '<c r="%s"><v>%g</v></c>' % (ref, v)
+    rows = "".join('<row r="%d">%s</row>' % (r + 1, "".join(
+        cell("%s%d" % ("ABCDEFGH"[c], r + 1), v) for c, v in enumerate(row)))
+        for r, row in enumerate(table))
+    ns = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+    parts = {
+        "[Content_Types].xml":
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="%s">'
+            '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.'
+            'relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>'
+            '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-'
+            'officedocument.spreadsheetml.sheet.main+xml"/>'
+            '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.'
+            'openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>' % CT,
+        "_rels/.rels": rels([("rId1", "officeDocument", "xl/workbook.xml")]),
+        "xl/workbook.xml":
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<workbook xmlns="%s" '
+            'xmlns:r="%s"><sheets><sheet name="Sheet1" sheetId="1" r:id="rId1"/></sheets>'
+            '</workbook>' % (ns, REL),
+        "xl/_rels/workbook.xml.rels": rels([("rId1", "worksheet", "worksheets/sheet1.xml")]),
+        "xl/worksheets/sheet1.xml":
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet xmlns="%s">'
+            '<sheetData>%s</sheetData></worksheet>' % (ns, rows),
+    }
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
+        for name, data in parts.items():
+            z.writestr(name, data.encode("utf-8"))
+    return buf.getvalue()
+
+
+def gantt_chart(rows, n_periods, highlight=None):
+    """v4 L21: a stacked bar whose first series (the start) has no fill, so the
+    second (the length) floats at its start period. Eight categories always,
+    blank rows included, so each bar stays on its row label's 0.425in pitch; the
+    plot area is pinned to the frame and both axes print nothing - the layout's
+    period and row placeholders are the labels.
+
+    One phase in CAT_1 and the rest SEQ_300 when `highlight` names a row (2.1:1
+    alone, legal only because every row has its label), all CAT_1 otherwise.
+    Bars are 0.20in: gap = (0.425 - 0.20) / 0.20.
+
+    Unlike L19's demo this one embeds its workbook: a plan nobody can edit is a
+    picture of a plan. Edit Data opens columns B (start, in periods from 0) and
+    C (length, in periods); milestones stay shapes, as the spec says.
+
+    `rows` are (label, start, end) in periods.
+    """
+    n = PL.PLAN_ROWS
+    rows = list(rows) + [None] * (n - len(rows))
+    table = [["เฟส", "เริ่ม", "ระยะเวลา"]] + [
+        [r[0], r[1], r[2] - r[1]] if r else [None, None, None] for r in rows]
+
+    def ref(col, kind):
+        pts = "".join('<c:pt idx="%d"><c:v>%s</c:v></c:pt>'
+                      % (i, _esc(row[col]) if kind == "str" else "%g" % row[col])
+                      for i, row in enumerate(table[1:]) if row[col] is not None)
+        rng = "Sheet1!$%s$2:$%s$%d" % ("ABC"[col], "ABC"[col], n + 1)
+        if kind == "str":
+            return ('<c:strRef><c:f>%s</c:f><c:strCache><c:ptCount val="%d"/>%s'
+                    '</c:strCache></c:strRef>' % (rng, n, pts))
+        return ('<c:numRef><c:f>%s</c:f><c:numCache><c:formatCode>General</c:formatCode>'
+                '<c:ptCount val="%d"/>%s</c:numCache></c:numRef>' % (rng, n, pts))
+
+    def ser(i, fill, extra=""):
+        col = "ABC"[i + 1]
+        return ('<c:ser><c:idx val="%d"/><c:order val="%d"/><c:tx><c:strRef>'
+                '<c:f>Sheet1!$%s$1</c:f><c:strCache><c:ptCount val="1"/><c:pt idx="0">'
+                '<c:v>%s</c:v></c:pt></c:strCache></c:strRef></c:tx>'
+                '<c:spPr>%s<a:ln><a:noFill/></a:ln></c:spPr><c:invertIfNegative val="0"/>%s'
+                '<c:cat>%s</c:cat><c:val>%s</c:val></c:ser>'
+                % (i, i, col, table[0][i + 1], fill, extra, ref(0, "str"), ref(i + 1, "num")))
+
+    hi = ""
+    if highlight is not None:
+        hi = ('<c:dPt><c:idx val="%d"/><c:invertIfNegative val="0"/><c:bubble3D val="0"/>'
+              '<c:spPr>%s<a:ln><a:noFill/></a:ln></c:spPr></c:dPt>' % (highlight, solid(CAT_1)))
+    bars = solid(SEQ_300 if highlight is not None else CAT_1)
+    chart = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
+             '<c:chartSpace %s xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" '
+             'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+             '<c:roundedCorners val="0"/><c:chart><c:autoTitleDeleted val="1"/>'
+             '<c:plotArea><c:layout><c:manualLayout><c:layoutTarget val="inner"/>'
+             '<c:xMode val="edge"/><c:yMode val="edge"/><c:x val="0"/><c:y val="0"/>'
+             '<c:w val="1"/><c:h val="1"/></c:manualLayout></c:layout>'
+             '<c:barChart><c:barDir val="bar"/><c:grouping val="stacked"/><c:varyColors val="0"/>'
+             '%s%s<c:gapWidth val="113"/><c:overlap val="100"/>'
+             '<c:axId val="21001"/><c:axId val="21002"/></c:barChart>'
+             '<c:catAx><c:axId val="21001"/><c:scaling><c:orientation val="maxMin"/></c:scaling>'
+             '<c:delete val="1"/><c:axPos val="l"/><c:majorTickMark val="none"/>'
+             '<c:minorTickMark val="none"/><c:tickLblPos val="none"/><c:crossAx val="21002"/>'
+             '<c:crosses val="autoZero"/><c:auto val="1"/><c:lblAlgn val="ctr"/>'
+             '<c:lblOffset val="100"/><c:noMultiLvlLbl val="0"/></c:catAx>'
+             '<c:valAx><c:axId val="21002"/><c:scaling><c:orientation val="minMax"/>'
+             '<c:max val="%d"/><c:min val="0"/></c:scaling><c:delete val="0"/><c:axPos val="b"/>'
+             '<c:majorGridlines><c:spPr><a:ln w="9525">%s</a:ln></c:spPr></c:majorGridlines>'
+             '<c:numFmt formatCode="General" sourceLinked="0"/><c:majorTickMark val="none"/>'
+             '<c:minorTickMark val="none"/><c:tickLblPos val="none"/>'
+             '<c:spPr><a:ln><a:noFill/></a:ln></c:spPr>'
+             '<c:crossAx val="21001"/><c:crosses val="max"/><c:crossBetween val="between"/>'
+             '<c:majorUnit val="1"/></c:valAx>'
+             '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr></c:plotArea>'
+             '<c:plotVisOnly val="1"/><c:dispBlanksAs val="gap"/></c:chart>'
+             '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr>'
+             '<c:externalData r:id="rId1"><c:autoUpdate val="0"/></c:externalData>'
+             '</c:chartSpace>'
+             % (NS_C, ser(0, nofill()), ser(1, bars, hi), n_periods, solid(RULE)))
+    return chart, xlsx(table)
+
+
+def milestones(sid, marks):
+    """The diamonds on a plan: (row, at, label), `at` in periods. CAT_2 with a
+    PAPER ring so it reads apart from the bar end it sits on; the label 10pt INK2
+    to its right."""
+    slot = PL.PLAN_W / PL.PLAN_PERIODS
+    d = 146304                                 # 0.16in
+    out = []
+    for row, at, label in marks:
+        cx = PL.PLAN_X + round(at * slot)
+        cy = PL.PLAN_Y + row * PL.PLAN_ROW_H + PL.PLAN_ROW_H // 2
+        out.append(shape(sid, "Milestone %d" % (row + 1), cx - d // 2, cy - d // 2, d, d,
+                         solid(CAT_2), prst="diamond",
+                         line='<a:ln w="19050">%s</a:ln>' % solid(PAPER)))
+        out.append(shape(sid + 1, "Milestone %d Label" % (row + 1), cx + d // 2 + 45720,
+                         cy - PL.PLAN_ROW_H // 2, 1463040, PL.PLAN_ROW_H, nofill(),
+                         body=txbody([para(label, sz=T_DENSECELL, color=INK2, line=100000)],
+                                     anchor="ctr")))
+        sid += 2
+    return out
 
 
 def slide(shapes):
@@ -713,6 +859,37 @@ def demo_slides():
                   sp_text(6, "TC", "body", 4,
                           ["องค์กร 50-200 ที่นั่งเลือก Business เป็นค่าเริ่มต้น "
                            "ตอบกลับ 4 ชั่วโมงครอบคลุมงานปิดงบรายเดือน"])]))
+    # --------------------------------------------- 15b · the whole plan (L21)
+    # phase 1 here is L17's "01 Preparation Phase" - the numbers have to match.
+    # Go-live is the one bar in CAT_1: it is what the takeaway is about.
+    plan = [("1. เตรียมระบบ", 0, 1, "4 สัปดาห์"),
+            ("2. วิเคราะห์และออกแบบ", 1, 2.5, "6 สัปดาห์"),
+            ("3. พัฒนาและตั้งค่าระบบ", 2.5, 5, "10 สัปดาห์"),
+            ("4. ทดสอบ UAT", 5, 6, "4 สัปดาห์"),
+            ("5. อบรมผู้ใช้", 5.75, 6, "1 สัปดาห์"),
+            ("6. ขึ้นระบบ", 6, 6.5, "2 สัปดาห์"),
+            ("7. ดูแลหลังขึ้นระบบ", 6.5, 9.5, "3 เดือน"),
+            ("8. รับประกันระบบ", 9.5, 12, "2.5 เดือน")]
+    sh21 = [sp_text(2, "Title", "title", None, ["แผนงาน 12 เดือน ขึ้นระบบต้นเดือนที่ 7"]),
+            chart_frame(3, "Plan", 1, PL.PLAN_X, PL.PLAN_Y, PL.PLAN_W,
+                        PL.PLAN_ROWS * PL.PLAN_ROW_H, "rId2")]
+    sid = 4
+    for i in range(PL.PLAN_PERIODS):
+        sh21.append(sp_text(sid, "P%d" % (i + 1), "body", PL.PH_FREE + i, ["ด.%d" % (i + 1)]))
+        sid += 1
+    for r, (label, _, _, dur) in enumerate(plan):
+        idx = PL.PH_FREE + PL.PLAN_PERIODS + 2 * r
+        sh21 += [sp_text(sid, "R%d" % (r + 1), "body", idx, [label]),
+                 sp_text(sid + 1, "D%d" % (r + 1), "body", idx + 1, [dur])]
+        sid += 2
+    sh21 += [sp_text(sid, "Key", "body", 2, ["■ ช่วงงาน   ◆ ส่งมอบ / ตรวจรับ"]),
+             sp_text(sid + 1, "Asm", "body", 3, ["นับจากวันลงนามสัญญา · หน่วย: เดือน"]),
+             sp_text(sid + 2, "TL", "body", 4, ["สรุป"]),
+             sp_text(sid + 3, "TC", "body", 5,
+                     ["ขึ้นระบบต้นเดือนที่ 7 ตรวจรับ 3 งวดตามจุดส่งมอบ"])]
+    sh21 += milestones(sid + 4, [(1, 2.5, "ตรวจรับงวด 1"), (3, 6, "ตรวจรับงวด 2"),
+                                 (6, 9.5, "ตรวจรับงวด 3")])
+    S.append((21, sh21, [gantt_chart([p[:3] for p in plan], PL.PLAN_PERIODS, highlight=5)]))
     # ------------------------------------------------- 16 · a phase of the plan (L17)
     S.append((17, [sp_text(2, "Title", "title", None, ["5. Implementation Stage"]),
                    sp_text(3, "KAL", "body", 1, ["Key Activity :"]),
@@ -833,6 +1010,12 @@ def build(path, with_slides, title):
         sr = [("rId1", "slideLayout", "../slideLayouts/slideLayout%d.xml" % layout_no)]
         for j, chart_xml in enumerate(parts[0] if parts else []):
             chart_no += 1
+            if isinstance(chart_xml, tuple):        # (chart, workbook): Edit Data works
+                chart_xml, book = chart_xml
+                w("ppt/embeddings/Microsoft_Excel_Worksheet%d.xlsx" % chart_no, book)
+                w("ppt/charts/_rels/chart%d.xml.rels" % chart_no, rels([
+                    ("rId1", "package",
+                     "../embeddings/Microsoft_Excel_Worksheet%d.xlsx" % chart_no)]))
             w("ppt/charts/chart%d.xml" % chart_no, chart_xml)
             sr.append(("rId%d" % (2 + j), "chart", "../charts/chart%d.xml" % chart_no))
         w("ppt/slides/_rels/slide%d.xml.rels" % i, rels(sr))
@@ -848,7 +1031,7 @@ def build(path, with_slides, title):
 if __name__ == "__main__":
     build(os.path.join(OUT, "NCT-Slide-Template.potx"), False, "NCT Slide Template")
     build(os.path.join(OUT, "NCT-Slide-Template-Demo.pptx"), True, "NCT Slide Template — ตัวอย่าง")
-    # v3: the same nineteen layouts wearing the chrome the corporate proposal
+    # v3: the same layouts wearing the chrome the corporate proposal
     # template requires. A PowerPoint layout cannot toggle its own chrome the
     # way the React <Deck> can - it is baked in - so the corp deck is a second
     # file built from the same source, not a second set of layouts inside one.

@@ -1090,3 +1090,141 @@ export function SlideChart({
     </Slide>
   );
 }
+
+/* ---------------------------------------------------------------- 21 */
+export interface PlanRow {
+  /** Phase name. Its number is the row's position, and has to match the phase on L17. */
+  label: ReactNode;
+  /** In periods from the start of the first: 0 opens `periods[0]`, 2.5 is halfway through the third. */
+  start: number;
+  end: number;
+  /** "8 สัปดาห์" — right-set between the label and the plot. */
+  duration?: ReactNode;
+  /** A deliverable or sign-off on this row, `at` in the same units. Its label sits to the right. */
+  milestone?: { at: number; label?: string };
+}
+
+/** One to eight. Past eight, roll the tasks up into phases and detail each on L17. */
+export type PlanRows =
+  | [PlanRow]
+  | [PlanRow, PlanRow]
+  | [PlanRow, PlanRow, PlanRow]
+  | [PlanRow, PlanRow, PlanRow, PlanRow]
+  | [PlanRow, PlanRow, PlanRow, PlanRow, PlanRow]
+  | [PlanRow, PlanRow, PlanRow, PlanRow, PlanRow, PlanRow]
+  | [PlanRow, PlanRow, PlanRow, PlanRow, PlanRow, PlanRow, PlanRow]
+  | [PlanRow, PlanRow, PlanRow, PlanRow, PlanRow, PlanRow, PlanRow, PlanRow];
+
+export interface SlidePlanProps extends Base {
+  title: ReactNode;
+  /**
+   * Counted from the start ("ด.1", "ด.2" …) — the real start date is not known
+   * when the proposal goes out. Twelve at most; past that, change the unit.
+   */
+  periods: string[];
+  rows: PlanRows;
+  /** The one row in cat-1, the rest in seq-300. Omit and every bar is cat-1. */
+  highlight?: number;
+  /** Required: what period one counts from ("นับจากวันลงนามสัญญา"). */
+  assumption: ReactNode;
+  takeawayLabel?: string;
+  takeaway: ReactNode;
+}
+
+/* the .potx placeholders' x: label 1.90in + duration 0.80in + 0.20in, then the plot */
+const PLAN_LEFT = 278.4;
+const PLAN_W = space.cw - PLAN_LEFT;
+const PLAN_ROW_H = 40.8;    // 0.425in - eight rows end at 5.65in, above the note
+const PLAN_BAR_H = 19.2;    // 0.20in
+const PLAN_MARK = 15.36;    // 0.16in diamond
+
+/**
+ * 21 · Plan Timeline. The whole plan on one slide; L17 is one phase of it. Bars
+ * float at their start, deliverables are cat-2 diamonds. No text in the bars and
+ * no dependency arrows — order of work is L13 / L14.
+ */
+export function SlidePlan({
+  title,
+  periods,
+  rows,
+  highlight,
+  assumption,
+  takeawayLabel = "สรุป",
+  takeaway,
+  ...chrome
+}: SlidePlanProps) {
+  const slot = PLAN_W / periods.length;
+  const h = rows.length * PLAN_ROW_H;
+  const marks = rows.some((r) => r.milestone);
+  return (
+    <Slide {...chrome}>
+      <SlideTitle>{title}</SlideTitle>
+      <div className="nct-body">
+        <div className="nct-plan">
+          <div className="nct-plan__periods" style={{ gridTemplateColumns: `repeat(${periods.length}, 1fr)` }}>
+            {periods.map((p, i) => <span key={i}>{p}</span>)}
+          </div>
+          <ol className="nct-plan__rows">
+            {rows.map((r, i) => (
+              <li key={i}>
+                <span className="nct-plan__label"><b>{i + 1}.</b> {r.label}</span>
+                <span className="nct-plan__dur">{r.duration}</span>
+              </li>
+            ))}
+          </ol>
+          <svg width={PLAN_W} height={h} aria-hidden="true">
+            {periods.concat("").map((_, i) => (
+              <line key={i} x1={i * slot} x2={i * slot} y1={0} y2={h} stroke="var(--nct-rule)" strokeWidth={1} />
+            ))}
+            {rows.map((r, i) => {
+              const w = (r.end - r.start) * slot;
+              return (
+                <rect key={i} x={r.start * slot} y={i * PLAN_ROW_H + (PLAN_ROW_H - PLAN_BAR_H) / 2}
+                      width={w} height={PLAN_BAR_H} rx={Math.min(PLAN_BAR_H, w) / 2}
+                      fill={highlight === undefined || highlight === i ? "var(--nct-cat-1)" : "var(--nct-seq-300)"} />
+              );
+            })}
+            {rows.map((r, i) => {
+              if (!r.milestone) return null;
+              const x = r.milestone.at * slot;
+              const y = i * PLAN_ROW_H + PLAN_ROW_H / 2;
+              const d = PLAN_MARK / 2;
+              return (
+                <g key={i}>
+                  <polygon points={`${x},${y - d} ${x + d},${y} ${x},${y + d} ${x - d},${y}`}
+                           fill="var(--nct-cat-2)" stroke="var(--nct-paper)" strokeWidth={2} />
+                  {r.milestone.label && (
+                    <text className="nct-plan__mark" x={x + d + 4.8} y={y} dominantBaseline="middle">
+                      {r.milestone.label}
+                    </text>
+                  )}
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+        <div className="nct-sr"><table>
+          <thead><tr><th /><th>เริ่ม</th><th>สิ้นสุด</th><th>ส่งมอบ</th></tr></thead>
+          <tbody>
+            {rows.map((r, i) => (
+              <tr key={i}>
+                <th>{i + 1}. {r.label}</th>
+                <td>{periods[Math.floor(r.start)]}</td>
+                <td>{periods[Math.max(0, Math.ceil(r.end) - 1)]}</td>
+                <td>{r.milestone?.label}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table></div>
+        <p className="nct-note">
+          <span className="nct-plan__key">
+            <span><i className="nct-plan__glyph">■</i> ช่วงงาน</span>
+            {marks && <span><i className="nct-plan__glyph nct-plan__glyph--mark">◆</i> ส่งมอบ / ตรวจรับ</span>}
+          </span>
+          <span className="nct-note__source">{assumption}</span>
+        </p>
+        <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
+      </div>
+    </Slide>
+  );
+}

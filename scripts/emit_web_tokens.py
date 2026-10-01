@@ -42,6 +42,7 @@ COLORS = [
     ("cat-3", T.CAT_3, "category / series 3 - all-pairs charts stop here"),
     ("cat-4", T.CAT_4, "category / series 4"),
     ("cat-mute", T.CAT_MUTE, "Other / de-emphasised / baseline - MARKS ONLY, never text"),
+    ("seq-300", T.SEQ_300, "v4 L21: the bars beside the highlighted one - labelled rows only"),
     ("corp-dim", T.CORP_DIM, "v3 corp foot-bar spent segment - DECORATION ONLY"),
     ("corp-bar-mid", T.CORP_BAR_MID, "v3 corp foot-bar middle segment - decoration only"),
 ]
