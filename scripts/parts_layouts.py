@@ -229,11 +229,19 @@ def l03_content(rid_mark_color):
 
 # ---------------------------------------------------------------- 04 Two Column
 def l04_two(rid_mark_color):
-    s = [_title(10), _rule(11),
-         placeholder(12, "Left Content", "body", MX, BODY_Y, HALF, BODY_H,
-                     body_specs(["คอลัมน์ซ้าย", "ระดับที่สอง", "ระดับที่สาม"]), idx=1),
-         placeholder(13, "Right Content", "body", MX + HALF + GUT, BODY_Y, HALF, BODY_H,
-                     body_specs(["คอลัมน์ขวา", "ระดับที่สอง", "ระดับที่สาม"]), idx=2)]
+    # Column headings sit where L11's kickers do. They take idx 3/4 so the bodies
+    # keep idx 1/2 and decks made from the old template keep their text.
+    KY, KH = BODY_Y, 548640
+    s = [_title(10), _rule(11)]
+    for i, (side, prompt, head) in enumerate((("Left", "คอลัมน์ซ้าย", "หัวคอลัมน์ซ้าย"),
+                                              ("Right", "คอลัมน์ขวา", "หัวคอลัมน์ขวา"))):
+        x = MX + i * (HALF + GUT)
+        s.append(placeholder(12 + 2 * i, side + " Heading", "body", x, KY, HALF, 365760,
+                             [S(head, sz=T_LEAD, color=heading(), bold=True, font="mj",
+                                line=115000)], idx=3 + i, anchor="t"))
+        s.append(placeholder(13 + 2 * i, side + " Content", "body", x, KY + KH, HALF,
+                             BODY_H - KH,
+                             body_specs([prompt, "ระดับที่สอง", "ระดับที่สาม"]), idx=1 + i))
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("04 Two Column", "twoObj", s, bgfill=solid(PAPER))
 

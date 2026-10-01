@@ -474,9 +474,9 @@
   font-weight: 700;
   font-size: var(--nct-fs-lead);
   line-height: 1.15;
+  color: var(--nct-heading);
 }
 .nct-panel--dark .nct-panel__kicker { color: var(--nct-paper); }
-.nct-panel--tint .nct-panel__kicker { color: var(--nct-heading); }
 
 /* ---------------------------------------------------------------- bands */
 .nct-band {

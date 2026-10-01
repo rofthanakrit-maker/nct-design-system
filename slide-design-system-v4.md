@@ -7,7 +7,7 @@
 **สิ่งที่ v1–v3 ทำถูกแล้วไม่แตะ** — canvas, grid, จังหวะแนวตั้ง, type scale, brand mode,
 status token, กติกาการทำเด็คทั้งหมด
 
-**สิ่งที่ v4 เพิ่ม** — ชุดสีข้อมูลที่ผ่านการตรวจ, กติกา mark ของกราฟ และ layout 19–23
+**สิ่งที่ v4 เพิ่ม** — ชุดสีข้อมูลที่ผ่านการตรวจ, กติกา mark ของกราฟ และ layout 19 · 21–24
 เพราะ v1 §7 เขียนไว้ว่า "ยังไม่มี chart style" และ deck ข้อเสนอจริงต้องมีกราฟ แผนงาน และหน้าราคา
 และ PowerPoint หยิบ theme accent1–6 มาใช้เอง ซึ่งเดิมเป็นน้ำเงิน 4 เฉดกับ `PAPER2`
 (series ที่ 6 เลยมองไม่เห็นบนพื้นขาว)
@@ -186,7 +186,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 
 ---
 
-## 4. Layout ที่เพิ่ม — 19 ถึง 23
+## 4. Layout ที่เพิ่ม — 19 · 21 ถึง 24
 
 ทุกอันใช้ margin, จังหวะแนวตั้ง, `showMasterSp="0"`, `<a:lstStyle>` บนทุก placeholder
 และ chrome ตาม brand เหมือน v2/v3 · layout ที่มี placeholder เกิน 9 ตัวเริ่ม idx ที่ `PH_FREE = 20` (v3 §7)
@@ -195,12 +195,12 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 | # | Layout | งานของข้อมูล | ใช้แทน | ฝั่ง `.potx` |
 |---|---|---|---|---|
 | 19 | Chart + Insight | ขนาด · แนวโน้ม · สัดส่วนตามเวลา · ส่วนต่างจากเป้า | กราฟที่วางลอยใน L03 | `chart` PH — native chart |
-| 20 | KPI + Trend | ตัวเลขหลัก 3–4 ตัว + แนวโน้มของหนึ่งในนั้น | L06 ที่ต้องมีส่วนต่าง | text PH + `chart` PH (sparkline เว็บเท่านั้น) |
-| 21 | Before → After | เปรียบเทียบก่อน/หลังรายรายการ (ROI) | ตาราง 2 คอลัมน์ | text PH + shape (ไม่มี dumbbell แบบ native) |
-| 22 | Plan Timeline | ช่วงเวลาของเฟส + จุดส่งมอบ | ตาราง Gantt ระบายสีเซลล์ | `chart` PH — stacked bar ซ่อนแท่งแรก |
-| 23 | Composition | ส่วนของทั้งหมด · เทียบแพ็กเกจราคา | pie · หน้าราคาที่ยังไม่มี | text PH + `chart` PH — 100% stacked bar |
+| 21 | KPI + Trend | ตัวเลขหลัก 3–4 ตัว + แนวโน้มของหนึ่งในนั้น | L06 ที่ต้องมีส่วนต่าง | text PH + `chart` PH (sparkline เว็บเท่านั้น) |
+| 22 | Before → After | เปรียบเทียบก่อน/หลังรายรายการ (ROI) | ตาราง 2 คอลัมน์ | text PH + shape (ไม่มี dumbbell แบบ native) |
+| 23 | Plan Timeline | ช่วงเวลาของเฟส + จุดส่งมอบ | ตาราง Gantt ระบายสีเซลล์ | `chart` PH — stacked bar ซ่อนแท่งแรก |
+| 24 | Composition | ส่วนของทั้งหมด · เทียบแพ็กเกจราคา | pie · หน้าราคาที่ยังไม่มี | text PH + `chart` PH — 100% stacked bar |
 
-แนะนำให้ทำ **19 → 22 → 23 → 20 → 21** L19 ใช้ได้กับงานส่วนใหญ่ ส่วน 22/23 เป็นช่องว่างที่ v1 §7 จดไว้
+แนะนำให้ทำ **19 → 23 → 24 → 21 → 22** L19 ใช้ได้กับงานส่วนใหญ่ ส่วน 23/24 เป็นช่องว่างที่ v1 §7 จดไว้
 (timeline, pricing)
 
 ### 19 Chart + Insight
@@ -237,7 +237,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 - `.potx`: กด Insert Chart บน placeholder ได้สีจาก theme ที่ชี้ใหม่ใน §2.5 · สไลด์เดโมเป็นกราฟ native ที่ใส่ค่าตรง ๆ
   (`c:numLit`) ไม่มี workbook ฝัง — แก้ style ตามได้ แต่ Edit Data เปิดไม่ได้
 
-### 20 KPI + Trend
+### 21 KPI + Trend
 
 พื้นขาว · tile 3 ใบบน `THIRD` หรือ 4 ใบบน `QUARTER` + กราฟแนวโน้มเต็มกว้าง
 
@@ -258,7 +258,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 - ส่วนต่างต้องบอกว่าเทียบกับอะไรทุกครั้ง ("จาก Q2", "เทียบเป้า")
 - ถ้าไม่มีแนวโน้มให้เล่า ใช้ L06
 
-### 21 Before → After
+### 22 Before → After
 
 พื้นขาว · dumbbell 3–7 แถว ขายเรื่อง "หลังใช้ระบบดีขึ้นเท่าไร"
 
@@ -282,7 +282,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 - ฝั่ง `.potx` ไม่มี chart แบบนี้ให้ใช้ — layout ให้แค่ PH ข้อความ ส่วนเดโมจะวางจุดกับเส้นเป็น shape ให้ copy ไปแก้ตำแหน่งเอง
   (`ponytail:` วางตำแหน่งด้วยมือ ถ้าใช้บ่อยค่อยทำเป็น scatter chart ที่ตั้ง style ไว้แล้ว)
 
-### 22 Plan Timeline
+### 23 Plan Timeline
 
 พื้นขาว · ภาพรวมแผน L17 คือรายละเอียดทีละเฟส **เลขเฟสต้องตรงกัน**
 
@@ -307,7 +307,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 - `.potx`: stacked bar ที่ series แรก (จุดเริ่ม) เป็น `noFill` ส่วน series ที่สอง (ระยะเวลา) เป็น `CAT_1` ·
   ตั้ง gap width ให้แท่งหนา 0.200in · แก้ตัวเลขใน data sheet ได้ · จุดส่งมอบวางเป็น shape เอง
 
-### 23 Composition
+### 24 Composition
 
 พื้นขาว · ส่วนของทั้งหมด 1 แท่ง (งบแยกหมวด) หรือ 2–3 แท่ง (เทียบแพ็กเกจ) — **แทน pie ทุกกรณี**
 
@@ -368,7 +368,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 3. แก้ hardcode `build.py:462` กับ `parts_layouts.py:414` ให้อ่าน `CAT_*`
 4. `parts_theme.py` accent1–6 ตาม §2.5
 5. `check_template.py` — ลบข้อยกเว้น `CAT_CODED` ของ corp แล้วรันให้ผ่านทั้ง 4 ไฟล์
-6. `parts_layouts.py` L19 → 22 → 23 → 20 → 21 · ขยาย `LAYOUTS`
+6. `parts_layouts.py` L19 → 23 → 24 → 21 → 22 · ขยาย `LAYOUTS`
 7. `emit_web_tokens.py` → component ใน `layouts.tsx` → `demo.tsx`
 8. `render_previews.py` บนเครื่องที่มี PowerPoint แล้ว**ดูภาพจริง** validator ตรวจสีได้ แต่ป้ายชนกันหรือล้นกรอบต้องดูด้วยตา
 

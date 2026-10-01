@@ -177,19 +177,35 @@ export function SlideContent({ title, items, ...chrome }: SlideContentProps) {
 /* ---------------------------------------------------------------- 04 */
 export interface SlideTwoColumnProps extends Base {
   title: ReactNode;
+  /** Column headings ("ก่อน" / "หลัง") — keep them out of the bullet lists. */
+  leftKicker?: ReactNode;
   left: BulletItem[];
+  rightKicker?: ReactNode;
   right: BulletItem[];
 }
 
 /** 04 · Two Column. Before/after, pros/cons. Left is always the current state. */
-export function SlideTwoColumn({ title, left, right, ...chrome }: SlideTwoColumnProps) {
+export function SlideTwoColumn({
+  title,
+  leftKicker,
+  left,
+  rightKicker,
+  right,
+  ...chrome
+}: SlideTwoColumnProps) {
   return (
     <Slide {...chrome}>
       <SlideTitle>{title}</SlideTitle>
       <div className="nct-body">
         <div className="nct-cols">
-          <BulletList items={left} />
-          <BulletList items={right} />
+          <div>
+            {leftKicker && <h3 className="nct-panel__kicker">{leftKicker}</h3>}
+            <BulletList items={left} />
+          </div>
+          <div>
+            {rightKicker && <h3 className="nct-panel__kicker">{rightKicker}</h3>}
+            <BulletList items={right} />
+          </div>
         </div>
       </div>
     </Slide>
