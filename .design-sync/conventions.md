@@ -212,6 +212,14 @@ does not keep.
   as an optional `takeaway` - add it when the slide argues for something,
   leave it off when it only lists; with it, `SlideContent` holds four level-1
   lines, not five.
+- **One strip, one place, one look.** Every layout that carries a conclusion
+  strip — 11's `takeaway`, 12's `band`, 13's `result`, 18's `takeaway` included —
+  pins it to the foot of the body box, tinted, label in accent. There is no dark
+  variant (`TakeawayBand` has no `tone`), and on 18 the order is claim, frames,
+  then the finding. Never letter-space the label: it is Thai.
+- **`SlideTwoColumn` is two equal sets, not before/after.** In/out of scope,
+  option A/B. Current state vs proposal is `SlideSplitPanel` (11), whose dark and
+  tinted panels say "now" and "next" before anyone reads a word.
 - `SlideCover` and `SlideClosing` appear once each, as the deck's bookends.
 - **Open on `SlideCover` unless you have a reason not to.** Its composition
   follows `brand`. `corp` (the default): paper, centred, the mark watermarked

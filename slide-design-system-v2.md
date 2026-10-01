@@ -157,7 +157,7 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 | # | Layout | รับสไลด์แบบไหน | แทนที่สไลด์ไหนใน NCT Example |
 |---|---|---|---|
 | 11 | Split Panel | พาเนลเข้ม + รายการมีเลข + แถบสรุป | S3, S5 |
-| 12 | Four Cards + Band | 4 ประเด็นขนาน + แถบสรุปเข้ม | S4 |
+| 12 | Four Cards + Band | 4 ประเด็นขนาน + แถบสรุป | S4 |
 | 13 | Process Flow | 3–5 สเต็ปบนแกนเดียว + แถบผลลัพธ์ | S10, S11 |
 | 14 | Diagram Canvas | ผังสถาปัตยกรรม / ผังระบบ | S8, S9, S14, S15 |
 | 15 | Agenda | คั่นบท + สารบัญ 4–6 บรรทัด | S2, S7, S12 |
@@ -177,9 +177,9 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 | Field (รูปทรง) | 6.768 | 1.850 | 5.565 | 4.200 | fill `PAPER2` |
 | Field kicker PH | 7.068 | 2.100 | 4.965 | 0.400 | 18 pt Kanit Bold `NAVY` |
 | Field body PH | 7.068 | 2.600 | 4.965 | 3.200 | 12 pt dense `INK` |
-| Takeaway band | 1.000 | 6.150 | 11.333 | 0.450 | fill `PAPER2` |
-| Band label PH | 1.200 | 6.220 | 2.000 | 0.310 | 12 pt Bold `TEAL` |
-| Band copy PH | 3.300 | 6.220 | 8.833 | 0.310 | 14 pt `INK` |
+| Takeaway band | 1.000 | 6.150 | 11.333 | 0.450 | fill `PAPER2` (`_takeaway`, ทุก layout ที่มีแถบสรุป) |
+| Band label PH | 1.200 | 6.220 | 1.000 | 0.310 | 12 pt Bold accent · ไม่มี letter-spacing |
+| Band copy PH | 2.450 | 6.220 | 9.683 | 0.310 | 14 pt `INK` |
 
 - ข้อความบนพาเนลเข้มเป็น `PAPER` เท่านั้น ข้อความรองใช้ alpha ไม่ใช่เทา — กฎ §3 ของ v1
 - ฝั่งซ้ายคือ "สภาพปัจจุบัน / บริบท" ฝั่งขวาคือ "สิ่งที่จะเกิดขึ้น" อย่าสลับข้าง
@@ -199,9 +199,9 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 | Card heading PH | +0.350 | 2.850 | 1.983 | 0.600 | 16 pt Kanit Bold `NAVY` |
 | Card body PH | +0.350 | 3.550 | 1.983 | 1.700 | 12 pt dense `INK` |
 | ~~Card callout PH~~ | — | — | — | — | ยังไม่ได้ทำใน `parts_layouts.py` — การ์ดมี number / heading / body อย่างละหนึ่ง (idx `PH_FREE + i×3 .. +2`, `PH_FREE = 20` — เดิมเป็น `i×3+1..3` ซึ่งชนกับ idx 10/11/12 ที่ `chrome()` จองไว้ ดู v3 §7) |
-| Band | 1.000 | 6.000 | 11.333 | 0.600 | fill `NAVY` |
-| Band label PH | 1.250 | 6.130 | 2.200 | 0.340 | 12 pt Bold · `PAPER` 70% |
-| Band copy PH | 3.550 | 6.120 | 8.583 | 0.360 | 14 pt `PAPER` |
+| Takeaway band | 1.000 | 6.150 | 11.333 | 0.450 | fill `PAPER2` (`_takeaway`, ทุก layout ที่มีแถบสรุป) |
+| Band label PH | 1.200 | 6.220 | 1.000 | 0.310 | 12 pt Bold accent · ไม่มี letter-spacing |
+| Band copy PH | 2.450 | 6.220 | 9.683 | 0.310 | 14 pt `INK` |
 
 - การ์ดสูงคงที่ 3.80in ข้อความยาวเกินให้ตัดคำ อย่ายืดการ์ด — กฎเดียวกับ L05
 - 4 ใบคือเพดาน อยากได้ 5 ประเด็นให้ใช้ L13 หรือแยกสไลด์
@@ -220,10 +220,10 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 | Step head PH | +0.250 | 3.200 | 1.607 | 0.450 | 16 pt Kanit Bold `NAVY` |
 | Step body PH | +0.250 | 3.700 | 1.607 | 0.700 | 12 pt dense `INK` |
 | Connector × 4 | 3.155 / 5.462 / 7.769 / 10.076 | 3.400 | 0.150 | 0.200 | chevron `TEAL` |
-| Result band | 1.000 | 4.800 | 11.333 | 0.750 | fill `PAPER2` |
-| Result label PH | 1.250 | 4.930 | 2.200 | 0.340 | 12 pt Bold `TEAL` |
-| Result copy PH | 3.550 | 4.920 | 8.583 | 0.480 | 14 pt `INK` |
-| Control note PH | 1.000 | 5.850 | 11.333 | 0.700 | 12 pt dense `INK2` |
+| Takeaway band | 1.000 | 6.150 | 11.333 | 0.450 | fill `PAPER2` (`_takeaway`, ทุก layout ที่มีแถบสรุป) |
+| Band label PH | 1.200 | 6.220 | 1.000 | 0.310 | 12 pt Bold accent · ไม่มี letter-spacing |
+| Band copy PH | 2.450 | 6.220 | 9.683 | 0.310 | 14 pt `INK` |
+| Note (`note`, React เท่านั้น) | 1.000 | 5.750 | 11.333 | 0.300 | บรรทัดเดียวเหนือแถบ แบบ `.nct-note` ของ L16 |
 
 - ลูกศรเป็น chevron ตันสี `TEAL` ห้ามใช้ลูกศรมีหาง มีเงา หรือโค้ง
 - สเต็ปคือ **ลำดับเวลา** ถ้าไม่ใช่ลำดับให้ใช้ L12 แทน
@@ -242,9 +242,9 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 > โค้ดฉบับส่งมอบเคยวาดกรอบประไว้ในตำแหน่งนี้ ซึ่งจะติดไปในสไลด์จริงทุกใบ
 > ลบออกแล้วตามสเปกข้อนี้ — ถ้าอยากได้เส้นไกด์ ให้เปิด `View > Guides` ใน PowerPoint แทน
 | Legend PH | 1.000 | 5.750 | 11.333 | 0.300 | 12 pt dense `INK2` |
-| Takeaway band | 1.000 | 6.150 | 11.333 | 0.450 | fill `PAPER2` |
-| Band label PH | 1.200 | 6.220 | 2.000 | 0.310 | 12 pt Bold `TEAL` |
-| Band copy PH | 3.200 | 6.220 | 8.933 | 0.310 | 14 pt `INK` |
+| Takeaway band | 1.000 | 6.150 | 11.333 | 0.450 | fill `PAPER2` (`_takeaway`, ทุก layout ที่มีแถบสรุป) |
+| Band label PH | 1.200 | 6.220 | 1.000 | 0.310 | 12 pt Bold accent · ไม่มี letter-spacing |
+| Band copy PH | 2.450 | 6.220 | 9.683 | 0.310 | 14 pt `INK` |
 
 **ชุดชิ้นส่วนมาตรฐาน — ทุกผังในเด็คต้องใช้ชุดนี้**
 
@@ -295,9 +295,9 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 | Table PH | 1.000 | 2.200 | 11.333 | 3.450 | รับ 8–9 แถวที่ 10 pt |
 | Category Key PH | 1.000 | 5.750 | 5.667 | 0.300 | 10 pt `INK2` — key ของสีหมวด (ชิดซ้าย) |
 | Footnote PH | 6.667 | 5.750 | 5.667 | 0.300 | 10 pt `INK2` — ที่มาข้อมูล (ชิดขวา) |
-| Takeaway band | 1.000 | 6.150 | 11.333 | 0.450 | fill `PAPER2` |
-| Band label PH | 1.200 | 6.220 | 2.000 | 0.310 | 12 pt Bold `TEAL` |
-| Band copy PH | 3.200 | 6.220 | 8.933 | 0.310 | 14 pt `INK` |
+| Takeaway band | 1.000 | 6.150 | 11.333 | 0.450 | fill `PAPER2` (`_takeaway`, ทุก layout ที่มีแถบสรุป) |
+| Band label PH | 1.200 | 6.220 | 1.000 | 0.310 | 12 pt Bold accent · ไม่มี letter-spacing |
+| Band copy PH | 2.450 | 6.220 | 9.683 | 0.310 | 14 pt `INK` |
 
 > แถบสรุปกินพื้นที่ตาราง 0.4in — L16 จึงรับ 8–9 แถว ไม่ใช่ 8–10 เหมือนร่างเดิม
 > เกินกว่านั้นให้แยกสไลด์ ห้ามลดขนาดตัวอักษรลงต่ำกว่า 10 pt

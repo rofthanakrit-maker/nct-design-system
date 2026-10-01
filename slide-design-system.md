@@ -158,7 +158,7 @@ accent1–2 เป็น `CAT_1` / `CAT_2` ตั้งแต่ v4 (เดิ�
 | 01 | Title Slide | gradient navy→teal 45° | title, subtitle (โลโก้ฝังใน layout แก้ในสไลด์ไม่ได้) | หน้าปกเท่านั้น |
 | 02 | Section Divider | navy ทึบ + แถบภาพขวา 40% fade เข้า navy | เลขหัวข้อ, title, คำอธิบาย | คั่นบท ทุก 4–8 สไลด์ |
 | 03 | Title and Content | ขาว | title, body 5 ระดับ | สไลด์เนื้อหาปกติ |
-| 04 | Two Column | ขาว | title, หัวคอลัมน์ซ้าย/ขวา, body ซ้าย, body ขวา | เทียบก่อน/หลัง, ข้อดี/ข้อเสีย |
+| 04 | Two Column | ขาว | title, หัวคอลัมน์ซ้าย/ขวา (ยืนบนเส้น hairline), body ซ้าย, body ขวา | สองชุดน้ำหนักเท่ากัน: รวม/ไม่รวมในขอบเขต, ทางเลือก A/B — ก่อน/หลังใช้ L11 |
 | 05 | Three Cards | ขาว + การ์ด `PAPER2` | title + (heading, body) × 3 | 3 บริการ / 3 เสาหลัก |
 | 06 | Key Figures | ขาว | title + (ตัวเลข, label) × 3 + footnote | ตัวเลขที่อยากให้จำ |
 | 07 | Pull Quote | `PAPER2` + แถบ gradient ซ้าย | quote, attribution | testimonial, คำพูดลูกค้า |

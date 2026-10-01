@@ -157,12 +157,21 @@ function WebDeck() {
         source="ระบบบัญชีของลูกค้า · ม.ค.–มิ.ย. 2569"
         takeaway="เดือนที่เกินกำลังคีย์คือเดือนที่ปิดงบนานสุด ต้องลดงานคีย์ ไม่ใช่เพิ่มคน"
       />
+      {/* 04 · two equal sets, not before/after (that is 11's job) */}
       <SlideTwoColumn
-        title="ก่อนและหลังใช้บริการ"
-        leftKicker="ก่อน"
-        left={["ระบบล่มบ่อย ไม่มีคนดูแลประจำ", "ค่าใช้จ่ายไม่แน่นอน"]}
-        rightKicker="หลัง"
-        right={["มอนิเตอร์ 24 ชั่วโมง แจ้งเตือนอัตโนมัติ", "ค่าใช้จ่ายคงที่ต่อเดือน"]}
+        title="ข้อเสนอนี้ครอบคลุมงานบัญชีสามหมวด ไม่รวมเงินเดือน"
+        leftKicker="รวมในข้อเสนอ"
+        left={[
+          "เจ้าหนี้ ลูกหนี้ และบัญชีแยกประเภท",
+          { text: <>ตัวเชื่อม {en("ERP")} เดิม และคิวเอกสารกลาง</> },
+          "อบรมผู้ใช้และผู้ดูแลระบบ 2 หลักสูตร",
+        ]}
+        rightKicker="ไม่รวมในข้อเสนอ"
+        right={[
+          "ระบบเงินเดือนและภาษีหัก ณ ที่จ่ายพนักงาน",
+          "ย้ายข้อมูลย้อนหลังเกิน 2 ปี",
+          { text: <>ค่าไลเซนส์ {en("ERP")} ที่ลูกค้ามีอยู่แล้ว</> },
+        ]}
       />
       <SlideFourCards
         title="สี่ผลลัพธ์ที่ข้อเสนอนี้ให้"
@@ -400,7 +409,7 @@ function CorpDeck() {
       />
       {/* 17 · phase card */}
       <SlidePhaseCard
-        title={en("5. Implementation Stage")}
+        title="เฟสแรกเตรียมเครื่องสองชุดให้พร้อมก่อนเริ่มพัฒนา"
         meta={[
           { label: en("Key Activity"), value: "ตั้งค่าสภาพแวดล้อม ติดตั้งฮาร์ดแวร์และซอฟต์แวร์" },
           {
@@ -504,9 +513,9 @@ function CorpDeck() {
       {/* 18 · evidence strip. Real decks put screenshots of the real system
           here; the demo only has the three house architecture frames. */}
       <SlideEvidence
-        title={en("8. Project Training")}
+        title="อบรมสองหลักสูตรจบก่อนวันขึ้นระบบ"
         kicker="วัตถุประสงค์ของการอบรม"
-        takeaway="อบรมสองหลักสูตร รวม 8 ชั่วโมง จบภายในสัปดาห์เดียวก่อนวันขึ้นระบบ"
+        takeaway="รวม 8 ชั่วโมงในสัปดาห์เดียว งานบัญชีไม่ต้องหยุดระหว่างอบรม"
         figures={[
           { src: photoSection, alt: "", caption: "อบรมที่สำนักงานลูกค้า 20–50 คน" },
           { src: photoFacade, alt: "", caption: "อบรมกลุ่มย่อยในห้องประชุม 2–20 คน" },

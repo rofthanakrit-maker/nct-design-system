@@ -471,8 +471,6 @@
 /* align-items:start keeps panels at their own height so a takeaway band
    still fits inside the body region instead of colliding with the footer */
 .nct-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--nct-gut); align-items: start; }
-/* the conclusion strip after a flowing block (L11 panels, L12 cards) */
-.nct-follow { margin-top: 14.4px; }
 .nct-panel { padding: 33.6px; height: 398.4px; overflow: hidden; }
 .nct-panel--dark { background: var(--nct-dark); color: var(--nct-paper); }
 .nct-panel--tint { background: var(--nct-paper-2); }
@@ -485,6 +483,9 @@
   color: var(--nct-heading);
 }
 .nct-panel--dark .nct-panel__kicker { color: var(--nct-paper); }
+/* L04: each heading stands on a hairline, so the columns read as two equal sets
+   (l04_two draws it at 0.50in, the list starts at 0.60in) */
+.nct-col-head { height: 48px; margin: 0 0 9.6px; border-bottom: 1.33px solid var(--nct-rule); }
 
 /* ---------------------------------------------------------------- bands */
 .nct-band {
@@ -493,22 +494,21 @@
   gap: 24px;
   padding: 0 19.2px;
   min-height: 43.2px;
+  background: var(--nct-paper-2);
 }
-.nct-band--tint { background: var(--nct-paper-2); }
-.nct-band--dark { background: var(--nct-dark); color: var(--nct-paper); }
 /* auto, not a fixed 168px column: a three-character Thai label left ~130px of
-   dead space after it on six slides and read as a broken grid, not a label */
+   dead space after it on six slides and read as a broken grid, not a label.
+   The .potx mirrors it as TAKE_LW, copy at 1.45in */
 .nct-band__label {
   flex: 0 0 auto;
   min-width: 96px;
   font-size: var(--nct-fs-label);
   font-weight: 700;
+  color: var(--nct-accent);
 }
-.nct-band--tint .nct-band__label { color: var(--nct-accent); }
-.nct-band--dark .nct-band__label { color: var(--nct-accent-up); }
 .nct-band__copy { font-size: var(--nct-fs-body-3); }
-/* 09 / 14 / 16 pin the strip to the foot of the body box: the conclusion lands
-   at the same y whether the table above it runs four rows or ten */
+/* every strip is pinned to the foot of the body box: the conclusion lands at
+   the same y whether the table above it runs four rows or ten */
 .nct-band--foot {
   position: absolute;
   left: 0;
@@ -718,8 +718,6 @@
 .nct-flow { display: flex; align-items: stretch; gap: 0; margin-top: 33.6px; }
 /* a step and the chevron after it, flattened into the flex row */
 .nct-flow__pair { display: contents; }
-.nct-flow-foot { margin-top: 19.2px; }
-.nct-flow-note { margin-top: 19.2px; color: var(--nct-ink-2); }
 .nct-flow__step { flex: 0 0 var(--nct-fifth); background: var(--nct-paper-2); padding: 24px; height: 192px; }
 .nct-flow__chip {
   width: 32.7px;
@@ -1049,7 +1047,9 @@
 /* the claim gives way, the proof does not: the strip is a fixed height and the
    table above it takes whatever is left */
 .nct-evidence__claim { flex: 1; min-height: 0; overflow: hidden; }
-.nct-body--evidence .nct-band { margin: 14.4px 0; }
+/* the foot strip is absolute; the frames end 14.4px above it, as in l18_evidence */
+.nct-body--evidence { padding-bottom: calc(var(--nct-take-h) + 14.4px); }
+.nct-evidence__claim { margin-bottom: 14.4px; }
 .nct-evidence {
   flex: none;
   height: var(--nct-evidence-h);

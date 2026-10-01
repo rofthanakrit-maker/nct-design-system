@@ -181,14 +181,17 @@ export function SlideContent({ title, items, takeaway, takeawayLabel = "สร�
 /* ---------------------------------------------------------------- 04 */
 export interface SlideTwoColumnProps extends Base {
   title: ReactNode;
-  /** Column headings ("ก่อน" / "หลัง") — keep them out of the bullet lists. */
+  /** Column headings ("รวมในข้อเสนอ" / "ไม่รวม") — keep them out of the bullet lists. */
   leftKicker?: ReactNode;
   left: BulletItem[];
   rightKicker?: ReactNode;
   right: BulletItem[];
 }
 
-/** 04 · Two Column. Before/after, pros/cons. Left is always the current state. */
+/**
+ * 04 · Two Column. Two parallel sets of equal weight: in/out of scope, option
+ * A/B. Before/after is layout 11, whose panels say "now" and "next" on sight.
+ */
 export function SlideTwoColumn({
   title,
   leftKicker,
@@ -203,11 +206,11 @@ export function SlideTwoColumn({
       <div className="nct-body">
         <div className="nct-cols">
           <div>
-            {leftKicker && <h3 className="nct-panel__kicker">{leftKicker}</h3>}
+            {leftKicker && <h3 className="nct-panel__kicker nct-col-head">{leftKicker}</h3>}
             <BulletList items={left} />
           </div>
           <div>
-            {rightKicker && <h3 className="nct-panel__kicker">{rightKicker}</h3>}
+            {rightKicker && <h3 className="nct-panel__kicker nct-col-head">{rightKicker}</h3>}
             <BulletList items={right} />
           </div>
         </div>
@@ -620,11 +623,7 @@ export function SlideSplitPanel({
             <BulletList items={outcome} dense />
           </div>
         </div>
-        {takeaway && (
-          <div className="nct-follow">
-            <TakeawayBand label={takeawayLabel}>{takeaway}</TakeawayBand>
-          </div>
-        )}
+        {takeaway && <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>}
       </div>
     </Slide>
   );
@@ -670,13 +669,7 @@ export function SlideFourCards({
             </div>
           ))}
         </div>
-        {band && (
-          <div className="nct-follow">
-            <TakeawayBand label={bandLabel} tone="dark">
-              {band}
-            </TakeawayBand>
-          </div>
-        )}
+        {band && <TakeawayBand label={bandLabel} foot>{band}</TakeawayBand>}
       </div>
     </Slide>
   );
@@ -741,12 +734,8 @@ export function SlideProcessFlow({
             </div>
           ))}
         </div>
-        {result && (
-          <div className="nct-flow-foot">
-            <TakeawayBand label={resultLabel}>{result}</TakeawayBand>
-          </div>
-        )}
-        {note && <p className="nct-dense nct-flow-note">{note}</p>}
+        {note && <p className="nct-note">{note}</p>}
+        {result && <TakeawayBand label={resultLabel} foot>{result}</TakeawayBand>}
       </div>
     </Slide>
   );
@@ -1005,17 +994,17 @@ export interface SlideEvidenceProps extends Base {
   figures: EvidenceFigures;
   takeawayLabel?: string;
   /**
-   * Required, and it is the band the strip hangs from. The source puts a
-   * section label there instead ("SAMPLE OF TRAINING SETUP"), which names the
-   * photographs without saying what they prove — the slide ends on evidence
-   * with no finding. This is the same band doing the job it was built for.
+   * Required: what the frames prove, in the standard foot strip. The source
+   * puts a section label over the photographs instead ("SAMPLE OF TRAINING
+   * SETUP"), which names them without saying what they prove — the slide ends
+   * on evidence with no finding.
    */
   takeaway: ReactNode;
 }
 
 /**
- * 18 · Evidence Strip. A claim, a one-line finding, and two to four frames of
- * proof underneath it.
+ * 18 · Evidence Strip. A claim, two to four frames of proof under it, and the
+ * finding in the foot strip — claim, proof, finding, top to bottom.
  *
  * The figures are the deck's receipts: screenshots of the real system, photos
  * of the real room. Stock imagery here is worse than no strip at all.
@@ -1035,7 +1024,6 @@ export function SlideEvidence({
       <div className="nct-body nct-body--evidence">
         {kicker && <div className="nct-kicker-pill">{kicker}</div>}
         <div className="nct-evidence__claim">{children}</div>
-        <TakeawayBand label={takeawayLabel} tone="dark">{takeaway}</TakeawayBand>
         <div className="nct-evidence" data-count={figures.length}>
           {figures.map((f, i) => (
             <figure className="nct-evidence__figure" key={i}>
@@ -1044,6 +1032,7 @@ export function SlideEvidence({
             </figure>
           ))}
         </div>
+        <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
       </div>
     </Slide>
   );

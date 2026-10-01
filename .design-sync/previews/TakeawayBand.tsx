@@ -35,16 +35,3 @@ export const PinnedToFoot = () => (
     </div>
   </Slide>
 );
-
-/** The dark band, for a tinted or dark slide where the tint one would vanish. */
-export const Dark = () => (
-  <Slide tone="tint" footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569" pageNumber={13}>
-    <SlideTitle>กระบวนการที่เสนอ</SlideTitle>
-    <div className="nct-body">
-      <BulletList items={["รับเอกสารเข้าคิวกลาง", "ตรวจกฎธุรกิจ แล้วบันทึกพร้อม audit trail"]} />
-      <TakeawayBand label="สรุป" tone="dark">
-        เอกสารหนึ่งใบผ่านครบห้าขั้นโดยไม่มีการคีย์ซ้ำเลย
-      </TakeawayBand>
-    </div>
-  </Slide>
-);

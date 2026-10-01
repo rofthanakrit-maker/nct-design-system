@@ -128,6 +128,9 @@ BODY_H           = SH - BODY_Y - 822960       # leaves footer band
 # same place whether the table above it runs four rows or ten.
 TAKE_H  = 411480                      # 0.45in - matches .nct-band min-height
 TAKE_Y  = BODY_Y + BODY_H - TAKE_H    # 5623560
+TAKE_PAD    = 182880                  # 0.20in - = .nct-band padding 19.2px
+TAKE_LW     = 914400                  # 1.00in - = .nct-band__label min-width 96px
+TAKE_COPY_X = TAKE_PAD + TAKE_LW + 228600   # 1.45in - + the band's 24px gap
 NOTE_H  = 274320                      # legend / source note - one line
 NOTE_Y  = TAKE_Y - 91440 - NOTE_H     # sits just above the strip
 

@@ -82,15 +82,14 @@ export function BulletList({ items, dense, onDark, className }: BulletListProps)
 /* ------------------------------------------------------------------ bands */
 
 export interface TakeawayBandProps {
-  /** Short label — "สรุป", "ผลลัพธ์". Set in caps-spaced eyebrow type. */
+  /** Short label — "สรุป", "ผลลัพธ์". Bold accent, no letter-spacing (Thai). */
   label: string;
   /** One line. If it needs two, the slide is carrying too much. */
   children: ReactNode;
-  tone?: "tint" | "dark";
   /**
    * Pin the strip to the foot of the body box instead of letting it flow after
-   * the content. Layouts 09/14/16 use this so the conclusion lands at the same
-   * y whether the table above runs four rows or ten.
+   * the content. Every layout that carries a strip uses this, so the conclusion
+   * lands at the same y on every slide, whatever is above it.
    */
   foot?: boolean;
 }
@@ -98,10 +97,14 @@ export interface TakeawayBandProps {
 /**
  * The one-line conclusion strip. Every table slide and every diagram slide must
  * carry one — the reader has to get the point without reading the grid.
+ *
+ * One look only: tint, accent label. There was a navy `tone="dark"` on L12 and
+ * L18, so the conclusion changed colour from slide to slide for no reason the
+ * reader could learn, and its accent-up label sat at low contrast on navy.
  */
-export function TakeawayBand({ label, children, tone = "tint", foot }: TakeawayBandProps) {
+export function TakeawayBand({ label, children, foot }: TakeawayBandProps) {
   return (
-    <div className={`nct-band nct-band--${tone}${foot ? " nct-band--foot" : ""}`}>
+    <div className={`nct-band${foot ? " nct-band--foot" : ""}`}>
       <span className="nct-band__label">{label}</span>
       <span className="nct-band__copy">{children}</span>
     </div>

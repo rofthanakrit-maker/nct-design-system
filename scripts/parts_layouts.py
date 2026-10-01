@@ -81,15 +81,23 @@ def _takeaway(sid, idx, label="สรุป", prompt="ประเด็นส�
     conclusion in the same place whether the table runs four rows or ten. L09,
     L14 and L16 all carry one: a grid or a drawing without a stated conclusion
     makes the reader do the work the slide was supposed to do.
+
+    Every strip in the system is this one: PAPER2, at TAKE_Y. L11-L13 and L18
+    used to float theirs under the content, and L12/L18 set them in navy, so
+    the conclusion moved and changed colour from slide to slide.
+
+    The copy starts 1.45in in, as .nct-band does on the web (0.20in pad, 1.00in
+    label, 0.25in gap). At 2.20in a four-character "สรุป" left 1.6in of dead
+    tint between label and copy, which read as a broken grid.
     """
     ly = TAKE_Y + (TAKE_H - 289560) // 2
     return [shape(sid, "Takeaway Band", MX, TAKE_Y, CW, TAKE_H, solid(PAPER2)),
-            placeholder(sid + 1, "Takeaway Label", "body", MX + 182880, ly,
-                        1828800, 289560,
+            placeholder(sid + 1, "Takeaway Label", "body", MX + TAKE_PAD, ly,
+                        TAKE_LW, 289560,
                         [S(label, sz=T_LABEL, color=accent(), bold=True,
                            line=100000)], idx=idx, anchor="ctr"),
-            placeholder(sid + 2, "Takeaway Copy", "body", MX + 2011680, ly,
-                        CW - 2011680 - 182880, 289560,
+            placeholder(sid + 2, "Takeaway Copy", "body", MX + TAKE_COPY_X, ly,
+                        CW - TAKE_COPY_X - TAKE_PAD, 289560,
                         [S(prompt, sz=T_BODY3, color=INK, line=100000)],
                         idx=idx + 1, anchor="ctr")]
 
@@ -104,15 +112,15 @@ def _takeaway_optional(sid, idx):
     copy each fill their own half and meet edge to edge - overlapping them
     let whichever came later in the slide's tree paint over the label.
     """
-    lw = 2011680
+    lw = TAKE_COPY_X
     return [placeholder(sid, "Takeaway Label", "body", MX, TAKE_Y, lw, TAKE_H,
                         [S("สรุป", sz=T_LABEL, color=accent(), bold=True,
                            line=100000)], idx=idx, anchor="ctr", fill=solid(PAPER2),
-                        ins=(182880, 0, 91440, 0)),
+                        ins=(TAKE_PAD, 0, 91440, 0)),
             placeholder(sid + 1, "Takeaway Copy", "body", MX + lw, TAKE_Y, CW - lw, TAKE_H,
                         [S("ประเด็นสรุปหนึ่งบรรทัด (ไม่ใส่ก็ได้)", sz=T_BODY3, color=INK,
                            line=100000)], idx=idx + 1, anchor="ctr", fill=solid(PAPER2),
-                        ins=(0, 0, 182880, 0))]
+                        ins=(0, 0, TAKE_PAD, 0))]
 
 
 # the photo band, defined once in tokens.py so slides.css can be emitted from it
@@ -258,8 +266,17 @@ def l03_content(rid_mark_color):
 
 # ---------------------------------------------------------------- 04 Two Column
 def l04_two(rid_mark_color):
-    # Column headings sit where L11's kickers do. They take idx 3/4 so the bodies
-    # keep idx 1/2 and decks made from the old template keep their text.
+    """Two parallel lists on open paper: in scope / out of scope, option A / B.
+
+    Not before/after - that is L11, whose dark and tinted panels say "now" and
+    "next" before a word is read. L04 shipped with ก่อน/หลัง in its demo and
+    nothing on the slide to tell the sides apart, so the two layouts did one
+    job. Each heading now stands on a RULE hairline, which makes the columns
+    read as two sets of equal weight - the thing L11 is not.
+
+    Column headings take idx 3/4 so the bodies keep idx 1/2 and decks made from
+    the old template keep their text.
+    """
     KY, KH = BODY_Y, 548640
     s = [_title(10), _rule(11)]
     for i, (side, prompt, head) in enumerate((("Left", "คอลัมน์ซ้าย", "หัวคอลัมน์ซ้าย"),
@@ -268,6 +285,8 @@ def l04_two(rid_mark_color):
         s.append(placeholder(12 + 2 * i, side + " Heading", "body", x, KY, HALF, 365760,
                              [S(head, sz=T_LEAD, color=heading(), bold=True, font="mj",
                                 line=115000)], idx=3 + i, anchor="t"))
+        s.append(shape(20 + i, side + " Heading Rule", x, KY + 457200, HALF, 12700,
+                       solid(RULE)))
         s.append(placeholder(13 + 2 * i, side + " Content", "body", x, KY + KH, HALF,
                              BODY_H - KH,
                              body_specs([prompt, "ระดับที่สอง", "ระดับที่สาม"]), idx=1 + i))
@@ -524,16 +543,8 @@ def l11_split(rid_mark_color):
                         line=115000)], idx=3, anchor="t"),
          placeholder(17, "Outcome Body", "body", MX + HALF + GUT + PAD, PY + PAD + 548640,
                      HALF - 2 * PAD, PH - PAD - 548640,
-                     dense_specs(["แนวทางหรือผลลัพธ์ที่เสนอ", "ระดับที่สอง"]), idx=4),
-         shape(18, "Takeaway Band", MX, PY + PH + 137160, CW, 411480, solid(PAPER2)),
-         placeholder(19, "Takeaway Label", "body", MX + 182880, PY + PH + 137160 + 60960,
-                     1828800, 289560,
-                     [S("สรุป", sz=T_LABEL, color=accent(), bold=True,
-                        line=100000)], idx=5, anchor="ctr"),
-         placeholder(20, "Takeaway Copy", "body", MX + 2011680, PY + PH + 137160 + 60960,
-                     CW - 2011680 - 182880, 289560,
-                     [S("ประเด็นสรุปหนึ่งบรรทัด", sz=T_BODY3, color=INK, line=100000)],
-                     idx=6, anchor="ctr")]
+                     dense_specs(["แนวทางหรือผลลัพธ์ที่เสนอ", "ระดับที่สอง"]), idx=4)]
+    s += _takeaway(18, 5)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("11 Split Panel", "twoObj", s, bgfill=solid(PAPER))
 
@@ -563,16 +574,7 @@ def l12_cards_band(rid_mark_color):
                              CARD_H - 2 * PAD - 1280160,
                              [S("คำอธิบายสั้น ๆ", sz=T_DENSEBODY, color=INK, line=132000,
                                 space_before=200)], idx=PH_FREE + i * 3 + 2, anchor="t")); sid += 1
-    s.append(shape(sid, "Band", MX, CARD_Y + CARD_H + 137160, CW, 548640, solid(dark())))
-    sid += 1
-    s.append(placeholder(sid, "Band Label", "body", MX + 228600,
-                         CARD_Y + CARD_H + 137160 + 91440, 2011680, 365760,
-                         [S("สรุป", sz=T_LABEL, color=accent_up(), bold=True,
-                            line=100000)], idx=PH_FREE + 12, anchor="ctr")); sid += 1
-    s.append(placeholder(sid, "Band Copy", "body", MX + 2240280,
-                         CARD_Y + CARD_H + 137160 + 91440, CW - 2240280 - 228600, 365760,
-                         [S("ประเด็นสรุปรวมสี่การ์ด", sz=T_BODY3, color=PAPER, line=130000)],
-                         idx=PH_FREE + 13, anchor="ctr"))
+    s += _takeaway(sid, PH_FREE + 12, prompt="ประเด็นสรุปรวมสี่การ์ด")
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("12 Four Cards + Band", "obj", s, bgfill=solid(PAPER))
 
@@ -607,16 +609,7 @@ def l13_process(rid_mark_color):
             cx = x + FIFTH + GUT // 2 - 45720
             s.append(shape(sid, "Connector %d" % (i + 1), cx, STEP_Y + STEP_H // 2 - 45720,
                            91440, 91440, solid(accent()), prst="chevron")); sid += 1
-    s.append(shape(sid, "Result Band", MX, STEP_Y + STEP_H + 137160, CW, 548640,
-                   solid(PAPER2))); sid += 1
-    s.append(placeholder(sid, "Result Label", "body", MX + 228600,
-                         STEP_Y + STEP_H + 137160 + 91440, 2011680, 365760,
-                         [S("ผลลัพธ์", sz=T_LABEL, color=accent(), bold=True,
-                            line=100000)], idx=PH_FREE + 15, anchor="ctr")); sid += 1
-    s.append(placeholder(sid, "Result Copy", "body", MX + 2240280,
-                         STEP_Y + STEP_H + 137160 + 91440, CW - 2240280 - 228600, 365760,
-                         [S("ผลลัพธ์รวมของกระบวนการ", sz=T_BODY3, color=INK, line=130000)],
-                         idx=PH_FREE + 16, anchor="ctr"))
+    s += _takeaway(sid, PH_FREE + 15, label="ผลลัพธ์", prompt="ผลลัพธ์รวมของกระบวนการ")
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("13 Process Flow", "obj", s, bgfill=solid(PAPER))
 
@@ -776,9 +769,13 @@ def l17_phase(rid_mark_color):
 def l18_evidence(rid_mark_color):
     """A claim, a one-line finding, and three frames of proof underneath it.
 
-    The band above the strip is the takeaway, not a section label. The source
-    puts "SAMPLE OF TRAINING SETUP" there, which names the photographs without
-    saying what they prove - the slide ends on evidence with no finding.
+    Claim, proof, finding - in that order, top to bottom. The finding is the
+    standard strip at TAKE_Y, not a section label: the source puts "SAMPLE OF
+    TRAINING SETUP" there, which names the photographs without saying what
+    they prove. It used to sit between the claim and the frames, in navy, as a
+    header for the strip; that put the one conclusion in the system that was
+    neither at the foot nor tinted. The frames end 0.15in above it, and the
+    claim keeps exactly the height it had.
 
     The frames are the deck's receipts: screenshots of the real system, photos
     of the real room. Stock imagery here is worse than no strip at all.
@@ -787,8 +784,7 @@ def l18_evidence(rid_mark_color):
     CAP_H, CAP_GAP = 228600, 57150
     kick_h = PHASE_TAB_H
     claim_y = BODY_Y + kick_h + 137160
-    strip_y = BODY_Y + BODY_H - EVIDENCE_H
-    band_y = strip_y - 137160 - TAKE_H
+    strip_y = TAKE_Y - 137160 - EVIDENCE_H
     s = [_title(10), _rule(11),
          shape(12, "Kicker Pill", MX, BODY_Y, 3200400, kick_h, solid(A),
                prst="roundRect", adj='<a:gd name="adj" fmla="val 50000"/>'),
@@ -797,18 +793,8 @@ def l18_evidence(rid_mark_color):
                                 font="mj", algn="ctr", line=100000)], idx=1,
                      anchor="ctr"),
          tbl_placeholder(14, "Claim Placeholder", MX, claim_y, CW,
-                         band_y - 137160 - claim_y, 2),
-         # the takeaway on this layout is dark, not tinted: it is the strip's
-         # header as well as the finding, and it has to hold the two apart
-         shape(15, "Takeaway Band", MX, band_y, CW, TAKE_H, solid(dark())),
-         placeholder(16, "Takeaway Label", "body", MX + 182880,
-                     band_y + (TAKE_H - 289560) // 2, 1828800, 289560,
-                     [S("สรุป", sz=T_LABEL, color=accent_up(), bold=True,
-                        line=100000)], idx=3, anchor="ctr"),
-         placeholder(17, "Takeaway Copy", "body", MX + 2011680,
-                     band_y + (TAKE_H - 289560) // 2, CW - 2011680 - 182880, 289560,
-                     [S("ข้อสรุปหนึ่งบรรทัด", sz=T_BODY3, color=PAPER, line=100000)],
-                     idx=4, anchor="ctr")]
+                         strip_y - 137160 - claim_y, 2)]
+    s += _takeaway(15, 3, prompt="ข้อสรุปหนึ่งบรรทัด")
     sid, idx = 18, PH_FREE
     for i in range(3):
         x = MX + i * (THIRD + GUT)
