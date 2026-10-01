@@ -1430,3 +1430,78 @@
 .nct-plan__key { display: inline-flex; gap: 19.2px; }
 .nct-plan__glyph { font-style: normal; color: var(--nct-cat-1); }
 .nct-plan__glyph--mark { color: var(--nct-cat-2); }
+
+/* ---------------------------------------------------------------- 22 */
+/* the .potx rows: total + label to 1.10in, breakdown (the legend) at 1.35in into
+   the body, bars from 2.20in on a 0.50in pitch - label 1.95in, plot 7.98in, the
+   totals column 1.20in after a gutter */
+.nct-comp__head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: var(--nct-gut);
+  height: 129.6px;
+}
+.nct-comp__total {
+  margin: 0;
+  height: 76.8px;
+  display: flex;
+  align-items: flex-end;
+  font-family: var(--nct-font-display);
+  font-weight: 700;
+  font-size: var(--nct-fs-tile);
+  line-height: 1;
+  color: var(--nct-heading);
+}
+.nct-comp__total-label { margin: 0; }
+.nct-comp__intro { margin: 0; font-size: var(--nct-fs-body-3); line-height: 1.3; color: var(--nct-ink-2); }
+.nct-comp__key {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: var(--nct-gut);
+  height: 81.6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.nct-comp__seg {
+  display: flex;
+  align-items: center;
+  gap: 8.8px;
+  height: 28.8px;
+  font-size: var(--nct-fs-label);
+  color: var(--nct-ink);
+}
+.nct-comp__swatch { flex: none; width: 13.33px; height: 13.33px; }
+.nct-comp__value {
+  display: flex;
+  align-items: baseline;
+  gap: 9.6px;
+  font-size: var(--nct-fs-body-2);
+  font-weight: 700;
+  color: var(--nct-ink);
+  font-variant-numeric: tabular-nums;
+}
+.nct-comp__value small { font-size: var(--nct-fs-label); font-weight: 400; color: var(--nct-ink-2); }
+.nct-comp__row { display: grid; grid-template-columns: 187.2px 766.4px 1fr; align-items: center; height: 48px; }
+.nct-comp__name { position: relative; font-size: var(--nct-fs-body-3); font-weight: 700; color: var(--nct-ink); }
+.nct-comp__name[data-rec] { color: var(--nct-accent); }
+.nct-comp__name[data-rec]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -9.6px;
+  width: var(--nct-rule-w);
+  height: 4.8px;
+  background: var(--nct-accent);
+}
+.nct-comp__track { display: block; }
+/* the 2px paper gap between segments, never an outline round the bar */
+.nct-comp__bar { display: flex; height: 24px; }
+.nct-comp__bar i + i { border-left: 2px solid var(--nct-paper); }
+.nct-comp__end {
+  padding-left: var(--nct-gut);
+  font-size: var(--nct-fs-body-3);
+  font-weight: 700;
+  color: var(--nct-ink);
+  font-variant-numeric: tabular-nums;
+}

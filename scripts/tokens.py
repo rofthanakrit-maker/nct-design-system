@@ -257,3 +257,6 @@ T_DENSEHEAD = 1600   # 16pt  dense section heading
 T_DENSEBODY = 1200   # 12pt  dense body copy
 T_TBLHEAD   = 1100   # 11pt  table header row
 T_DENSECELL = 1000   # 10pt  table cell - absolute floor, do not go lower
+
+# ---- v4: the data-tile figure - ONLY legal on L22 / L23 (v4 §3 type roles) ----
+T_TILE = 4000   # 40pt  a total or KPI on a data slide, under L06's 72pt

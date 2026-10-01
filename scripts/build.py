@@ -42,7 +42,8 @@ def layouts():
     return ([cover] + _LAYOUTS_02_09 + [close] + _LAYOUTS_11_19
             + [(lambda: PL.l20_cover_gradient("rId2", "rId3"),
                 ["logo-white.png", "mark-white.png"]),
-               (lambda: PL.l21_plan("rId2"), ["mark-color.png"])])
+               (lambda: PL.l21_plan("rId2"), ["mark-color.png"]),
+               (lambda: PL.l22_composition("rId2"), ["mark-color.png"])])
 
 
 _LAYOUTS_02_09 = [
@@ -510,12 +511,80 @@ def xlsx(table):
     return buf.getvalue()
 
 
+def bar_chart(table, fills, grouping, gap, vmax, grid=True, dpts=None, edge=None):
+    """A horizontal bar chart on its own embedded workbook - L21 and L22.
+
+    `table` is the sheet: row 0 is the header (A1 blank or a caption, then one
+    series name per column), every other row a category, padded with None rows
+    so the category count - and with it each bar's pitch - never changes. The
+    plot area is pinned to the frame (manualLayout) and neither axis prints, so
+    the layout's own placeholders are the labels and line up with the bars.
+
+    `fills` is one spPr fill per series; `dpts` maps a series to extra <c:dPt>
+    XML; `edge` is the outline every segment gets - PAPER, which is how adjacent
+    segments get their gap (v4 §3) without a visible border.
+    """
+    n = len(table) - 1
+    cols = "ABCDEFGH"
+
+    def ref(col, kind):
+        pts = "".join('<c:pt idx="%d"><c:v>%s</c:v></c:pt>'
+                      % (i, _esc(row[col]) if kind == "str" else "%g" % row[col])
+                      for i, row in enumerate(table[1:]) if row[col] is not None)
+        rng = "Sheet1!$%s$2:$%s$%d" % (cols[col], cols[col], n + 1)
+        if kind == "str":
+            return ('<c:strRef><c:f>%s</c:f><c:strCache><c:ptCount val="%d"/>%s'
+                    '</c:strCache></c:strRef>' % (rng, n, pts))
+        return ('<c:numRef><c:f>%s</c:f><c:numCache><c:formatCode>General</c:formatCode>'
+                '<c:ptCount val="%d"/>%s</c:numCache></c:numRef>' % (rng, n, pts))
+
+    ln = edge or '<a:ln><a:noFill/></a:ln>'
+    sers = "".join(
+        '<c:ser><c:idx val="%d"/><c:order val="%d"/><c:tx><c:strRef>'
+        '<c:f>Sheet1!$%s$1</c:f><c:strCache><c:ptCount val="1"/><c:pt idx="0">'
+        '<c:v>%s</c:v></c:pt></c:strCache></c:strRef></c:tx>'
+        '<c:spPr>%s%s</c:spPr><c:invertIfNegative val="0"/>%s'
+        '<c:cat>%s</c:cat><c:val>%s</c:val></c:ser>'
+        % (i, i, cols[i + 1], _esc(table[0][i + 1]), fill, ln, (dpts or {}).get(i, ""),
+           ref(0, "str"), ref(i + 1, "num"))
+        for i, fill in enumerate(fills))
+    gridlines = ('<c:majorGridlines><c:spPr><a:ln w="9525">%s</a:ln></c:spPr></c:majorGridlines>'
+                 % solid(RULE)) if grid else ""
+    chart = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
+             '<c:chartSpace %s xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" '
+             'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+             '<c:roundedCorners val="0"/><c:chart><c:autoTitleDeleted val="1"/>'
+             '<c:plotArea><c:layout><c:manualLayout><c:layoutTarget val="inner"/>'
+             '<c:xMode val="edge"/><c:yMode val="edge"/><c:x val="0"/><c:y val="0"/>'
+             '<c:w val="1"/><c:h val="1"/></c:manualLayout></c:layout>'
+             '<c:barChart><c:barDir val="bar"/><c:grouping val="%s"/><c:varyColors val="0"/>'
+             '%s<c:gapWidth val="%d"/><c:overlap val="100"/>'
+             '<c:axId val="21001"/><c:axId val="21002"/></c:barChart>'
+             '<c:catAx><c:axId val="21001"/><c:scaling><c:orientation val="maxMin"/></c:scaling>'
+             '<c:delete val="1"/><c:axPos val="l"/><c:majorTickMark val="none"/>'
+             '<c:minorTickMark val="none"/><c:tickLblPos val="none"/><c:crossAx val="21002"/>'
+             '<c:crosses val="autoZero"/><c:auto val="1"/><c:lblAlgn val="ctr"/>'
+             '<c:lblOffset val="100"/><c:noMultiLvlLbl val="0"/></c:catAx>'
+             '<c:valAx><c:axId val="21002"/><c:scaling><c:orientation val="minMax"/>'
+             '<c:max val="%g"/><c:min val="0"/></c:scaling><c:delete val="0"/><c:axPos val="b"/>'
+             '%s<c:numFmt formatCode="General" sourceLinked="0"/><c:majorTickMark val="none"/>'
+             '<c:minorTickMark val="none"/><c:tickLblPos val="none"/>'
+             '<c:spPr><a:ln><a:noFill/></a:ln></c:spPr>'
+             '<c:crossAx val="21001"/><c:crosses val="max"/><c:crossBetween val="between"/>'
+             '<c:majorUnit val="1"/></c:valAx>'
+             '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr></c:plotArea>'
+             '<c:plotVisOnly val="1"/><c:dispBlanksAs val="gap"/></c:chart>'
+             '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr>'
+             '<c:externalData r:id="rId1"><c:autoUpdate val="0"/></c:externalData>'
+             '</c:chartSpace>'
+             % (NS_C, grouping, sers, gap, vmax, gridlines))
+    return chart, xlsx(table)
+
+
 def gantt_chart(rows, n_periods, highlight=None):
     """v4 L21: a stacked bar whose first series (the start) has no fill, so the
     second (the length) floats at its start period. Eight categories always,
-    blank rows included, so each bar stays on its row label's 0.425in pitch; the
-    plot area is pinned to the frame and both axes print nothing - the layout's
-    period and row placeholders are the labels.
+    blank rows included, so each bar stays on its row label's 0.425in pitch.
 
     One phase in CAT_1 and the rest SEQ_300 when `highlight` names a row (2.1:1
     alone, legal only because every row has its label), all CAT_1 otherwise.
@@ -527,66 +596,39 @@ def gantt_chart(rows, n_periods, highlight=None):
 
     `rows` are (label, start, end) in periods.
     """
-    n = PL.PLAN_ROWS
-    rows = list(rows) + [None] * (n - len(rows))
+    rows = list(rows) + [None] * (PL.PLAN_ROWS - len(rows))
     table = [["เฟส", "เริ่ม", "ระยะเวลา"]] + [
         [r[0], r[1], r[2] - r[1]] if r else [None, None, None] for r in rows]
-
-    def ref(col, kind):
-        pts = "".join('<c:pt idx="%d"><c:v>%s</c:v></c:pt>'
-                      % (i, _esc(row[col]) if kind == "str" else "%g" % row[col])
-                      for i, row in enumerate(table[1:]) if row[col] is not None)
-        rng = "Sheet1!$%s$2:$%s$%d" % ("ABC"[col], "ABC"[col], n + 1)
-        if kind == "str":
-            return ('<c:strRef><c:f>%s</c:f><c:strCache><c:ptCount val="%d"/>%s'
-                    '</c:strCache></c:strRef>' % (rng, n, pts))
-        return ('<c:numRef><c:f>%s</c:f><c:numCache><c:formatCode>General</c:formatCode>'
-                '<c:ptCount val="%d"/>%s</c:numCache></c:numRef>' % (rng, n, pts))
-
-    def ser(i, fill, extra=""):
-        col = "ABC"[i + 1]
-        return ('<c:ser><c:idx val="%d"/><c:order val="%d"/><c:tx><c:strRef>'
-                '<c:f>Sheet1!$%s$1</c:f><c:strCache><c:ptCount val="1"/><c:pt idx="0">'
-                '<c:v>%s</c:v></c:pt></c:strCache></c:strRef></c:tx>'
-                '<c:spPr>%s<a:ln><a:noFill/></a:ln></c:spPr><c:invertIfNegative val="0"/>%s'
-                '<c:cat>%s</c:cat><c:val>%s</c:val></c:ser>'
-                % (i, i, col, table[0][i + 1], fill, extra, ref(0, "str"), ref(i + 1, "num")))
-
-    hi = ""
+    dpts = {}
     if highlight is not None:
-        hi = ('<c:dPt><c:idx val="%d"/><c:invertIfNegative val="0"/><c:bubble3D val="0"/>'
-              '<c:spPr>%s<a:ln><a:noFill/></a:ln></c:spPr></c:dPt>' % (highlight, solid(CAT_1)))
-    bars = solid(SEQ_300 if highlight is not None else CAT_1)
-    chart = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
-             '<c:chartSpace %s xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" '
-             'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
-             '<c:roundedCorners val="0"/><c:chart><c:autoTitleDeleted val="1"/>'
-             '<c:plotArea><c:layout><c:manualLayout><c:layoutTarget val="inner"/>'
-             '<c:xMode val="edge"/><c:yMode val="edge"/><c:x val="0"/><c:y val="0"/>'
-             '<c:w val="1"/><c:h val="1"/></c:manualLayout></c:layout>'
-             '<c:barChart><c:barDir val="bar"/><c:grouping val="stacked"/><c:varyColors val="0"/>'
-             '%s%s<c:gapWidth val="113"/><c:overlap val="100"/>'
-             '<c:axId val="21001"/><c:axId val="21002"/></c:barChart>'
-             '<c:catAx><c:axId val="21001"/><c:scaling><c:orientation val="maxMin"/></c:scaling>'
-             '<c:delete val="1"/><c:axPos val="l"/><c:majorTickMark val="none"/>'
-             '<c:minorTickMark val="none"/><c:tickLblPos val="none"/><c:crossAx val="21002"/>'
-             '<c:crosses val="autoZero"/><c:auto val="1"/><c:lblAlgn val="ctr"/>'
-             '<c:lblOffset val="100"/><c:noMultiLvlLbl val="0"/></c:catAx>'
-             '<c:valAx><c:axId val="21002"/><c:scaling><c:orientation val="minMax"/>'
-             '<c:max val="%d"/><c:min val="0"/></c:scaling><c:delete val="0"/><c:axPos val="b"/>'
-             '<c:majorGridlines><c:spPr><a:ln w="9525">%s</a:ln></c:spPr></c:majorGridlines>'
-             '<c:numFmt formatCode="General" sourceLinked="0"/><c:majorTickMark val="none"/>'
-             '<c:minorTickMark val="none"/><c:tickLblPos val="none"/>'
-             '<c:spPr><a:ln><a:noFill/></a:ln></c:spPr>'
-             '<c:crossAx val="21001"/><c:crosses val="max"/><c:crossBetween val="between"/>'
-             '<c:majorUnit val="1"/></c:valAx>'
-             '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr></c:plotArea>'
-             '<c:plotVisOnly val="1"/><c:dispBlanksAs val="gap"/></c:chart>'
-             '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr>'
-             '<c:externalData r:id="rId1"><c:autoUpdate val="0"/></c:externalData>'
-             '</c:chartSpace>'
-             % (NS_C, ser(0, nofill()), ser(1, bars, hi), n_periods, solid(RULE)))
-    return chart, xlsx(table)
+        dpts[1] = ('<c:dPt><c:idx val="%d"/><c:invertIfNegative val="0"/><c:bubble3D val="0"/>'
+                   '<c:spPr>%s<a:ln><a:noFill/></a:ln></c:spPr></c:dPt>'
+                   % (highlight, solid(CAT_1)))
+    return bar_chart(table, [nofill(), solid(SEQ_300 if highlight is not None else CAT_1)],
+                     "stacked", 113, n_periods, dpts=dpts)
+
+
+def composition_chart(segments, bars, mode="share", other=False):
+    """v4 L22: part-to-whole as one to three horizontal bars - never a pie.
+
+    Each segment is a series in its slot's colour, so the colour follows the
+    category across every bar; with `other` the last one is the folded tail in
+    CAT_MUTE. The PAPER outline is the 2px gap between segments. `share` draws
+    every bar to 100%, `amount` scales them to the largest total. Three
+    categories always (blank ones too) so a bar keeps its label's 0.5in pitch;
+    bars are 0.25in: gap = (0.5 - 0.25) / 0.25.
+
+    `bars` are (label, [value per segment]).
+    """
+    cats = [CAT_1, CAT_2, CAT_3, CAT_4]
+    fills = [solid(CAT_MUTE if other and i == len(segments) - 1 else cats[i])
+             for i in range(len(segments))]
+    rows = list(bars) + [None] * (PL.COMP_BARS - len(bars))
+    table = [["แท่ง"] + list(segments)] + [
+        [r[0]] + list(r[1]) if r else [None] * (len(segments) + 1) for r in rows]
+    vmax = 1 if mode == "share" else max(sum(r[1]) for r in bars)
+    return bar_chart(table, fills, "percentStacked" if mode == "share" else "stacked", 100,
+                     vmax, grid=False, edge='<a:ln w="19050">%s</a:ln>' % solid(PAPER))
 
 
 def milestones(sid, marks):
@@ -890,6 +932,35 @@ def demo_slides():
     sh21 += milestones(sid + 4, [(1, 2.5, "ตรวจรับงวด 1"), (3, 6, "ตรวจรับงวด 2"),
                                  (6, 9.5, "ตรวจรับงวด 3")])
     S.append((21, sh21, [gantt_chart([p[:3] for p in plan], PL.PLAN_PERIODS, highlight=5)]))
+    # ---------------------------------------------- 15c · where the money goes (L22)
+    # one bar, so the breakdown carries the values; the tail is folded into
+    # "อื่น ๆ" in CAT_MUTE. Every share is rounded to a whole percent and they
+    # still sum to 100, so the note does not need to say so.
+    segs = [("พัฒนาและตั้งค่าระบบ", 2.4, "50%"), ("ไลเซนส์ซอฟต์แวร์", 1.2, "25%"),
+            ("คลาวด์ปีแรก", 0.7, "15%"), ("อื่น ๆ", 0.5, "10%")]
+    sh22 = [sp_text(2, "Title", "title", None, ["ครึ่งหนึ่งของงบ 4.8 ล้านบาท คือค่าพัฒนาระบบ"]),
+            sp_text(3, "Total", "body", 2, ["4.8 ล้านบาท"]),
+            sp_text(4, "TotalL", "body", 3, ["งบโครงการรวมทั้งสิ้น"]),
+            sp_text(5, "Intro", "body", 4,
+                    ["รวมภาษีมูลค่าเพิ่ม · สัญญา 12 เดือน "
+                     "ไม่รวมค่าบริการรายเดือนหลังปีแรก"]),
+            chart_frame(6, "Composition", 1, PL.COMP_X, PL.COMP_Y, PL.COMP_W,
+                        PL.COMP_BARS * PL.COMP_ROW_H, "rId2"),
+            sp_text(7, "B1", "body", PL.PH_FREE, ["งบโครงการ"])]
+    sid, idx = 8, PL.PH_FREE + 2 * PL.COMP_BARS
+    for name, val, pct in segs:
+        sh22 += [sp_text(sid, "SN", "body", idx, [name]),
+                 sp_text(sid + 1, "SV", "body", idx + 1, ["%g ล้านบาท" % val]),
+                 sp_text(sid + 2, "SP", "body", idx + 2, [pct])]
+        sid += 3
+        idx += 3
+    sh22 += [sp_text(sid, "Src", "body", 5, ["ใบเสนอราคา NCT-2569-041 · ปัดเป็นแสนบาท"]),
+             sp_text(sid + 1, "TL", "body", 6, ["สรุป"]),
+             sp_text(sid + 2, "TC", "body", 7,
+                     ["ไลเซนส์กับคลาวด์รวมกันไม่ถึง 40% งบส่วนใหญ่จ่ายให้งานที่ทำครั้งเดียว"])]
+    S.append((22, sh22, [composition_chart([s_[0] for s_ in segs],
+                                           [("งบโครงการ", [s_[1] for s_ in segs])],
+                                           other=True)]))
     # ------------------------------------------------- 16 · a phase of the plan (L17)
     S.append((17, [sp_text(2, "Title", "title", None, ["5. Implementation Stage"]),
                    sp_text(3, "KAL", "body", 1, ["Key Activity :"]),

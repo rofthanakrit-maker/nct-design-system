@@ -247,4 +247,4 @@ lightness band, all four under the chroma floor, navy↔teal at normal-vision Δ
   with words stays mandatory wherever the coding appears.
 - The PowerPoint theme's accent1–4 are this set in order, accent5 is `cat-mute`, so
   Insert Chart starts on-system.
-- Full method, validator output and layouts 19–23: `slide-design-system-v4.md`.
+- Full method, validator output and layouts 19 · 21–24: `slide-design-system-v4.md`.

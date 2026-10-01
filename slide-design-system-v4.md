@@ -14,7 +14,7 @@ status token, กติกาการทำเด็คทั้งหมด
 
 > ลำดับการแก้ยังเหมือนเดิม: `design.md` → `scripts/tokens.py` → `python scripts/build.py`
 > **สถานะ (2026-09-11)** — §2 ลง `design.md § v4` และ `tokens.py` แล้ว · §2.2 เจ้าของระบบอนุมัติแล้ว ·
-> L19 · L21 build แล้วทั้ง `.potx` และ React (L21 เมื่อ 2026-10-01) · **L22–L24 ยังเป็น spec** ·
+> L19 · L21 · L22 build แล้วทั้ง `.potx` และ React (L21 · L22 เมื่อ 2026-10-01) · **L23–L24 ยังเป็น spec** ·
 > web emit `--nct-cat-*` กับ `--nct-seq-300` (L21 อ่าน) ส่วน seq ตัวอื่น / `--nct-div-warm-l`
 > จะ emit วันที่มี layout อ่านมัน
 >
@@ -293,6 +293,13 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
   (โหมด `amount` แท่งยาวตามยอด) และตัวเลขเต็มอยู่ภาคผนวก
 - แพ็กเกจที่แนะนำ: ป้ายชื่อเป็น `NAVY`/accent และมีแถบ accent 0.050in เหนือป้าย — ใช้วิธีเดียวกับคอลัมน์แนะนำของ L09
 - ยอดปัดเศษแล้วรวมไม่ถึง 100 ให้เขียนที่ source note ว่า "ปัดเศษ"
+- **ทำแล้ว (2026-10-01) ต่างจากตารางข้างบนสองข้อ** — (1) breakdown ย้ายขึ้นไปอยู่**เหนือ**แท่งที่ y 3.200
+  แท่งเริ่ม 4.050 จบ 5.550: breakdown คือ legend และ §3 ให้ legend อยู่มุมซ้ายบนของกราฟ
+  ตอนแท่งเดียว แถวว่างสองแถวเลยไปกองที่ท้ายแทนที่จะเป็นช่องโหว่ระหว่างแท่งกับ key ของมันเอง ·
+  (2) กราฟกว้าง 7.983 ไม่ใช่ 9.383 แล้วมี**คอลัมน์ยอดรวม** 1.200 ต่อท้ายหลัง gutter — โหมด `share`
+  แท่งเต็มกรอบ ยอดรวมที่ปลายแท่งจะล้นขอบสไลด์ · ค่าใน breakdown กว้าง 1.450 แล้ว % ต่อท้ายทันที ·
+  swatch ใน `.potx` เป็น `CAT_1–3` + `CAT_MUTE` (กรณีที่พบบ่อย: สามหมวด + อื่น ๆ) ·
+  กราฟเดโมฝัง workbook เหมือน L21 · token `T_TILE` 40 pt (`--nct-fs-tile`) เพิ่มสำหรับ L22 / L23
 
 ### 23 KPI + Trend
 
@@ -354,6 +361,8 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
            series: { name: 'เวลาปิดงบ', values: [6, 7, 6, 8, 9, 7] } }}
   figure={{ value: '9 วัน', label: '…' }} insights={['…', '…']} source="…" takeaway="…" />
 
+<SlideComposition total="4.8 ล้านบาท" totalLabel="…" segments={['พัฒนา', 'ไลเซนส์', 'คลาวด์', 'อื่น ๆ']} other
+  bars={[{ label: 'งบโครงการ', values: [2.4, 1.2, 0.7, 0.5] }]} unit="ล้านบาท" source="…" takeaway="…" />  // bars 1–3
 <SlidePlan periods={['ด.1', …]} highlight={5} assumption="…" takeaway="…"
   rows={[{ label: 'เตรียมระบบ', start: 0, end: 1, duration: '4 สัปดาห์' },
          { label: '…', start: 1, end: 2.5, milestone: { at: 2.5, label: 'ตรวจรับงวด 1' } }, …]} />  // ≤8 × ≤12
@@ -361,8 +370,6 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 // ยังเป็นสเปก
 <SlideKpiTrend tiles={[t1, t2, t3]} trend={{ tile: 0, points: […], target: 95 }} … />
 <SlideBeforeAfter better="lower" unit="วัน" rows={[{ label, before, after }, …]} … />   // 3–7
-<SlideComposition total="4.8 ล้านบาท" segments={['FN', 'AP', 'AR', 'อื่น ๆ']}
-  bars={[{ label: 'Standard', values: […], recommended: true }]} mode="share" … />       // bars 1–3
 ```
 
 - `series` / `segments` ส่งเป็นลำดับ slot ตรง ๆ **index ของสีผูกกับตัวข้อมูล ไม่ใช่ลำดับที่ render**
@@ -373,7 +380,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 
 ## 6. ลำดับการลงมือ
 
-สถานะ 2026-10-01: ข้อ 1–5 ทำแล้ว · ข้อ 6–8 ทำแล้วเฉพาะ L19 · L21
+สถานะ 2026-10-01: ข้อ 1–5 ทำแล้ว · ข้อ 6–8 ทำแล้วเฉพาะ L19 · L21 · L22
 
 1. **ตัดสินใจ §2.2** แล้วลง `design.md § v4`
 2. `tokens.py` — เปลี่ยนค่า `CAT_1..4` · เพิ่ม `CAT_MUTE` `SEQ_100..400` `DIV_WARM_L`
@@ -398,7 +405,7 @@ node <dataviz>/scripts/validate_palette.js "#90B4E4,#6994CF,#2A5EA0,#23436D,#163
 
 | | v3 | v4 |
 |---|---|---|
-| layout | 18 | **19 · 21** (+ สเปก 22–24) |
+| layout | 18 | **19 · 21 · 22** (+ สเปก 23–24) |
 | colour token | 26 | **31** (+ `CAT_MUTE` · `SEQ_100..400` · `DIV_WARM_L` − `TEAL_L` ที่ไม่มีใครอ่านแล้ว) · `CAT_1..4` เปลี่ยนค่า |
 | สีหมวด | น้ำเงิน 4 เฉด ห่างกัน 1.31:1 | 4 hue · ผ่าน validator (CVD 15.0 · normal 21.4) |
 | theme accent | 4 น้ำเงิน + เทา + `PAPER2` | ชุด categorical ที่ตรวจแล้ว |

@@ -104,6 +104,7 @@ export const fontSize = {
   densebody: 16,
   tblhead: 14.67,
   densecell: 13.33,
+  tile: 53.33,
 } as const;
 
 export type NctColor = keyof typeof color;

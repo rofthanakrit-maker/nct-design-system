@@ -13,7 +13,7 @@ No provider, no theme object. Two things only:
    (every `--nct-*` variable) and `slides.css`. Without it slides render unstyled
    at the wrong size — there is no inline-style fallback.
 2. Put content inside a layout component. `Slide` is the raw 1280×720 canvas
-   (13.333in × 7.5in at 96dpi); the 21 layouts wrap it. Reach for bare `Slide`
+   (13.333in × 7.5in at 96dpi); the 22 layouts wrap it. Reach for bare `Slide`
    only when no layout fits.
 
 Slides scale themselves to their container's width by default (`fit`, measured
@@ -21,14 +21,14 @@ before paint). `fit="contain"` fits width *and* height and centres the canvas �
 use it for a presenter or any box whose height is fixed; the default crops the
 foot of the slide there. Pass `fit={false}` for a fixed 1280×720 board.
 
-## The 21 layouts
+## The 22 layouts
 
 `SlideCover` 01 · `SlideSection` 02 · `SlideContent` 03 · `SlideTwoColumn` 04 ·
 `SlideThreeCards` 05 · `SlideKeyFigures` 06 · `SlideQuote` 07 · `SlideFullImage` 08 ·
 `SlideTable` 09 · `SlideClosing` 10 · `SlideSplitPanel` 11 · `SlideFourCards` 12 ·
 `SlideProcessFlow` 13 · `SlideDiagram` 14 · `SlideAgenda` 15 · `SlideDenseTable` 16 ·
 `SlidePhaseCard` 17 · `SlideEvidence` 18 · `SlideChart` 19 ·
-`SlideCoverGradient` 20 · `SlidePlan` 21
+`SlideCoverGradient` 20 · `SlidePlan` 21 · `SlideComposition` 22
 
 Compose with `Deck`. Building blocks: `BulletList`, `DataTable`, `TakeawayBand`,
 `DiagramBox`, `DiagramLink`, `DiagramGroup`, `NctLogo`, `NctMark`, `Icon`.
@@ -149,8 +149,9 @@ does not keep.
   story. `figure`, `source` and `takeaway` are required: the big number must come
   out of the chart beside it (otherwise it is `SlideKeyFigures`), and the source
   says where the full table lives. Charts never go on a dark slide, never take a
-  second y-axis, and never use a pie — part-to-whole is a `stacked` column with
-  the tail folded into `slot: "mute"`.
+  second y-axis, and never use a pie — part-to-whole over time is a `stacked`
+  column with the tail folded into `slot: "mute"`, and part-to-whole at one
+  moment is `SlideComposition`.
 - **A plan is `SlidePlan`, never a table with coloured cells.** `periods` count
   from the start ("ด.1" …, the real date is unknown at proposal time), twelve at
   most — past that change the unit; `rows` are one to eight, each `{ label, start,
@@ -160,6 +161,14 @@ does not keep.
   `milestone` is a sign-off or deliverable, not a task. `assumption` (what period
   one counts from) and `takeaway` are required. No text in bars, no dependency
   arrows — order of work is `SlideProcessFlow` / `SlideDiagram`.
+- **Part-to-whole is `SlideComposition`.** One bar is a budget by category and
+  its breakdown carries the values; two or three bars compare packages, the
+  breakdown becomes the legend and each bar carries its total. Four segments at
+  most — keep the three largest and set `other` to fold the rest into "อื่น ๆ".
+  The segment order is the colour order on every bar; never re-sort it by size.
+  `mode="amount"` when the totals differ and that difference is the story;
+  `recommended` on the package the takeaway argues for. `source` says "ปัดเศษ"
+  whenever the rounded shares do not sum to 100.
 - **Values are selective.** The chart labels the highlighted bar (or the largest),
   the line ends when they sit apart, and the last stack total. It never prints a
   number on every mark; the axis, the hidden table and each mark's hover title

@@ -145,6 +145,7 @@ export {
   SlideChart,
   SlideCoverGradient,
   SlidePlan,
+  SlideComposition,
 } from "./layouts";
 export { Chart } from "./chart";
 export type { ChartProps, ChartSeries, ChartSeriesList } from "./chart";
@@ -182,6 +183,10 @@ export type {
   SlidePlanProps,
   PlanRow,
   PlanRows,
+  SlideCompositionProps,
+  CompositionSegments,
+  CompositionBar,
+  CompositionBars,
 } from "./layouts";
 
 /* Stock imagery, inlined as data URIs so it survives a CSP that blocks external

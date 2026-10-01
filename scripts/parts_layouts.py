@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""The 21 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3
+"""The 22 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3
 + 1 chart, v4 + the gradient cover, moved off 01 when the corp cover became
-the default one + the plan timeline, v4)."""
+the default one + the plan timeline and the composition bars, v4)."""
 import parts_master as PM
 from tokens import *
 from ooxml import *
@@ -913,3 +913,83 @@ def l21_plan(rid_mark_color):
     s += _takeaway(sid + 2, 4)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("21 Plan Timeline", "chart", s, bgfill=solid(PAPER))
+
+
+# ---------------------------------------------------------------- 22 Composition (v4)
+COMP_BARS, COMP_SEGMENTS = 3, 4
+COMP_KEY_Y = 2926080                      # 3.20in - the breakdown, which is the legend
+COMP_Y = 3703320                          # 4.05in - the first bar's row
+COMP_ROW_H = 457200                       # 0.50in - three rows end at 5.55in
+COMP_LABEL_W = 1645920                    # 1.80in
+COMP_X = 2697480                          # 2.95in
+COMP_TOTAL_W = 1097280                    # 1.20in: each bar's total, at its end
+COMP_TOTAL_X = MX + CW - COMP_TOTAL_W
+COMP_W = COMP_TOTAL_X - GUT - COMP_X      # 7.983in
+COMP_SWATCH = 127000                      # 0.139in
+
+
+def l22_composition(rid_mark_color):
+    """Part-to-whole, never a pie: one bar for a budget by category, two or three
+    to compare packages.
+
+    The totals column is the one departure from the spec's table (which ran the
+    chart to the margin): a share-mode bar fills the plot, so the total has to
+    sit in its own column at the bar's end or it lands outside the slide. The
+    breakdown sits above the bars, not below as the spec drew it: it is the
+    legend, and v4 §3 puts a legend top-left of its chart - and a single bar
+    then leaves its two empty rows at the foot instead of a gap between the bar
+    and its own key. The breakdown swatches are CAT_1-3 and CAT_MUTE - the common case, three
+    categories and the folded tail; a fourth real category is CAT_4 on the chart
+    and a recoloured swatch on the slide.
+    """
+    s = [_title(10), _rule(11),
+         placeholder(12, "Total", "body", MX, BODY_Y, HALF, 731520,
+                     [S("0.0 ล้านบาท", sz=T_TILE, color=heading(), bold=True, font="mj",
+                        line=100000)], idx=2, anchor="b"),
+         placeholder(13, "Total Label", "body", MX, BODY_Y + 731520, HALF, NOTE_H,
+                     [S("ยอดรวมนี้คืออะไร", sz=T_LABEL, color=INK2, bold=True, spc=120,
+                        line=130000)], idx=3, anchor="t"),
+         placeholder(14, "Intro", "body", MX + HALF + GUT, BODY_Y, HALF, 1005840,
+                     [S("เงื่อนไขของตัวเลข: รวม VAT หรือไม่ ระยะสัญญา", sz=T_BODY3, color=INK2,
+                        line=130000)], idx=4),
+         chart_placeholder(15, "Chart Placeholder", COMP_X, COMP_Y, COMP_W,
+                           COMP_BARS * COMP_ROW_H, 1)]
+    sid, idx = 16, PH_FREE
+    for b in range(COMP_BARS):
+        y = COMP_Y + b * COMP_ROW_H
+        s.append(placeholder(sid, "Bar %d Label" % (b + 1), "body", MX, y, COMP_LABEL_W,
+                             COMP_ROW_H,
+                             [S("ชื่อแท่ง", sz=T_BODY3, color=INK, bold=True, line=100000)],
+                             idx=idx, anchor="ctr"))
+        s.append(placeholder(sid + 1, "Bar %d Total" % (b + 1), "body", COMP_TOTAL_X, y,
+                             COMP_TOTAL_W, COMP_ROW_H,
+                             [S("ยอดรวม", sz=T_BODY3, color=INK, bold=True, line=100000)],
+                             idx=idx + 1, anchor="ctr"))
+        sid += 2
+        idx += 2
+    swatches = [CAT_1, CAT_2, CAT_3, CAT_MUTE]
+    vy, vw = COMP_KEY_Y + NOTE_H, 1325880     # value row under the name, 1.45in wide
+    for k in range(COMP_SEGMENTS):
+        x = MX + k * (QUARTER + GUT)
+        s += [shape(sid, "Swatch %d" % (k + 1), x, COMP_KEY_Y + (NOTE_H - COMP_SWATCH) // 2,
+                    COMP_SWATCH, COMP_SWATCH, solid(swatches[k])),
+              placeholder(sid + 1, "Segment %d Name" % (k + 1), "body",
+                          x + COMP_SWATCH + 91440, COMP_KEY_Y,
+                          QUARTER - COMP_SWATCH - 91440, NOTE_H,
+                          [S("หมวด %d" % (k + 1), sz=T_LABEL, color=INK, line=100000)],
+                          idx=idx, anchor="ctr"),
+              placeholder(sid + 2, "Segment %d Value" % (k + 1), "body", x, vy, vw, 365760,
+                          [S("0.0", sz=T_BODY2, color=INK, bold=True, line=100000)],
+                          idx=idx + 1, anchor="ctr"),
+              placeholder(sid + 3, "Segment %d Share" % (k + 1), "body", x + vw, vy,
+                          QUARTER - vw, 365760,
+                          [S("0%", sz=T_LABEL, color=INK2, line=100000)],
+                          idx=idx + 2, anchor="ctr")]
+        sid += 4
+        idx += 3
+    s.append(placeholder(sid, "Source", "body", MX, NOTE_Y, CW, NOTE_H,
+                         [S("ที่มาของตัวเลข · ปัดเศษ", sz=T_DENSECELL, color=INK2,
+                            line=130000)], idx=5))
+    s += _takeaway(sid + 1, 6)
+    s += chrome(dark=False, mark_rid=rid_mark_color)
+    return _wrap("22 Composition", "chart", s, bgfill=solid(PAPER))

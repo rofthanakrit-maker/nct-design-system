@@ -173,6 +173,10 @@
       "cardMode": "column",
       "viewport": "1024x700"
     },
+    "SlideComposition": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
     "SlideCoverGradient": {
       "cardMode": "column",
       "viewport": "1024x700"

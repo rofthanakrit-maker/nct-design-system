@@ -117,6 +117,7 @@
   --nct-fs-densebody: 16px;  /* 12pt - dense: body copy (L11-L14) */
   --nct-fs-tblhead:   14.67px;  /* 11pt - dense: table header (L16) */
   --nct-fs-densecell: 13.33px;  /* 10pt - dense: table cell (L16) - 10pt floor */
+  --nct-fs-tile:      53.33px;  /* 40pt - v4: total / KPI figure on a data slide (L22 / L23) */
 
   /* ---- families: Kanit is the heading voice, Noto the body voice ---- */
   --nct-font-display: 'Kanit', 'Noto Sans Thai', system-ui, sans-serif;

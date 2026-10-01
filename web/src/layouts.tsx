@@ -1228,3 +1228,135 @@ export function SlidePlan({
     </Slide>
   );
 }
+
+/* ---------------------------------------------------------------- 22 */
+/** One to four. Past four, keep the three largest and fold the rest into "อื่น ๆ" with `other`. */
+export type CompositionSegments =
+  | [string]
+  | [string, string]
+  | [string, string, string]
+  | [string, string, string, string];
+
+export interface CompositionBar {
+  /** "งบโครงการ", or the package name when bars compare packages. */
+  label: ReactNode;
+  /** One per segment, in segment order — the colour follows the segment, never the size. */
+  values: number[];
+  /** Shown at the bar's end when there are two or three bars. Defaults to the formatted sum. */
+  total?: ReactNode;
+  /** The package the takeaway argues for: accent label with a cap, as L09's column. */
+  recommended?: boolean;
+}
+
+export type CompositionBars =
+  | [CompositionBar]
+  | [CompositionBar, CompositionBar]
+  | [CompositionBar, CompositionBar, CompositionBar];
+
+export interface SlideCompositionProps extends Base {
+  title: ReactNode;
+  /** The whole, at tile size ("4.8 ล้านบาท"). */
+  total: ReactNode;
+  totalLabel: ReactNode;
+  /** The terms behind the number — VAT, contract length. */
+  intro?: ReactNode;
+  segments: CompositionSegments;
+  /** The last segment is the folded tail, drawn cat-mute. */
+  other?: boolean;
+  bars: CompositionBars;
+  /** `share`: every bar runs to 100%. `amount`: bars scale to the largest total. */
+  mode?: "share" | "amount";
+  /** Appended to every value in the breakdown ("ล้านบาท"). */
+  unit?: string;
+  format?: (n: number) => string;
+  /** Required: where the numbers come from, and "ปัดเศษ" when the shares do not sum to 100. */
+  source: ReactNode;
+  takeawayLabel?: string;
+  takeaway: ReactNode;
+}
+
+/**
+ * 22 · Composition. Part-to-whole as one to three horizontal bars — never a pie.
+ * One bar: the breakdown above it carries the values. Two or three: the
+ * breakdown is only the legend, each bar carries its total, and the full
+ * numbers go to the appendix.
+ */
+export function SlideComposition({
+  title,
+  total,
+  totalLabel,
+  intro,
+  segments,
+  other = false,
+  bars,
+  mode = "share",
+  unit,
+  format = (n) => n.toLocaleString("th-TH"),
+  source,
+  takeawayLabel = "สรุป",
+  takeaway,
+  ...chrome
+}: SlideCompositionProps) {
+  const color = (i: number) =>
+    other && i === segments.length - 1 ? "var(--nct-cat-mute)" : `var(--nct-cat-${i + 1})`;
+  const sum = (b: CompositionBar) => b.values.reduce((a, v) => a + v, 0);
+  const max = Math.max(...bars.map(sum));
+  const one = bars.length === 1;
+  const withUnit = (n: number) => (unit ? `${format(n)} ${unit}` : format(n));
+  return (
+    <Slide {...chrome}>
+      <SlideTitle>{title}</SlideTitle>
+      <div className="nct-body">
+        <div className="nct-comp__head">
+          <div>
+            <p className="nct-comp__total">{total}</p>
+            <p className="nct-figure__label nct-comp__total-label">{totalLabel}</p>
+          </div>
+          {intro && <p className="nct-comp__intro">{intro}</p>}
+        </div>
+        <ul className="nct-comp__key">
+          {segments.map((name, i) => (
+            <li key={i}>
+              <span className="nct-comp__seg">
+                <i className="nct-comp__swatch" style={{ background: color(i) }} />
+                {name}
+              </span>
+              {one && (
+                <span className="nct-comp__value">
+                  {withUnit(bars[0].values[i])}
+                  <small>{Math.round((bars[0].values[i] / sum(bars[0])) * 100)}%</small>
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+        <div className="nct-comp__bars" aria-hidden="true">
+          {bars.map((b, r) => (
+            <div key={r} className="nct-comp__row">
+              <span className="nct-comp__name" data-rec={b.recommended || undefined}>{b.label}</span>
+              <span className="nct-comp__track">
+                <span className="nct-comp__bar" style={{ width: `${mode === "amount" ? (sum(b) / max) * 100 : 100}%` }}>
+                  {b.values.map((v, i) => (
+                    // normalised: flex-grow values summing under 1 leave part of the bar empty
+                    <i key={i} style={{ flex: `${v / sum(b)} 1 0`, background: color(i) }} />
+                  ))}
+                </span>
+              </span>
+              <span className="nct-comp__end">{one ? null : b.total ?? withUnit(sum(b))}</span>
+            </div>
+          ))}
+        </div>
+        <div className="nct-sr"><table>
+          <thead><tr><th />{segments.map((s, i) => <th key={i}>{s}</th>)}<th>รวม</th></tr></thead>
+          <tbody>
+            {bars.map((b, r) => (
+              <tr key={r}><th>{b.label}</th>{b.values.map((v, i) => <td key={i}>{withUnit(v)}</td>)}<td>{withUnit(sum(b))}</td></tr>
+            ))}
+          </tbody>
+        </table></div>
+        <p className="nct-dia-legend">{source}</p>
+        <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
+      </div>
+    </Slide>
+  );
+}

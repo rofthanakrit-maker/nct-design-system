@@ -15,6 +15,7 @@ import {
   SlideAgenda,
   SlideChart,
   SlideClosing,
+  SlideComposition,
   SlideContent,
   SlideCover,
   SlideCoverGradient,
@@ -275,6 +276,19 @@ function WebDeck() {
           [{ value: "รายงานสุขภาพระบบ", bold: true }, { value: "ไตรมาส", align: "center" }, { value: "รายเดือน", align: "center" }, { value: "รายสัปดาห์", align: "center" }],
           [{ value: "ค่าบริการต่อเดือน", bold: true }, { value: "18,000 บาท", align: "center", bold: true }, { value: "32,000 บาท", align: "center", bold: true }, { value: "65,000 บาท", align: "center", bold: true }],
         ]}
+      />
+      {/* 22 · where the money goes: one bar, so the breakdown carries the values */}
+      <SlideComposition
+        title="ครึ่งหนึ่งของงบ 4.8 ล้านบาท คือค่าพัฒนาระบบ"
+        total="4.8 ล้านบาท"
+        totalLabel="งบโครงการรวมทั้งสิ้น"
+        intro="รวมภาษีมูลค่าเพิ่ม · สัญญา 12 เดือน ไม่รวมค่าบริการรายเดือนหลังปีแรก"
+        segments={["พัฒนาและตั้งค่าระบบ", "ไลเซนส์ซอฟต์แวร์", "คลาวด์ปีแรก", "อื่น ๆ"]}
+        other
+        bars={[{ label: "งบโครงการ", values: [2.4, 1.2, 0.7, 0.5] }]}
+        unit="ล้านบาท"
+        source="ใบเสนอราคา NCT-2569-041 · ปัดเป็นแสนบาท"
+        takeaway="ไลเซนส์กับคลาวด์รวมกันไม่ถึง 40% งบส่วนใหญ่จ่ายให้งานที่ทำครั้งเดียว"
       />
       {/* the ask. The thank-you is the title; the content is what happens next.
           Web brand: the cover's split mirrored, the handshake heads the contact card. */}
