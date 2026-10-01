@@ -12,7 +12,7 @@ import {
   type DataTableProps,
 } from "./primitives";
 
-/* The 25 layouts of NCT-Slide-Template.potx, one component each. Names, slots
+/* The 26 layouts of NCT-Slide-Template.potx, one component each. Names, slots
    and geometry mirror the .potx so a design made here can be rebuilt in
    PowerPoint by picking the layout of the same number. */
 
@@ -1645,6 +1645,70 @@ export function SlideTeam({
         <div className="nct-team" style={{ gridTemplateColumns: `repeat(${team.length}, 1fr)` }}>
           {team.map((m, i) => <TeamCard key={i} m={m} />)}
         </div>
+        {note && <p className="nct-dia-legend">{note}</p>}
+        {takeaway && <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>}
+      </div>
+    </Slide>
+  );
+}
+
+/* ---------------------------------------------------------------- 26 */
+export interface ClientItem {
+  /** Always given: the logo's alt text, and the tile itself when there is no logo. */
+  name: string;
+  /** Logo image URL. Only with the client's permission — without it, the name stands in. */
+  logo?: string;
+  /** Sector · what was delivered ("ค้าปลีก · ปิดงบอัตโนมัติ"). One line. */
+  caption?: ReactNode;
+}
+
+type ClientRow = [ClientItem, ClientItem, ClientItem, ClientItem];
+
+/** Whole rows of four only — four, eight or twelve. A ragged last row reads as a gap. */
+export type ClientItems = [...ClientRow] | [...ClientRow, ...ClientRow] | [...ClientRow, ...ClientRow, ...ClientRow];
+
+export interface SlideClientsProps extends Base {
+  /** A claim the wall proves ("40 องค์กรปิดงบด้วยระบบที่ NCT วางอยู่ทุกเดือน"). */
+  title: ReactNode;
+  /** How these were picked, out of how many ("คัด 12 จาก 40 องค์กร ที่ใช้งานเกิน 2 ปี"). */
+  intro?: ReactNode;
+  clients: ClientItems;
+  /** Where the full list is; permission for the logos. */
+  note?: ReactNode;
+  takeawayLabel?: string;
+  takeaway?: ReactNode;
+}
+
+/**
+ * 26 · Client References. Up to twelve clients in rows of four, each a logo
+ * (or its name, when the logo is not cleared for use) over what was delivered.
+ * The caption is what makes a tile a reference rather than decoration. Tiles
+ * are paper with a hairline: logos ship on white, and a tint would box them.
+ */
+export function SlideClients({
+  title,
+  intro,
+  clients,
+  note,
+  takeawayLabel = "สรุป",
+  takeaway,
+  ...chrome
+}: SlideClientsProps) {
+  return (
+    <Slide {...chrome}>
+      <SlideTitle>{title}</SlideTitle>
+      <div className="nct-body">
+        {intro && <p className="nct-refs__intro">{intro}</p>}
+        <ul className="nct-refs">
+          {clients.map((c, i) => (
+            <li key={i} className="nct-refs__tile">
+              <div className="nct-refs__logo">
+                {c.logo ? <img src={c.logo} alt={c.name} /> : <span>{c.name}</span>}
+              </div>
+              {c.caption && <p className="nct-refs__caption">{c.caption}</p>}
+            </li>
+          ))}
+        </ul>
         {note && <p className="nct-dia-legend">{note}</p>}
         {takeaway && <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>}
       </div>

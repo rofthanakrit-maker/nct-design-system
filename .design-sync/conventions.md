@@ -13,7 +13,7 @@ No provider, no theme object. Two things only:
    (every `--nct-*` variable) and `slides.css`. Without it slides render unstyled
    at the wrong size — there is no inline-style fallback.
 2. Put content inside a layout component. `Slide` is the raw 1280×720 canvas
-   (13.333in × 7.5in at 96dpi); the 25 layouts wrap it. Reach for bare `Slide`
+   (13.333in × 7.5in at 96dpi); the 26 layouts wrap it. Reach for bare `Slide`
    only when no layout fits.
 
 Slides scale themselves to their container's width by default (`fit`, measured
@@ -21,7 +21,7 @@ before paint). `fit="contain"` fits width *and* height and centres the canvas �
 use it for a presenter or any box whose height is fixed; the default crops the
 foot of the slide there. Pass `fit={false}` for a fixed 1280×720 board.
 
-## The 25 layouts
+## The 26 layouts
 
 `SlideCover` 01 · `SlideSection` 02 · `SlideContent` 03 · `SlideTwoColumn` 04 ·
 `SlideThreeCards` 05 · `SlideKeyFigures` 06 · `SlideQuote` 07 · `SlideFullImage` 08 ·
@@ -29,7 +29,7 @@ foot of the slide there. Pass `fit={false}` for a fixed 1280×720 board.
 `SlideProcessFlow` 13 · `SlideDiagram` 14 · `SlideAgenda` 15 · `SlideDenseTable` 16 ·
 `SlidePhaseCard` 17 · `SlideEvidence` 18 · `SlideChart` 19 ·
 `SlideCoverGradient` 20 · `SlidePlan` 21 · `SlideComposition` 22 · `SlideKpiTrend` 23 ·
-`SlideBeforeAfter` 24 · `SlideTeam` 25
+`SlideBeforeAfter` 24 · `SlideTeam` 25 · `SlideClients` 26
 
 Compose with `Deck`. Building blocks: `BulletList`, `DataTable`, `TakeawayBand`,
 `DiagramBox`, `DiagramLink`, `DiagramGroup`, `NctLogo`, `NctMark`, `Icon`.
@@ -192,6 +192,12 @@ does not keep.
   several says so in `role` ("นักพัฒนาระบบ × 3") and names the one who leads it;
   `credential` is the one line the TOR asks for. More than four roles: merge
   them and put the full roster and CVs in the appendix, said in `note`.
+- **Client references are `SlideClients`, never a bare logo grid.** Four, eight
+  or twelve tiles (whole rows of four). Every tile has a `caption` - sector and
+  what was delivered ("ค้าปลีก · ปิดงบอัตโนมัติ") - because a logo alone proves
+  nothing. `logo` only with the client's permission; without it the `name`
+  stands in, set as a wordmark. Never draw or approximate a real company's logo.
+  `intro` says how the tiles were picked out of how many.
 - **Values are selective.** The chart labels the highlighted bar (or the largest),
   the line ends when they sit apart, and the last stack total. It never prints a
   number on every mark; the axis, the hidden table and each mark's hover title

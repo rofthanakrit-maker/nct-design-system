@@ -1618,3 +1618,54 @@
   color: var(--nct-heading);
 }
 .nct-team__cred { margin: 0; font-size: var(--nct-fs-densebody); line-height: 1.3; color: var(--nct-ink-2); }
+
+/* ---------------------------------------------------------------- 26 */
+/* the .potx: intro on the first 0.30in, tiles from 0.40in, 1.00in tall on the
+   quarter grid with 0.20in gutters; logo box 0.55in from +0.10in, the caption
+   on the tile's last 0.34in */
+.nct-refs__intro {
+  margin: 0;
+  height: 28.8px;
+  display: flex;
+  align-items: center;
+  font-size: var(--nct-fs-body-3);
+  color: var(--nct-ink-2);
+}
+.nct-refs {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 38.4px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 96px;
+  gap: var(--nct-gut);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.nct-refs__tile {
+  display: grid;
+  grid-template-rows: 52.8px 1fr;
+  padding: 9.6px 13.2px;
+  background: var(--nct-paper);
+  border: 1px solid var(--nct-rule);
+}
+.nct-refs__logo { display: flex; align-items: center; justify-content: center; min-height: 0; }
+.nct-refs__logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.nct-refs__logo span {
+  font-family: var(--nct-font-display);
+  font-weight: 700;
+  font-size: var(--nct-fs-densehead);
+  line-height: 1.1;
+  text-align: center;
+  color: var(--nct-ink);
+}
+.nct-refs__caption {
+  margin: 0;
+  align-self: center;
+  font-size: var(--nct-fs-densebody);
+  line-height: 1.2;
+  text-align: center;
+  color: var(--nct-ink-2);
+}

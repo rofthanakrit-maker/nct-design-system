@@ -167,6 +167,18 @@ interface TeamMember {
 }
 ```
 
+## Client references 26 — `ClientItem`
+
+`SlideClients.clients` is four, eight or twelve of these (whole rows of four):
+
+```ts
+interface ClientItem {
+  name: string;           // always: the logo's alt text, and the tile when there is no logo
+  logo?: string;          // image URL - only with the client's permission
+  caption?: ReactNode;    // "ค้าปลีก · ปิดงบอัตโนมัติ" - sector · what was delivered
+}
+```
+
 ## Icons — `LucideIcon`
 
 `Icon`'s `icon` prop takes the glyph **component**, not a name:

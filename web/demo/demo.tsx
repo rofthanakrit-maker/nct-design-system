@@ -15,6 +15,7 @@ import {
   SlideAgenda,
   SlideBeforeAfter,
   SlideChart,
+  SlideClients,
   SlideClosing,
   SlideComposition,
   SlideContent,
@@ -534,6 +535,28 @@ function CorpDeck() {
           ]}
         />
       </SlideEvidence>
+      {/* 26 · who already runs it. Microsoft's stock fictional companies, as
+          names in the logo slot: the demo has no client logos to show. */}
+      <SlideClients
+        title="40 องค์กรปิดงบด้วยระบบที่ NCT วางอยู่ทุกเดือน"
+        intro="คัด 12 จาก 40 องค์กร ที่ใช้งานต่อเนื่องเกิน 2 ปี"
+        clients={[
+          { name: "Contoso", caption: "ค้าปลีก · ปิดงบอัตโนมัติ" },
+          { name: "Fabrikam", caption: "การผลิต · ใบแจ้งหนี้ด้วย OCR" },
+          { name: "Northwind Traders", caption: "นำเข้า-ส่งออก · กระทบยอดธนาคาร" },
+          { name: "Adventure Works", caption: "การผลิต · Dynamics 365 BC" },
+          { name: "Tailspin Toys", caption: "ค้าปลีก · ใบกำกับภาษีอัตโนมัติ" },
+          { name: "Wide World Importers", caption: "โลจิสติกส์ · Intercompany" },
+          { name: "Woodgrove Bank", caption: "การเงิน · RPA กระทบยอด" },
+          { name: "Litware", caption: "ซอฟต์แวร์ · ระบบเบิกจ่าย" },
+          { name: "Proseware", caption: "บริการ · วางบิลและติดตามเช็ค" },
+          { name: "Alpine Ski House", caption: "ท่องเที่ยว · ตรวจเงินสดย่อย" },
+          { name: "Coho Winery", caption: "เครื่องดื่ม · ลูกหนี้และวางบิล" },
+          { name: "Lucerne Publishing", caption: "สื่อ · ปิดงบรายเดือน" },
+        ]}
+        note="รายชื่อเต็มอยู่ภาคผนวก ค · ชื่อในตัวอย่างนี้เป็นบริษัทสมมติ"
+        takeaway="ระบบเดียวกับที่เสนอ ใช้งานจริงแล้วทั้งค้าปลีก การผลิต และการเงิน"
+      />
       {/* 25 · who does the work: the lead over four roles, credentials as the TOR asks */}
       <SlideTeam
         title="ทีม 7 คน ทำเองตั้งแต่ออกแบบจนถึงอบรม"

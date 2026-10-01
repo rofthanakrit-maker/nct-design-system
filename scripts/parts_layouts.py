@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-"""The 25 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3
+"""The 26 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3
 + 1 chart, v4 + the gradient cover, moved off 01 when the corp cover became
-the default one + the four data layouts 21-24, v4 + the project team)."""
+the default one + the four data layouts 21-24, v4 + the project team and the
+client references)."""
 import parts_master as PM
 from tokens import *
 from ooxml import *
@@ -1165,3 +1166,51 @@ def l25_team(rid_mark_color):
     s += _takeaway(sid + 1, 2)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("25 Project Team", "obj", s, bgfill=solid(PAPER))
+
+
+# ---------------------------------------------------------------- 26 Client References
+REF_COLS, REF_ROWS = 4, 3
+REF_Y = 2057400                           # 2.25in - under the one-line intro
+REF_H = 914400                            # 1.00in a tile; three rows + two gutters end 5.65in
+REF_LOGO_H = 502920                       # 0.55in - the logo box inside the tile
+REF_CAP_H = 219456                        # 0.24in - one 12pt line
+
+
+def l26_references(rid_mark_color):
+    """Who already runs it: up to twelve clients, a logo and what was delivered.
+
+    A logo alone is decoration; the caption under it (sector · what we built)
+    is what makes the tile a reference. The logo slot is a CONTENT placeholder,
+    not a picture one: PowerPoint crops a picture placeholder to fill, which
+    cuts logos of every other aspect, while a content placeholder scales the
+    picture to fit inside. It also takes text, so a client that has not given
+    permission for its logo is written as its name in the same slot. Tiles are
+    paper with a hairline - logos ship on white, and a tinted tile boxes them.
+    """
+    s = [_title(10), _rule(11),
+         placeholder(12, "Intro", "body", MX, BODY_Y, CW, NOTE_H,
+                     [S("คัดมาจากลูกค้าทั้งหมดกี่ราย · เกณฑ์ที่ใช้คัด", sz=T_BODY3, color=INK2,
+                        line=100000)], idx=1, anchor="ctr")]
+    sid, idx = 13, PH_FREE
+    for r in range(REF_ROWS):
+        for c in range(REF_COLS):
+            n = r * REF_COLS + c + 1
+            x, y = MX + c * (QUARTER + GUT), REF_Y + r * (REF_H + GUT)
+            s += [shape(sid, "Tile %d" % n, x, y, QUARTER, REF_H, solid(PAPER),
+                        line='<a:ln w="9525">%s</a:ln>' % solid(RULE)),
+                  placeholder(sid + 1, "Tile %d Logo" % n, None, x + 137160, y + 91440,
+                              QUARTER - 2 * 137160, REF_LOGO_H,
+                              [S("โลโก้ หรือชื่อลูกค้า", sz=T_DENSEHEAD, color=INK, bold=True,
+                                 font="mj", algn="ctr", line=100000)], idx=idx, anchor="ctr"),
+                  placeholder(sid + 2, "Tile %d Caption" % n, "body", x + 91440,
+                              y + REF_H - 91440 - REF_CAP_H, QUARTER - 2 * 91440, REF_CAP_H,
+                              [S("อุตสาหกรรม · งานที่ทำ", sz=T_DENSEBODY, color=INK2, algn="ctr",
+                                 line=100000)], idx=idx + 1, anchor="ctr")]
+            sid += 3
+            idx += 2
+    s.append(placeholder(sid, "Note", "body", MX, NOTE_Y, CW, NOTE_H,
+                         [S("รายชื่อเต็มอยู่ภาคผนวก · ใช้โลโก้เมื่อลูกค้าอนุญาต", sz=T_DENSECELL,
+                            color=INK2, line=130000)], idx=2))
+    s += _takeaway(sid + 1, 3)
+    s += chrome(dark=False, mark_rid=rid_mark_color)
+    return _wrap("26 Client References", "obj", s, bgfill=solid(PAPER))

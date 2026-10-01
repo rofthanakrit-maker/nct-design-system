@@ -46,7 +46,8 @@ def layouts():
                (lambda: PL.l22_composition("rId2"), ["mark-color.png"]),
                (lambda: PL.l23_kpi("rId2"), ["mark-color.png"]),
                (lambda: PL.l24_before_after("rId2"), ["mark-color.png"]),
-               (lambda: PL.l25_team("rId2"), ["mark-color.png"])])
+               (lambda: PL.l25_team("rId2"), ["mark-color.png"]),
+               (lambda: PL.l26_references("rId2"), ["mark-color.png"])])
 
 
 _LAYOUTS_02_09 = [
@@ -1073,6 +1074,34 @@ def demo_slides():
              sp_text(sid + 2, "TkC", "body", 6,
                      ["ปิดงบลดได้มากสุด ไม่ใช่งานคีย์ เพราะระบบกระทบยอดให้ทุกวัน"])]
     S.append((24, sh24, [dumbbell_chart(ba)]))
+    # ------------------------------------------- 13c · who already runs it (L26)
+    # The names are Microsoft's stock fictional companies, written as text in
+    # the logo slot - the demo has no client logos and must not invent any.
+    refs = [("Contoso", "ค้าปลีก · ปิดงบอัตโนมัติ"),
+            ("Fabrikam", "การผลิต · ใบแจ้งหนี้ด้วย OCR"),
+            ("Northwind Traders", "นำเข้า-ส่งออก · กระทบยอดธนาคาร"),
+            ("Adventure Works", "การผลิต · Dynamics 365 BC"),
+            ("Tailspin Toys", "ค้าปลีก · ใบกำกับภาษีอัตโนมัติ"),
+            ("Wide World Importers", "โลจิสติกส์ · Intercompany"),
+            ("Woodgrove Bank", "การเงิน · RPA กระทบยอด"),
+            ("Litware", "ซอฟต์แวร์ · ระบบเบิกจ่าย"),
+            ("Proseware", "บริการ · วางบิลและติดตามเช็ค"),
+            ("Alpine Ski House", "ท่องเที่ยว · ตรวจเงินสดย่อย"),
+            ("Coho Winery", "เครื่องดื่ม · ลูกหนี้และวางบิล"),
+            ("Lucerne Publishing", "สื่อ · ปิดงบรายเดือน")]
+    sh26 = [sp_text(2, "Title", "title", None,
+                    ["40 องค์กรปิดงบด้วยระบบที่ NCT วางอยู่ทุกเดือน"]),
+            sp_text(3, "Intro", "body", 1,
+                    ["คัด 12 จาก 40 องค์กร ที่ใช้งานต่อเนื่องเกิน 2 ปี"]),
+            sp_text(4, "Note", "body", 2,
+                    ["รายชื่อเต็มอยู่ภาคผนวก ค · ชื่อในตัวอย่างนี้เป็นบริษัทสมมติ"]),
+            sp_text(5, "TkL", "body", 3, ["สรุป"]),
+            sp_text(6, "TkC", "body", 4,
+                    ["ระบบเดียวกับที่เสนอ ใช้งานจริงแล้วทั้งค้าปลีก การผลิต และการเงิน"])]
+    for i, (name, cap) in enumerate(refs):
+        sh26 += [sp_text(10 + 2 * i, "L%d" % i, None, PL.PH_FREE + 2 * i, [name]),
+                 sp_text(11 + 2 * i, "C%d" % i, "body", PL.PH_FREE + 2 * i + 1, [cap])]
+    S.append((26, sh26))
     # ---------------------------------------------------------------- 14 · quote (L07)
     S.append((7, [sp_text(2, "Q", "body", 1,
                           ["ระบบไม่ล่มอีกเลยตั้งแต่เปลี่ยนมาใช้ทีมนี้ดูแล และเราวางแผนงบประมาณได้ล่วงหน้าจริง ๆ"]),
