@@ -94,6 +94,27 @@ def _takeaway(sid, idx, label="สรุป", prompt="ประเด็นส�
                         idx=idx + 1, anchor="ctr")]
 
 
+def _takeaway_optional(sid, idx):
+    """The same strip for a layout where a conclusion is optional (03, 05, 06).
+
+    _takeaway's band is a layout shape, so it prints on every slide whether
+    or not anyone typed a conclusion. Here the tint is the placeholders' own
+    fill: PowerPoint does not show an empty placeholder in the show, fill
+    included, so a slide that leaves both empty has no band at all. Label and
+    copy each fill their own half and meet edge to edge - overlapping them
+    let whichever came later in the slide's tree paint over the label.
+    """
+    lw = 2011680
+    return [placeholder(sid, "Takeaway Label", "body", MX, TAKE_Y, lw, TAKE_H,
+                        [S("สรุป", sz=T_LABEL, color=accent(), bold=True, spc=120,
+                           line=100000)], idx=idx, anchor="ctr", fill=solid(PAPER2),
+                        ins=(182880, 0, 91440, 0)),
+            placeholder(sid + 1, "Takeaway Copy", "body", MX + lw, TAKE_Y, CW - lw, TAKE_H,
+                        [S("ประเด็นสรุปหนึ่งบรรทัด (ไม่ใส่ก็ได้)", sz=T_BODY3, color=INK,
+                           line=100000)], idx=idx + 1, anchor="ctr", fill=solid(PAPER2),
+                        ins=(0, 0, 182880, 0))]
+
+
 # the photo band, defined once in tokens.py so slides.css can be emitted from it
 SEC_PHOTO_W, SEC_PHOTO_X, SEC_TEXT_W = BAND_W, BAND_X, BAND_TW
 
@@ -222,8 +243,9 @@ def l02_section(rid_mark_white, rid_photo):
 # ---------------------------------------------------------------- 03 Title + Content
 def l03_content(rid_mark_color):
     s = [_title(10), _rule(11),
-         placeholder(12, "Content Placeholder", "body", MX, BODY_Y, CW, BODY_H,
+         placeholder(12, "Content Placeholder", "body", MX, BODY_Y, CW, TAKE_Y - GUT - BODY_Y,
                      body_specs(["เนื้อหาระดับที่หนึ่ง", "ระดับที่สอง", "ระดับที่สาม"]), idx=1)]
+    s += _takeaway_optional(13, 2)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("03 Title and Content", "obj", s, bgfill=solid(PAPER))
 
@@ -269,6 +291,7 @@ def l05_cards(rid_mark_color):
                              [S("คำอธิบายสั้น ๆ สองถึงสามบรรทัด", sz=T_BODY3, color=INK,
                                 line=135000, space_before=300)],
                              idx=i * 2 + 2, anchor="t")); sid += 1
+    s += _takeaway_optional(sid, 7)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("05 Three Cards", "obj", s, bgfill=solid(PAPER))
 
@@ -293,6 +316,7 @@ def l06_stats(rid_mark_color):
     s.append(placeholder(sid, "Footnote", "body", MX, 4754880, CW, 640080,
                          [S("ที่มาของข้อมูล / หมายเหตุ", sz=T_BODY3, color=INK2,
                             line=130000)], idx=7))
+    s += _takeaway_optional(sid + 1, 8)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("06 Key Figures", "obj", s, bgfill=solid(PAPER))
 

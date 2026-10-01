@@ -160,15 +160,19 @@ export function SlideSection({
 export interface SlideContentProps extends Base {
   title: ReactNode;
   items: BulletItem[];
+  /** Optional one-line conclusion, pinned to the foot like layout 16's. Leave it out and nothing is drawn. */
+  takeaway?: ReactNode;
+  takeawayLabel?: string;
 }
 
-/** 03 · Title and Content. The workhorse. Five level-1 lines is the ceiling. */
-export function SlideContent({ title, items, ...chrome }: SlideContentProps) {
+/** 03 · Title and Content. The workhorse. Five level-1 lines is the ceiling (four with a takeaway). */
+export function SlideContent({ title, items, takeaway, takeawayLabel = "สรุป", ...chrome }: SlideContentProps) {
   return (
     <Slide {...chrome}>
       <SlideTitle>{title}</SlideTitle>
       <div className="nct-body">
         <BulletList items={items} />
+        {takeaway && <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>}
       </div>
     </Slide>
   );
@@ -222,10 +226,13 @@ export interface SlideThreeCardsProps extends Base {
   title: ReactNode;
   /** Exactly three. Cards are a fixed height — trim copy, never stretch them. */
   cards: [CardItem, CardItem, CardItem];
+  /** Optional one-line conclusion, pinned to the foot like layout 16's. Leave it out and nothing is drawn. */
+  takeaway?: ReactNode;
+  takeawayLabel?: string;
 }
 
 /** 05 · Three Cards. Three parallel points on the THIRD grid. */
-export function SlideThreeCards({ title, cards, ...chrome }: SlideThreeCardsProps) {
+export function SlideThreeCards({ title, cards, takeaway, takeawayLabel = "สรุป", ...chrome }: SlideThreeCardsProps) {
   return (
     <Slide {...chrome}>
       <SlideTitle>{title}</SlideTitle>
@@ -239,6 +246,7 @@ export function SlideThreeCards({ title, cards, ...chrome }: SlideThreeCardsProp
             </div>
           ))}
         </div>
+        {takeaway && <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>}
       </div>
     </Slide>
   );
@@ -256,10 +264,20 @@ export interface SlideKeyFiguresProps extends Base {
   figures: [FigureItem, FigureItem, FigureItem];
   /** Source line under the figures. */
   footnote?: ReactNode;
+  /** Optional one-line conclusion, pinned to the foot like layout 16's. Leave it out and nothing is drawn. */
+  takeaway?: ReactNode;
+  takeawayLabel?: string;
 }
 
 /** 06 · Key Figures. Three numbers you want remembered. Baseline-aligned. */
-export function SlideKeyFigures({ title, figures, footnote, ...chrome }: SlideKeyFiguresProps) {
+export function SlideKeyFigures({
+  title,
+  figures,
+  footnote,
+  takeaway,
+  takeawayLabel = "สรุป",
+  ...chrome
+}: SlideKeyFiguresProps) {
   return (
     <Slide {...chrome}>
       <SlideTitle>{title}</SlideTitle>
@@ -273,6 +291,7 @@ export function SlideKeyFigures({ title, figures, footnote, ...chrome }: SlideKe
           ))}
         </div>
         {footnote && <p className="nct-caption nct-caption--footnote">{footnote}</p>}
+        {takeaway && <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>}
       </div>
     </Slide>
   );

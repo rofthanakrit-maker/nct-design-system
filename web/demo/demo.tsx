@@ -264,6 +264,7 @@ function WebDeck() {
           { heading: en("Managed Service"), body: "ดูแลระบบรายเดือน พร้อมทีมซัพพอร์ตและรายงานสุขภาพระบบ" },
           { heading: en("Cloud & Security"), body: "ย้ายระบบขึ้นคลาวด์ และวางมาตรการความปลอดภัยตามมาตรฐาน" },
         ]}
+        takeaway="ทีมเดียวดูแลครบทั้งสามด้าน ไม่ต้องประสานผู้รับจ้างหลายราย"
       />
       <SlideKeyFigures
         title="ตัวเลขที่บอกเรื่องเรา"
@@ -273,6 +274,7 @@ function WebDeck() {
           { value: "24/7", label: "ทีมเฝ้าระวังและตอบกลับ" },
         ]}
         footnote="ข้อมูล ณ ไตรมาส 1 ปี 2569"
+        takeaway="ระบบที่เราดูแลหยุดรวมไม่ถึง 9 ชั่วโมงต่อปี"
       />
       {/* 24 · what it did for a client like this one; the layout sorts the rows */}
       <SlideBeforeAfter

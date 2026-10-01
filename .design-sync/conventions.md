@@ -208,6 +208,10 @@ does not keep.
   **required** — the type checker enforces the rule so it cannot be forgotten.
   All three pin the strip to the foot of the body box, so the conclusion lands
   at the same y whether the grid runs four rows or ten.
+  `SlideContent`, `SlideThreeCards` and `SlideKeyFigures` take the same strip
+  as an optional `takeaway` - add it when the slide argues for something,
+  leave it off when it only lists; with it, `SlideContent` holds four level-1
+  lines, not five.
 - `SlideCover` and `SlideClosing` appear once each, as the deck's bookends.
 - **Open on `SlideCover` unless you have a reason not to.** Its composition
   follows `brand`. `corp` (the default): paper, centred, the mark watermarked

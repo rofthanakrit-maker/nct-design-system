@@ -1025,6 +1025,8 @@ def demo_slides():
                            ["หกในแปดกระบวนการเริ่มได้ทันทีในรอบ 1-2 "
                             "อีกสองรายการรอสิทธิ์เข้าระบบ ยืนยันภายใน 15 วัน"])]))
     # ---------------------------------------------------------------- 11 · services (L03)
+    # no takeaway here on purpose: the strip on 03 / 05 / 06 is optional, and
+    # this slide is the proof that an unused one leaves nothing behind
     S.append((3, [sp_text(2, "Title", "title", None, ["ขอบเขตบริการของ NCT"]),
                   sp_text(3, "Body", "body", 1,
                           ["วางระบบโครงสร้างพื้นฐานไอทีสำหรับองค์กร",
@@ -1039,7 +1041,10 @@ def demo_slides():
                   sp_text(5, "C2H", "body", 3, ["Managed Service"]),
                   sp_text(6, "C2B", "body", 4, ["ดูแลระบบรายเดือน พร้อมทีมซัพพอร์ตและรายงานสุขภาพระบบ"]),
                   sp_text(7, "C3H", "body", 5, ["Cloud & Security"]),
-                  sp_text(8, "C3B", "body", 6, ["ย้ายระบบขึ้นคลาวด์ และวางมาตรการความปลอดภัยตามมาตรฐาน"])]))
+                  sp_text(8, "C3B", "body", 6, ["ย้ายระบบขึ้นคลาวด์ และวางมาตรการความปลอดภัยตามมาตรฐาน"]),
+                  sp_text(9, "TkL", "body", 7, ["สรุป"]),
+                  sp_text(10, "TkC", "body", 8,
+                          ["ทีมเดียวดูแลครบทั้งสามด้าน ไม่ต้องประสานผู้รับจ้างหลายราย"])]))
     # ---------------------------------------------------------------- 13 · figures (L06)
     S.append((6, [sp_text(2, "Title", "title", None, ["ตัวเลขที่บอกเรื่องเรา"]),
                   sp_text(3, "F1", "body", 1, ["12"]),
@@ -1048,7 +1053,10 @@ def demo_slides():
                   sp_text(6, "F2L", "body", 4, ["Uptime เฉลี่ยของระบบที่ดูแล"]),
                   sp_text(7, "F3", "body", 5, ["24/7"]),
                   sp_text(8, "F3L", "body", 6, ["ทีมเฝ้าระวังและตอบกลับ"]),
-                  sp_text(9, "FN", "body", 7, ["ข้อมูล ณ ไตรมาส 1 ปี 2569"])]))
+                  sp_text(9, "FN", "body", 7, ["ข้อมูล ณ ไตรมาส 1 ปี 2569"]),
+                  sp_text(10, "TkL", "body", 8, ["สรุป"]),
+                  sp_text(11, "TkC", "body", 9,
+                          ["ระบบที่เราดูแลหยุดรวมไม่ถึง 9 ชั่วโมงต่อปี"])]))
     # ------------------------------------------- 13b · what it did elsewhere (L24)
     # one unit for every row (hours a month), largest change first; the change
     # column is signed and never hidden - it is what makes SEQ_300 legal
