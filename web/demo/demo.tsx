@@ -13,6 +13,7 @@ import {
   DiagramLink,
   Icon,
   SlideAgenda,
+  SlideBeforeAfter,
   SlideChart,
   SlideClosing,
   SlideComposition,
@@ -270,6 +271,22 @@ function WebDeck() {
           { value: "24/7", label: "ทีมเฝ้าระวังและตอบกลับ" },
         ]}
         footnote="ข้อมูล ณ ไตรมาส 1 ปี 2569"
+      />
+      {/* 24 · what it did for a client like this one; the layout sorts the rows */}
+      <SlideBeforeAfter
+        title="ลูกค้ารายเดิมลดงานบัญชีจาก 114 เหลือ 31 ชั่วโมงต่อเดือน"
+        rows={[
+          { label: "ปิดงบสิ้นเดือน", before: 48, after: 16 },
+          { label: "คีย์ใบแจ้งหนี้ซื้อ", before: 28, after: 3 },
+          { label: "กระทบยอดธนาคาร", before: 16, after: 2 },
+          { label: "ออกใบแจ้งหนี้ขาย", before: 12, after: 4 },
+          { label: "ติดตามลูกหนี้", before: 10, after: 6 },
+        ]}
+        unit="ชม."
+        better="lower"
+        intro="ชั่วโมงทำงานต่อเดือน · น้อยกว่าดีกว่า"
+        source="ลูกค้าธุรกิจค้าปลีก ปี 2568 · วัดก่อนขึ้นระบบและหลังขึ้นระบบ 3 เดือน"
+        takeaway="ปิดงบลดได้มากสุด ไม่ใช่งานคีย์ เพราะระบบกระทบยอดให้ทุกวัน"
       />
       <SlideQuote
         quote="ระบบไม่ล่มอีกเลยตั้งแต่เปลี่ยนมาใช้ทีมนี้ดูแล และเราวางแผนงบประมาณได้ล่วงหน้าจริง ๆ"

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""The 23 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3
+"""The 24 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3
 + 1 chart, v4 + the gradient cover, moved off 01 when the corp cover became
-the default one + the plan timeline, the composition bars and KPI + trend, v4)."""
+the default one + the four data layouts 21-24, v4)."""
 import parts_master as PM
 from tokens import *
 from ooxml import *
@@ -1039,3 +1039,50 @@ def l23_kpi(rid_mark_color):
     s += _takeaway(sid + 2, 3)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("23 KPI + Trend", "chart", s, bgfill=solid(PAPER))
+
+
+# ---------------------------------------------------------------- 24 Before -> After (v4)
+BA_ROWS = 7
+BA_SCALE_Y = 2057400                      # 2.25in - the scale band, axis on top
+BA_Y = 2377440                            # 2.60in - the first row
+BA_ROW_H = 393192                         # 0.43in - seven rows end at 5.61in
+BA_X, BA_W = 3840480, 5791200             # 4.20in, 6.333in
+BA_VALUE_X, BA_VALUE_W = 9814560, 1463040 # 10.733in, 1.60in
+
+
+def l24_before_after(rid_mark_color):
+    """Before and after, item by item - the dumbbell that sells "how much better".
+
+    The chart frame starts at the scale band, so the axis labels print on top
+    and stay put however many rows there are; the plot under it is pinned to the
+    seven 0.43in rows the labels and values sit on. The value column is the
+    difference, signed, on every row: SEQ_300 is 2.1:1 alone, legal only because
+    that column is never hidden.
+    """
+    s = [_title(10), _rule(11),
+         placeholder(12, "Intro", "body", MX, BODY_Y, 6400800, NOTE_H,
+                     [S("หน่วย · ทิศที่ดี (น้อยกว่าดีกว่า)", sz=T_BODY3, color=INK2,
+                        line=100000)], idx=2, anchor="ctr"),
+         placeholder(13, "Legend", "body", MX + CW - 3657600, BODY_Y, 3657600, NOTE_H,
+                     [S("● ก่อน   ● หลัง", sz=T_LABEL, color=INK, algn="r", line=100000)],
+                     idx=3, anchor="ctr"),
+         chart_placeholder(14, "Chart Placeholder", BA_X, BA_SCALE_Y, BA_W,
+                           BA_Y - BA_SCALE_Y + BA_ROWS * BA_ROW_H, 1)]
+    sid, idx = 15, PH_FREE
+    for r in range(BA_ROWS):
+        y = BA_Y + r * BA_ROW_H
+        s += [placeholder(sid, "Row %d Label" % (r + 1), "body", MX, y, 2743200, BA_ROW_H,
+                          [S("รายการ", sz=T_BODY3, color=INK, line=100000)],
+                          idx=idx, anchor="ctr"),
+              placeholder(sid + 1, "Row %d Change" % (r + 1), "body", BA_VALUE_X, y, BA_VALUE_W,
+                          BA_ROW_H,
+                          [S("−0", sz=T_BODY3, color=INK, bold=True, algn="r", line=100000)],
+                          idx=idx + 1, anchor="ctr")]
+        sid += 2
+        idx += 2
+    s.append(placeholder(sid, "Source", "body", MX, NOTE_Y, CW, NOTE_H,
+                         [S("ที่มาของตัวเลข · ตัวเลขเต็มอยู่ภาคผนวก", sz=T_DENSECELL, color=INK2,
+                            line=130000)], idx=4))
+    s += _takeaway(sid + 1, 5)
+    s += chrome(dark=False, mark_rid=rid_mark_color)
+    return _wrap("24 Before After", "chart", s, bgfill=solid(PAPER))

@@ -1542,3 +1542,24 @@
 .nct-kpi__delta { font-size: var(--nct-fs-label); color: var(--nct-ink); }
 .nct-kpi__delta i { font-style: normal; }
 .nct-kpi__spark { display: block; }
+
+/* ---------------------------------------------------------------- 24 */
+/* intro and legend on the first 0.30in, the scale band from 0.40in, rows from
+   0.75in on a 0.43in pitch - the .potx placeholders. The plot overlays the row
+   list at 3.20in, between the labels and the change column. */
+.nct-ba__head { display: flex; justify-content: space-between; align-items: center; height: 28.8px; }
+.nct-ba__intro { margin: 0; font-size: var(--nct-fs-body-3); color: var(--nct-ink-2); }
+.nct-ba__legend { margin: 0; font-size: var(--nct-fs-label); color: var(--nct-ink); }
+.nct-ba__legend i { font-style: normal; margin: 0 4.8px 0 19.2px; }
+.nct-ba__legend i:first-child { margin-left: 0; }
+.nct-ba__rows { position: absolute; left: 0; right: 0; top: 72px; margin: 0; padding: 0; list-style: none; }
+.nct-ba__rows li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 41.28px;
+  font-size: var(--nct-fs-body-3);
+  color: var(--nct-ink);
+}
+.nct-ba__rows b { font-variant-numeric: tabular-nums; }
+.nct-ba__plot { position: absolute; left: 307.2px; top: 38.4px; overflow: visible; }

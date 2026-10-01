@@ -14,7 +14,7 @@ status token, กติกาการทำเด็คทั้งหมด
 
 > ลำดับการแก้ยังเหมือนเดิม: `design.md` → `scripts/tokens.py` → `python scripts/build.py`
 > **สถานะ (2026-09-11)** — §2 ลง `design.md § v4` และ `tokens.py` แล้ว · §2.2 เจ้าของระบบอนุมัติแล้ว ·
-> L19 · L21–L23 build แล้วทั้ง `.potx` และ React (L21–L23 เมื่อ 2026-10-01) · **L24 ยังเป็น spec** ·
+> L19 · L21–L24 build แล้วทั้ง `.potx` และ React (L21–L24 เมื่อ 2026-10-01) ·
 > web emit `--nct-cat-*` กับ `--nct-seq-300` (L21 อ่าน) ส่วน seq ตัวอื่น / `--nct-div-warm-l`
 > จะ emit วันที่มี layout อ่านมัน
 >
@@ -348,8 +348,12 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 
 - ทุกแถวต้องใช้หน่วยเดียวกัน หน่วยปนกันให้แปลงเป็น % ของค่าเดิม หรือแยกสไลด์
 - เรียงแถวจากส่วนต่างมากสุดลงมา · 7 แถวคือเพดาน (2.600 + 7×0.430 = 5.610)
-- ฝั่ง `.potx` ไม่มี chart แบบนี้ให้ใช้ — layout ให้แค่ PH ข้อความ ส่วนเดโมจะวางจุดกับเส้นเป็น shape ให้ copy ไปแก้ตำแหน่งเอง
-  (`ponytail:` วางตำแหน่งด้วยมือ ถ้าใช้บ่อยค่อยทำเป็น scatter chart ที่ตั้ง style ไว้แล้ว)
+- ~~ฝั่ง `.potx` ไม่มี chart แบบนี้ให้ใช้ — layout ให้แค่ PH ข้อความ ส่วนเดโมจะวางจุดกับเส้นเป็น shape~~
+- **ทำแล้ว (2026-10-01)** — `.potx` ใช้ **native scatter chart** แทน shape: หนึ่งแถว = หนึ่ง series สองจุด
+  (x = ก่อน / หลัง, y = เลขแถว) ฝัง workbook แก้คอลัมน์ B ก่อน / C หลัง แล้วจุดเลื่อนเอง ·
+  chart placeholder เริ่มที่ scale band (2.250) แกน x พิมพ์ด้านบน ส่วน plot ตรึงกับ 7 แถว 0.430 ·
+  แกนเริ่ม 0 ขั้น 1/2/5 เหมือนกราฟอื่น · จุด 8 pt (ขนาดเต็มที่ใกล้ 10px ที่สุด ใช้กับจุดปลายเส้นของ L23 ด้วย) ·
+  ฝั่งเว็บ `SlideBeforeAfter` เรียงแถวตามส่วนต่างให้เอง ฝั่ง `.potx` ผู้ทำต้องเรียงเอง
 
 ---
 
@@ -373,9 +377,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 <SlidePlan periods={['ด.1', …]} highlight={5} assumption="…" takeaway="…"
   rows={[{ label: 'เตรียมระบบ', start: 0, end: 1, duration: '4 สัปดาห์' },
          { label: '…', start: 1, end: 2.5, milestone: { at: 2.5, label: 'ตรวจรับงวด 1' } }, …]} />  // ≤8 × ≤12
-
-// ยังเป็นสเปก
-<SlideBeforeAfter better="lower" unit="วัน" rows={[{ label, before, after }, …]} … />   // 3–7
+<SlideBeforeAfter better="lower" unit="ชม." rows={[{ label, before, after }, …]} source="…" takeaway="…" />  // 3–7
 ```
 
 - `series` / `segments` ส่งเป็นลำดับ slot ตรง ๆ **index ของสีผูกกับตัวข้อมูล ไม่ใช่ลำดับที่ render**
@@ -386,7 +388,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 
 ## 6. ลำดับการลงมือ
 
-สถานะ 2026-10-01: ข้อ 1–5 ทำแล้ว · ข้อ 6–8 ทำแล้วเฉพาะ L19 · L21–L23
+สถานะ 2026-10-01: ข้อ 1–5 ทำแล้ว · ข้อ 6–8 ทำแล้วครบ (L19 · L21–L24)
 
 1. **ตัดสินใจ §2.2** แล้วลง `design.md § v4`
 2. `tokens.py` — เปลี่ยนค่า `CAT_1..4` · เพิ่ม `CAT_MUTE` `SEQ_100..400` `DIV_WARM_L`
@@ -411,7 +413,7 @@ node <dataviz>/scripts/validate_palette.js "#90B4E4,#6994CF,#2A5EA0,#23436D,#163
 
 | | v3 | v4 |
 |---|---|---|
-| layout | 18 | **19 · 21–23** (+ สเปก 24) |
+| layout | 18 | **19 · 21–24** |
 | colour token | 26 | **31** (+ `CAT_MUTE` · `SEQ_100..400` · `DIV_WARM_L` − `TEAL_L` ที่ไม่มีใครอ่านแล้ว) · `CAT_1..4` เปลี่ยนค่า |
 | สีหมวด | น้ำเงิน 4 เฉด ห่างกัน 1.31:1 | 4 hue · ผ่าน validator (CVD 15.0 · normal 21.4) |
 | theme accent | 4 น้ำเงิน + เทา + `PAPER2` | ชุด categorical ที่ตรวจแล้ว |

@@ -44,7 +44,8 @@ def layouts():
                 ["logo-white.png", "mark-white.png"]),
                (lambda: PL.l21_plan("rId2"), ["mark-color.png"]),
                (lambda: PL.l22_composition("rId2"), ["mark-color.png"]),
-               (lambda: PL.l23_kpi("rId2"), ["mark-color.png"])])
+               (lambda: PL.l23_kpi("rId2"), ["mark-color.png"]),
+               (lambda: PL.l24_before_after("rId2"), ["mark-color.png"])])
 
 
 _LAYOUTS_02_09 = [
@@ -683,7 +684,7 @@ def line_chart(name, categories, values, target=None):
                 % (i, i, "BC"[i], _esc(table[0][i + 1]), ln, extra, labels,
                    ref(0, "str"), ref(i + 1, "num")))
 
-    end = ('<c:dPt><c:idx val="%d"/><c:marker><c:symbol val="circle"/><c:size val="7"/>'
+    end = ('<c:dPt><c:idx val="%d"/><c:marker><c:symbol val="circle"/><c:size val="8"/>'
            '<c:spPr>%s<a:ln w="19050">%s</a:ln></c:spPr></c:marker><c:bubble3D val="0"/></c:dPt>'
            % (n - 1, solid(CAT_1), solid(PAPER)))
     sers = ser(0, '<a:ln w="19050" cap="rnd">%s<a:round/></a:ln>' % solid(CAT_1), end,
@@ -722,6 +723,78 @@ def line_chart(name, categories, values, target=None):
              '</c:chartSpace>'
              % (NS_C, sers, solid(CAT_MUTE), _chart_txpr(T_LABEL, INK2), top, solid(RULE),
                 _chart_txpr(T_LABEL, INK2), step))
+    return chart, xlsx(table)
+
+
+def dumbbell_chart(rows):
+    """v4 L24: one scatter series per row, two points - before then after -
+    joined by a SEQ_300 1.5pt line; the before dot SEQ_300, the after dot CAT_1,
+    both 10px with a PAPER ring. The spec drew this as loose shapes moved by
+    hand; a scatter on an embedded sheet moves its own dots when B / C change.
+
+    The y axis is the row (reversed, 0.5-7.5, deleted) so a dot sits on its
+    label's 0.43in pitch whatever the row count; the plot is pinned under a
+    0.35in band where the x ticks print on top. The x axis runs 0 to a 1/2/5
+    step like every other chart here.
+
+    `rows` are (label, before, after), sorted largest change first by the caller.
+    """
+    n = PL.BA_ROWS
+    table = [["รายการ", "ก่อน", "หลัง", "แถว", "แถว"]] + [
+        [lab, b, a, r + 1, r + 1] for r, (lab, b, a) in enumerate(rows)]
+    hi = max(max(b, a) for _, b, a in rows)
+    step = nice_step(hi)
+    top = step * math.ceil(hi / step)
+    band = PL.BA_Y - PL.BA_SCALE_Y
+    frame = band + n * PL.BA_ROW_H
+
+    def dot(c):
+        return ('<c:marker><c:symbol val="circle"/><c:size val="8"/><c:spPr>%s'
+                '<a:ln w="19050">%s</a:ln></c:spPr></c:marker>' % (solid(c), solid(PAPER)))
+
+    def nums(r, cols, vals):
+        return ('<c:numRef><c:f>Sheet1!$%s$%d:$%s$%d</c:f><c:numCache><c:formatCode>General'
+                '</c:formatCode><c:ptCount val="2"/><c:pt idx="0"><c:v>%g</c:v></c:pt>'
+                '<c:pt idx="1"><c:v>%g</c:v></c:pt></c:numCache></c:numRef>'
+                % (cols[0], r, cols[1], r, vals[0], vals[1]))
+
+    sers = "".join(
+        '<c:ser><c:idx val="%d"/><c:order val="%d"/><c:tx><c:strRef><c:f>Sheet1!$A$%d</c:f>'
+        '<c:strCache><c:ptCount val="1"/><c:pt idx="0"><c:v>%s</c:v></c:pt></c:strCache>'
+        '</c:strRef></c:tx><c:spPr><a:ln w="19050" cap="rnd">%s<a:round/></a:ln></c:spPr>%s'
+        '<c:dPt><c:idx val="1"/>%s<c:bubble3D val="0"/></c:dPt>'
+        '<c:xVal>%s</c:xVal><c:yVal>%s</c:yVal><c:smooth val="0"/></c:ser>'
+        % (i, i, i + 2, _esc(lab), solid(SEQ_300), dot(SEQ_300), dot(CAT_1),
+           nums(i + 2, "BC", (b, a)), nums(i + 2, "DE", (i + 1, i + 1)))
+        for i, (lab, b, a) in enumerate(rows))
+    chart = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
+             '<c:chartSpace %s xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" '
+             'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+             '<c:roundedCorners val="0"/><c:chart><c:autoTitleDeleted val="1"/>'
+             '<c:plotArea><c:layout><c:manualLayout><c:layoutTarget val="inner"/>'
+             '<c:xMode val="edge"/><c:yMode val="edge"/><c:x val="0"/><c:y val="%.4f"/>'
+             '<c:w val="1"/><c:h val="%.4f"/></c:manualLayout></c:layout>'
+             '<c:scatterChart><c:scatterStyle val="lineMarker"/><c:varyColors val="0"/>%s'
+             '<c:axId val="24001"/><c:axId val="24002"/></c:scatterChart>'
+             '<c:valAx><c:axId val="24001"/><c:scaling><c:orientation val="minMax"/>'
+             '<c:max val="%g"/><c:min val="0"/></c:scaling><c:delete val="0"/><c:axPos val="t"/>'
+             '<c:majorGridlines><c:spPr><a:ln w="9525">%s</a:ln></c:spPr></c:majorGridlines>'
+             '<c:numFmt formatCode="#,##0" sourceLinked="0"/><c:majorTickMark val="none"/>'
+             '<c:minorTickMark val="none"/><c:tickLblPos val="low"/>'
+             '<c:spPr><a:ln><a:noFill/></a:ln></c:spPr>%s<c:crossAx val="24002"/>'
+             '<c:crosses val="min"/><c:crossBetween val="midCat"/><c:majorUnit val="%g"/></c:valAx>'
+             '<c:valAx><c:axId val="24002"/><c:scaling><c:orientation val="maxMin"/>'
+             '<c:max val="%g"/><c:min val="0.5"/></c:scaling><c:delete val="1"/><c:axPos val="l"/>'
+             '<c:numFmt formatCode="General" sourceLinked="0"/><c:majorTickMark val="none"/>'
+             '<c:minorTickMark val="none"/><c:tickLblPos val="none"/><c:crossAx val="24001"/>'
+             '<c:crosses val="autoZero"/><c:crossBetween val="midCat"/><c:majorUnit val="1"/></c:valAx>'
+             '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr></c:plotArea>'
+             '<c:plotVisOnly val="1"/><c:dispBlanksAs val="gap"/></c:chart>'
+             '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr>'
+             '<c:externalData r:id="rId1"><c:autoUpdate val="0"/></c:externalData>'
+             '</c:chartSpace>'
+             % (NS_C, band / frame, n * PL.BA_ROW_H / frame, sers, top, solid(RULE),
+                _chart_txpr(T_LABEL, INK2), step, n + 0.5))
     return chart, xlsx(table)
 
 
@@ -974,6 +1047,31 @@ def demo_slides():
                   sp_text(7, "F3", "body", 5, ["24/7"]),
                   sp_text(8, "F3L", "body", 6, ["ทีมเฝ้าระวังและตอบกลับ"]),
                   sp_text(9, "FN", "body", 7, ["ข้อมูล ณ ไตรมาส 1 ปี 2569"])]))
+    # ------------------------------------------- 13b · what it did elsewhere (L24)
+    # one unit for every row (hours a month), largest change first; the change
+    # column is signed and never hidden - it is what makes SEQ_300 legal
+    ba = [("ปิดงบสิ้นเดือน", 48, 16), ("คีย์ใบแจ้งหนี้ซื้อ", 28, 3),
+          ("กระทบยอดธนาคาร", 16, 2), ("ออกใบแจ้งหนี้ขาย", 12, 4),
+          ("ติดตามลูกหนี้", 10, 6)]
+    sh24 = [sp_text(2, "Title", "title", None,
+                    ["ลูกค้ารายเดิมลดงานบัญชีจาก 114 เหลือ 31 ชั่วโมงต่อเดือน"]),
+            sp_text(3, "Intro", "body", 2, ["ชั่วโมงทำงานต่อเดือน · น้อยกว่าดีกว่า"]),
+            sp_text(4, "Legend", "body", 3,
+                    [[("● ", SEQ_300), ("ก่อน   ", None), ("● ", CAT_1), ("หลัง", None)]]),
+            chart_frame(5, "Before After", 1, PL.BA_X, PL.BA_SCALE_Y, PL.BA_W,
+                        PL.BA_Y - PL.BA_SCALE_Y + PL.BA_ROWS * PL.BA_ROW_H, "rId2")]
+    sid = 6
+    for r, (lab, b, a) in enumerate(ba):
+        sh24 += [sp_text(sid, "R%d" % r, "body", PL.PH_FREE + 2 * r, [lab]),
+                 sp_text(sid + 1, "C%d" % r, "body", PL.PH_FREE + 2 * r + 1,
+                         ["−%d ชม." % (b - a)])]
+        sid += 2
+    sh24 += [sp_text(sid, "Src", "body", 4,
+                     ["ลูกค้าธุรกิจค้าปลีก ปี 2568 · วัดก่อนขึ้นระบบและหลังขึ้นระบบ 3 เดือน"]),
+             sp_text(sid + 1, "TkL", "body", 5, ["สรุป"]),
+             sp_text(sid + 2, "TkC", "body", 6,
+                     ["ปิดงบลดได้มากสุด ไม่ใช่งานคีย์ เพราะระบบกระทบยอดให้ทุกวัน"])]
+    S.append((24, sh24, [dumbbell_chart(ba)]))
     # ---------------------------------------------------------------- 14 · quote (L07)
     S.append((7, [sp_text(2, "Q", "body", 1,
                           ["ระบบไม่ล่มอีกเลยตั้งแต่เปลี่ยนมาใช้ทีมนี้ดูแล และเราวางแผนงบประมาณได้ล่วงหน้าจริง ๆ"]),

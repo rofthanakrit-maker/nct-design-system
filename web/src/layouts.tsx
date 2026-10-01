@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { coverScatter, markColor } from "./assets";
-import { Chart, type ChartProps } from "./chart";
+import { Chart, niceTicks, type ChartProps } from "./chart";
 import { space } from "./tokens";
 import { Slide, SlideTitle, type SlideChromeProps, type SlideFit } from "./Slide";
 import {
@@ -1458,6 +1458,122 @@ export function SlideKpiTrend({
         <Chart kind="line" categories={trend.categories} unit={trend.unit} target={trend.target}
                series={[{ name: trend.name ?? (typeof label === "string" ? label : ""), values: trend.values }]}
                width={space.cw} height={KPI_TREND_H} />
+        <p className="nct-dia-legend">{source}</p>
+        <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
+      </div>
+    </Slide>
+  );
+}
+
+/* ---------------------------------------------------------------- 24 */
+export interface BeforeAfterRow {
+  label: ReactNode;
+  before: number;
+  after: number;
+}
+
+/** Three to seven, in one unit. Mixed units: convert to % of the old value, or split the slide. */
+export type BeforeAfterRows =
+  | [BeforeAfterRow, BeforeAfterRow, BeforeAfterRow]
+  | [BeforeAfterRow, BeforeAfterRow, BeforeAfterRow, BeforeAfterRow]
+  | [BeforeAfterRow, BeforeAfterRow, BeforeAfterRow, BeforeAfterRow, BeforeAfterRow]
+  | [BeforeAfterRow, BeforeAfterRow, BeforeAfterRow, BeforeAfterRow, BeforeAfterRow, BeforeAfterRow]
+  | [BeforeAfterRow, BeforeAfterRow, BeforeAfterRow, BeforeAfterRow, BeforeAfterRow, BeforeAfterRow, BeforeAfterRow];
+
+export interface SlideBeforeAfterProps extends Base {
+  title: ReactNode;
+  rows: BeforeAfterRows;
+  /** Short unit for the change column ("ชม.", "วัน"). */
+  unit: string;
+  /** Which way is good. Only the intro says it; the colours do not change. */
+  better: "lower" | "higher";
+  /** Defaults to "{unit} · น้อยกว่าดีกว่า" / "มากกว่าดีกว่า". Say the full unit here. */
+  intro?: ReactNode;
+  format?: (n: number) => string;
+  /** Required: where the numbers came from; the full table belongs in the appendix. */
+  source: ReactNode;
+  takeawayLabel?: string;
+  takeaway: ReactNode;
+}
+
+/* the .potx placeholders: labels 3.00in, plot from 3.20in for 6.333in, the
+   change column 1.60in at the margin; scale band 0.40-0.75in, rows 0.43in */
+const BA_PLOT_X = 307.2;
+const BA_PLOT_W = 608;
+const BA_BAND = 33.6;
+const BA_ROW_H = 41.28;
+
+/**
+ * 24 · Before → After. A dumbbell per item: before in seq-300, after in cat-1,
+ * the signed change on every row. Rows are sorted largest change first here,
+ * so the order on the slide is never the order they were typed in.
+ */
+export function SlideBeforeAfter({
+  title,
+  rows,
+  unit,
+  better,
+  intro,
+  format = (n) => n.toLocaleString("th-TH"),
+  source,
+  takeawayLabel = "สรุป",
+  takeaway,
+  ...chrome
+}: SlideBeforeAfterProps) {
+  const sorted = [...rows].sort((a, b) => Math.abs(b.after - b.before) - Math.abs(a.after - a.before));
+  const ticks = niceTicks(Math.max(...rows.flatMap((r) => [r.before, r.after])));
+  const top = ticks[ticks.length - 1];
+  const x = (v: number) => (v / top) * BA_PLOT_W;
+  const h = BA_BAND + 7 * BA_ROW_H;
+  const change = (r: BeforeAfterRow) => {
+    const d = r.after - r.before;
+    return `${d < 0 ? "−" : d > 0 ? "+" : ""}${format(Math.abs(d))} ${unit}`;
+  };
+  return (
+    <Slide {...chrome}>
+      <SlideTitle>{title}</SlideTitle>
+      <div className="nct-body">
+        <div className="nct-ba__head">
+          <p className="nct-ba__intro">{intro ?? `${unit} · ${better === "lower" ? "น้อยกว่าดีกว่า" : "มากกว่าดีกว่า"}`}</p>
+          <p className="nct-ba__legend">
+            <i style={{ color: "var(--nct-seq-300)" }}>●</i> ก่อน
+            <i style={{ color: "var(--nct-cat-1)" }}>●</i> หลัง
+          </p>
+        </div>
+        <ol className="nct-ba__rows">
+          {sorted.map((r, i) => (
+            <li key={i}>
+              <span>{r.label}</span>
+              <b>{change(r)}</b>
+            </li>
+          ))}
+        </ol>
+        <svg className="nct-ba__plot" width={BA_PLOT_W} height={h} aria-hidden="true">
+          {ticks.map((t) => (
+            <g key={t}>
+              <line x1={x(t)} x2={x(t)} y1={BA_BAND} y2={h} stroke="var(--nct-rule)" strokeWidth={1} />
+              <text className="nct-chart__tick" x={x(t)} y={BA_BAND - 12} textAnchor="middle">{format(t)}</text>
+            </g>
+          ))}
+          {sorted.map((r, i) => {
+            const y = BA_BAND + i * BA_ROW_H + BA_ROW_H / 2;
+            return (
+              <g key={i}>
+                <line x1={x(r.before)} x2={x(r.after)} y1={y} y2={y} stroke="var(--nct-seq-300)" strokeWidth={2} strokeLinecap="round" />
+                <circle cx={x(r.before)} cy={y} r={5} fill="var(--nct-seq-300)" stroke="var(--nct-paper)" strokeWidth={2} />
+                <circle cx={x(r.after)} cy={y} r={5} fill="var(--nct-cat-1)" stroke="var(--nct-paper)" strokeWidth={2} />
+              </g>
+            );
+          })}
+        </svg>
+        <div className="nct-sr"><table>
+          <thead><tr><th /><th>ก่อน</th><th>หลัง</th><th>ส่วนต่าง</th></tr></thead>
+          <tbody>
+            {sorted.map((r, i) => (
+              <tr key={i}><th>{r.label}</th><td>{format(r.before)}</td><td>{format(r.after)}</td><td>{change(r)}</td></tr>
+            ))}
+          </tbody>
+        </table></div>
         <p className="nct-dia-legend">{source}</p>
         <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
       </div>

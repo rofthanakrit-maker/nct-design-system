@@ -181,6 +181,10 @@
       "cardMode": "column",
       "viewport": "1024x700"
     },
+    "SlideBeforeAfter": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
     "SlideCoverGradient": {
       "cardMode": "column",
       "viewport": "1024x700"

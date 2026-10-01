@@ -13,7 +13,7 @@ No provider, no theme object. Two things only:
    (every `--nct-*` variable) and `slides.css`. Without it slides render unstyled
    at the wrong size — there is no inline-style fallback.
 2. Put content inside a layout component. `Slide` is the raw 1280×720 canvas
-   (13.333in × 7.5in at 96dpi); the 23 layouts wrap it. Reach for bare `Slide`
+   (13.333in × 7.5in at 96dpi); the 24 layouts wrap it. Reach for bare `Slide`
    only when no layout fits.
 
 Slides scale themselves to their container's width by default (`fit`, measured
@@ -21,14 +21,15 @@ before paint). `fit="contain"` fits width *and* height and centres the canvas �
 use it for a presenter or any box whose height is fixed; the default crops the
 foot of the slide there. Pass `fit={false}` for a fixed 1280×720 board.
 
-## The 23 layouts
+## The 24 layouts
 
 `SlideCover` 01 · `SlideSection` 02 · `SlideContent` 03 · `SlideTwoColumn` 04 ·
 `SlideThreeCards` 05 · `SlideKeyFigures` 06 · `SlideQuote` 07 · `SlideFullImage` 08 ·
 `SlideTable` 09 · `SlideClosing` 10 · `SlideSplitPanel` 11 · `SlideFourCards` 12 ·
 `SlideProcessFlow` 13 · `SlideDiagram` 14 · `SlideAgenda` 15 · `SlideDenseTable` 16 ·
 `SlidePhaseCard` 17 · `SlideEvidence` 18 · `SlideChart` 19 ·
-`SlideCoverGradient` 20 · `SlidePlan` 21 · `SlideComposition` 22 · `SlideKpiTrend` 23
+`SlideCoverGradient` 20 · `SlidePlan` 21 · `SlideComposition` 22 · `SlideKpiTrend` 23 ·
+`SlideBeforeAfter` 24
 
 Compose with `Deck`. Building blocks: `BulletList`, `DataTable`, `TakeawayBand`,
 `DiagramBox`, `DiagramLink`, `DiagramGroup`, `NctLogo`, `NctMark`, `Icon`.
@@ -177,6 +178,13 @@ does not keep.
   words stay ink — a rise can be bad. `target` is a limit or goal on the trend,
   named at its end. `spark` is optional history beside the delta, mute with the
   latest point in cat-1.
+- **Item-by-item improvement is `SlideBeforeAfter`, not a two-column table.**
+  Three to seven rows in ONE unit — mixed units go to % of the old value or to
+  separate slides. The layout sorts rows largest change first and prints the
+  signed change on every row; the before dot is pale seq-300, legal only because
+  that column is always there. `better` sets the intro's "which way is good" and
+  nothing else. Put the full before/after table in the appendix and say so in
+  `source`.
 - **Values are selective.** The chart labels the highlighted bar (or the largest),
   the line ends when they sit apart, and the last stack total. It never prints a
   number on every mark; the axis, the hidden table and each mark's hover title
