@@ -7,7 +7,7 @@ const en = (s: string) => <span lang="en">{s}</span>;
 export const PreparationPhase = () => (
   <SlidePhaseCard
     brand="corp"
-    title={en("5. Implementation Stage")}
+    title="เฟสแรกเตรียมเครื่องสองชุดให้พร้อมก่อนเริ่มพัฒนา"
     meta={[
       { label: en("Key Activity"), value: "ตั้งค่าสภาพแวดล้อม ติดตั้งฮาร์ดแวร์และซอฟต์แวร์" },
       { label: en("Participant"), value: <>{en("NCT Infra Engineer")}, ทีมไอทีลูกค้า, {en("Business Analyst")}</> },

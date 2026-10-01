@@ -364,3 +364,38 @@ Repo-specific gotchas. Read before re-syncing.
   L26 patch (count 26, `SlideClients` in the list, a reference-wall rule, dense
   type legal on client references). Uploaded from `ds-bundle/.project-patch/`.
 - **Known render warns:** none.
+
+## Re-sync, 2026-10-01 (Thai tracking off, one takeaway strip, L04 split from L11)
+
+- **Scope: 5 re-graded + 3 docs-only.** `SlideTwoColumn` (preview now
+  `InOutOfScope` + `Corp`), `SlideEvidence` / `SlidePhaseCard` (Thai assertion
+  titles), `TakeawayBand` (`InFlow` cell deleted - it taught the strip flowing
+  under the content, which the rule now forbids) and `SlideCover` (`Corp` title
+  lost its "For" line). 35 carried forward. Render check 40/40, no warns.
+- **The render hash does not see the bundle.** Moving every strip to the foot
+  changed how `SlideSplitPanel`, `SlideFourCards`, `SlideProcessFlow`,
+  `SlideClosing`, `SlideContent` and `SlideTable` render, yet all six carried
+  forward as verified-by-upload. They were spot-checked by hand
+  (`package-capture.mjs --components X --spot-check-components X`) and the
+  sheets confirmed. **Any CSS/layout change in `web/src` needs that spot-check
+  on the components it touches** - the driver will not ask for it.
+- **The corp cover title column is 6.83in now** (between the scatter and its
+  mirror). A long English client name wraps, so the cover holds three lines:
+  "PROPOSAL" + the name, never "PROPOSAL / For / ...". Recorded in
+  `conventions.md` and the project `readme.md`.
+- **The project's own `slides.css` still letter-spaces labels** and still sets
+  `.nct-body--evidence .nct-band { margin: 14.4px 0 }`. The package CSS no
+  longer declares either property, so it cannot override them by order alone:
+  the project `styles.css` merge now ends with an explicit
+  `letter-spacing: normal` on the seven label selectors and `margin: 0` on the
+  evidence band. A plain re-sync that uploads `ds-bundle/styles.css` drops this
+  block too - re-apply it from the remote file.
+- **Project `readme.md`** fetched fresh and patched: strip rule (foot, tinted,
+  no navy), L04 = two equal sets, L18 = claim/proof/finding, Thai titles,
+  no letter-spacing on Thai, corp cover three-line rule, and a note that
+  `slides/` 04/11/12/13/18 predate the strip rule. Uploaded from
+  `ds-bundle/.project-patch/` with `styles.css`; `README.md` stayed out.
+- **The hand-built half was not touched**: `slides/*.html`, `templates/`, and
+  `components/bands/TakeawayBand.*` (the old hand port) still show navy strips
+  and the old L04. The readme points the agent at the synced components.
+- **Known render warns:** none.

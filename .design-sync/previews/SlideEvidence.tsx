@@ -2,14 +2,14 @@ import { DataTable, SlideEvidence, photoFacade, photoSection, photoTower } from 
 
 const en = (s: string) => <span lang="en">{s}</span>;
 
-/** 18 · a claim, a one-line finding, and three frames of proof under it. The
-    children carry the claim — here a DataTable of the two courses. */
+/** 18 · claim, proof, finding: the children carry the claim (here a DataTable
+    of the two courses), the frames sit under it, the finding is the foot strip. */
 export const TrainingCorp = () => (
   <SlideEvidence
     brand="corp"
-    title={en("8. Project Training")}
+    title="อบรมสองหลักสูตรจบก่อนวันขึ้นระบบ"
     kicker="วัตถุประสงค์ของการอบรม"
-    takeaway="อบรมสองหลักสูตร รวม 8 ชั่วโมง จบภายในสัปดาห์เดียวก่อนวันขึ้นระบบ"
+    takeaway="รวม 8 ชั่วโมงในสัปดาห์เดียว งานบัญชีไม่ต้องหยุดระหว่างอบรม"
     figures={[
       { src: photoSection, alt: "", caption: "อบรมที่สำนักงานลูกค้า 20–50 คน" },
       { src: photoFacade, alt: "", caption: "อบรมกลุ่มย่อยในห้องประชุม 2–20 คน" },

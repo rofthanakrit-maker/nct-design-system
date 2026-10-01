@@ -1,29 +1,10 @@
 import { BulletList, Slide, SlideTitle, TakeawayBand } from "@nct/slides";
 
 /* The band is never a slide on its own — it is the conclusion strip under a
-   layout's body box, so every cell renders it where it actually lives. */
+   layout's body box, so the card renders it where it actually lives. */
 
-/** Default tint band, flowing after the content it concludes. */
-export const InFlow = () => (
-  <Slide footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569" pageNumber={5}>
-    <SlideTitle>สภาพระบบบัญชีปัจจุบัน</SlideTitle>
-    <div className="nct-body">
-      <BulletList
-        items={[
-          "คีย์เอกสารซ้ำสามระบบ ไม่มีจุดตรวจกลาง",
-          { text: "เอกสารเข้าเฉลี่ย 1,200 ใบต่อเดือน", level: 2 },
-          "ปิดงบล่าช้าเฉลี่ย 6 วันทำการ",
-        ]}
-      />
-      <TakeawayBand label="สรุป">
-        ปัญหาหลักคือการคีย์ซ้ำ ไม่ใช่จำนวนเอกสาร
-      </TakeawayBand>
-    </div>
-  </Slide>
-);
-
-/** `foot` pins it to the bottom of the body box, so the conclusion lands at the
-    same y whether the content above runs short or long. */
+/** Always `foot`: the strip is pinned to the bottom of the body box, tinted, so
+    the conclusion lands at the same y on every slide whatever runs above it. */
 export const PinnedToFoot = () => (
   <Slide footer="NCT · ข้อเสนอโครงการระบบบัญชี" date="2569" pageNumber={9}>
     <SlideTitle>ขอบเขตงานที่ตกลงกัน</SlideTitle>

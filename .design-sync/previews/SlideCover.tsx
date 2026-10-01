@@ -13,15 +13,14 @@ export const House = () => (
   />
 );
 
-/** The corp cover: centred and watermarked. The three-line title is how the
-    source template sets a proposal cover. */
+/** The corp cover: centred and watermarked. The title column stops short of the
+    square scatter (6.83in), so it holds three lines - a long client name takes two. */
 export const Corp = () => (
   <SlideCover
     brand="corp"
     title={
       <>
         <span>{en("PROPOSAL")}</span>
-        <span>{en("For")}</span>
         <span>{en("“AGE — Finance and Accounting”")}</span>
       </>
     }

@@ -374,7 +374,6 @@ function CorpDeck() {
         title={
           <>
             <span>{en("PROPOSAL")}</span>
-            <span>{en("For")}</span>
             <span>{en("“AGE — Finance and Accounting”")}</span>
           </>
         }

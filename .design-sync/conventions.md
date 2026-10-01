@@ -224,7 +224,9 @@ does not keep.
 - **Open on `SlideCover` unless you have a reason not to.** Its composition
   follows `brand`. `corp` (the default): paper, centred, the mark watermarked
   behind it and the lockup as the hero — the page the company actually puts in
-  front of a client; no foot bar, no corner lockup. `web`: a split — paper left
+  front of a client; no foot bar, no corner lockup. Its title sits between the
+  square scatter and its mirror, so it holds **three lines max** - write
+  "PROPOSAL" + the client/project name, not "PROPOSAL / For / ...". `web`: a split — paper left
   with the lockup, a left-set title (three lines max), the teal rule and a
   one-line subtitle; the right 40% is the navy→teal panel with white squares.
   `date` renders bottom-left in both; pass the whole string, the layout does not
