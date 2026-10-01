@@ -16,7 +16,7 @@ scripts/tokens.py            ← single source of truth
 
 | ไฟล์ | เนื้อหา |
 |---|---|
-| [`design.md`](design.md) | brand token ต้นทาง (studied จาก nctthai.com) + ส่วนขยาย v2 / v3 |
+| [`design.md`](design.md) | brand token ต้นทาง (studied จาก nctthai.com) + ส่วนขยาย v2 / v3 / v4 |
 | [`slide-design-system.md`](slide-design-system.md) | v1 — canvas, grid, type scale, layout 01–10, กติกาการทำเด็ค |
 | [`slide-design-system-v2.md`](slide-design-system-v2.md) | v2 — token dense, status/category, layout 11–16 |
 | [`slide-design-system-v3.md`](slide-design-system-v3.md) | v3 — brand mode `corp`, chrome geometry, cover, layout 17–18 (แกะจาก `NCT Template.pptx`) |
@@ -152,6 +152,10 @@ python scripts/build.py          # เขียนทับ .potx และ .ppt
   แยกไฟล์เพราะ layout ใน PowerPoint สลับ chrome ของตัวเองไม่ได้
 - `NCT-Slide-Template-Corp-Demo.pptx` — เดโมฝั่ง corp
 
+กราฟในเดโมของ layout 21–24 ฝัง workbook ไว้ คลิกขวาที่กราฟ → Edit Data แล้วแก้ตัวเลขได้
+(แผนงาน: คอลัมน์เริ่ม / ระยะเวลา · Before → After: คอลัมน์ก่อน / หลัง) ส่วนกราฟของ layout 19
+ยังเป็นค่าตายตัว ใช้ดู style แล้ว Insert Chart ใหม่บน placeholder
+
 ```bash
 python scripts/check_template.py   # ตรวจไฟล์ที่ build แล้ว
 python scripts/render_previews.py  # → preview/ (ต้องมี PowerPoint บน Windows)
@@ -164,26 +168,28 @@ shape หลุดขอบ canvas, **ข้อความล้นลงไป
 gradient bookend คือ layout 10 กับ 20) สองข้อหลังคือบั๊กที่เคยหลุดไปแล้วทั้งคู่ —
 ล่าสุดคือ L08 ที่ scrim เป็น navy บ้านอยู่ในเด็ค corp และปกที่คอลัมน์ลายเป็น `#1E5473`
 
-- `preview/` — `layout-01..20.png` (web) + `corp-layout-01..20.png` (corp)
+- `preview/` — `layout-01..24.png` (web) + `corp-layout-01..24.png` (corp)
   เรียงตามเบอร์ layout + contact sheet สองใบ (`all-layouts.png` = web,
   `corp-all-layouts.png` = corp) render จาก PowerPoint จริง
   **รันใหม่ทุกครั้งที่ geometry ขยับ**
 
-**ติดตั้งฟอนต์ก่อนเปิด** — Noto Sans Thai อยู่ใน `fonts/` (คลิกขวา → Install),
-Kanit โหลดจาก [Google Fonts](https://fonts.google.com/specimen/Kanit)
-ไม่ติดตั้งแล้ว PowerPoint จะ substitute ฟอนต์อื่น ผิดหน้าตาทั้งเด็ค
+**ติดตั้งฟอนต์ก่อนเปิด** — Kanit กับ Noto Sans Thai อยู่ใน `fonts/` ทั้งคู่
+(เลือก `.ttf` ทั้งหมด → คลิกขวา → Install) ไม่ติดตั้งแล้ว PowerPoint จะ substitute
+ฟอนต์อื่น ผิดหน้าตาทั้งเด็ค
 
 ## React (`@nct/slides`)
 
 ```bash
 npm install                  # ที่ root — workspace จะลิงก์ web/ ให้
 npm run build                # → web/dist/index.js + index.d.ts
-npm run fonts                # woff2 (ต้องมี Kanit ติดตั้งบนเครื่อง)
+npm run fonts                # woff2 จาก fonts/*.ttf (ไม่ต้องติดตั้งอะไรเพิ่ม)
 npm run assets               # โลโก้เป็น data URI
 ```
 
-20 component ตรงกับ 20 layout ใน `.potx` เลขเดียวกัน ออกแบบฝั่งเว็บแล้วมาทำต่อ
-ใน PowerPoint ได้โดยหยิบ layout เบอร์เดิม
+24 component ตรงกับ 24 layout ใน `.potx` เลขเดียวกัน ออกแบบฝั่งเว็บแล้วมาทำต่อ
+ใน PowerPoint ได้โดยหยิบ layout เบอร์เดิม layout ข้อมูลของ v4 คือ `SlideChart` 19,
+`SlidePlan` 21 (แผนงาน), `SlideComposition` 22 (สัดส่วน แทน pie), `SlideKpiTrend` 23
+(ตัวเลขหลัก + แนวโน้ม) และ `SlideBeforeAfter` 24 (ก่อน → หลัง รายรายการ)
 
 Icon ใช้ `<Icon icon={Truck} size="body" tone="accent" />` กับ glyph lucide ชุดที่เลือกไว้
 (การเงิน เวลา ความปลอดภัย เทคโนโลยี และทั่วไป) ที่ bundle มากับ `@nct/slides` (import จาก `@nct/slides` ได้เลย รายชื่ออยู่ใน
@@ -230,8 +236,10 @@ npm run serve                # เปิด /demo/index.html
 ```
 
 converter จะอ่าน `web/dist/` แล้วสร้าง bundle + preview card + `.prompt.md`
-ต่อ component ก่อนอัปโหลด ถ้ายังไม่เคย sync มันจะสร้าง project ใหม่ให้แล้วจำ
-`projectId` ลง config เอง
+ต่อ component ก่อนอัปโหลด ปลายทางคือ project **NCT Design System** (`projectId`
+อยู่ใน config) ซึ่งมีงานที่ทำด้วยมือของตัวเองอยู่ด้วย — `styles.css` ที่ merge ไว้ และ
+`readme.md` ที่ design agent อ่านจริง ทั้งสองไฟล์ sync ไม่ได้สร้าง ต้อง patch เอง
+**อ่าน `.design-sync/NOTES.md` ก่อน sync ทุกครั้ง**
 
 ## โครงสร้าง
 
@@ -245,6 +253,6 @@ scripts/                                generator ทั้งหมด (Python,
   emit_web_tokens.py build_webfonts.py emit_web_assets.py
 web/                                    @nct/slides
   src/  Slide.tsx primitives.tsx layouts.tsx  + ไฟล์ที่ generate
-  demo/ demo.tsx                        18 layout (web) + 5 สไลด์อ้างอิง corp
+  demo/ demo.tsx                        21 layout (web) + 6 สไลด์ corp — ครบ 24
 assets/  fonts/  preview/               โลโก้ · ฟอนต์ต้นฉบับ · ภาพ render (generate)
 ```
