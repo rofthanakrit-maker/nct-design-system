@@ -185,6 +185,10 @@
       "cardMode": "column",
       "viewport": "1024x700"
     },
+    "SlideTeam": {
+      "cardMode": "column",
+      "viewport": "1024x700"
+    },
     "SlideCoverGradient": {
       "cardMode": "column",
       "viewport": "1024x700"

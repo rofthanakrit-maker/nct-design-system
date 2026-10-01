@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""The 24 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3
+"""The 25 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3
 + 1 chart, v4 + the gradient cover, moved off 01 when the corp cover became
-the default one + the four data layouts 21-24, v4)."""
+the default one + the four data layouts 21-24, v4 + the project team)."""
 import parts_master as PM
 from tokens import *
 from ooxml import *
@@ -1086,3 +1086,82 @@ def l24_before_after(rid_mark_color):
     s += _takeaway(sid + 1, 5)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("24 Before After", "chart", s, bgfill=solid(PAPER))
+
+
+# ---------------------------------------------------------------- 25 Project Team
+TEAM_LEAD_H = 1051560                     # 1.15in - ends 3.00in
+TEAM_BUS_Y = 2903220                      # 3.175in - the bar the four drops hang from
+TEAM_Y = 3063240                          # 3.35in - the role cards, ending 5.65in
+TEAM_H = 2103120                          # 2.30in
+TEAM_PAD = 182880                         # 0.20in - the cards are a quarter wide, not a third
+TEAM_LINE = 12700                         # 1pt
+
+
+def l25_team(rid_mark_color):
+    """Who does the work: the project lead over up to four roles.
+
+    Two tiers only - a proposal names the lead and the roles it commits to, not
+    the client's org chart. The lead spans the middle two quarter columns, so
+    its centre is the slide's and the stem drops straight onto the bar. A role
+    card reads role (with a head count, "× 2"), name, the credential the TOR
+    asks for, then duties. Four cards is fixed here like L12; with three roles,
+    merge two or use the web component, which also takes two or three.
+    """
+    A = accent()
+    lead_x, lead_w = MX + QUARTER + GUT, 2 * QUARTER + GUT
+    left_w = 2194560                      # 2.40in: role / name / credential
+    s = [_title(10), _rule(11),
+         shape(12, "Lead Card", lead_x, BODY_Y, lead_w, TEAM_LEAD_H, solid(PAPER2))]
+    sid, idx = 13, PH_FREE
+
+    def who(x, y, w, role, name, top):
+        nonlocal sid, idx
+        out = [placeholder(sid, "%s Role" % role, "body", x, y + top, w, NOTE_H,
+                           [S("บทบาท", sz=T_LABEL, color=INK2, bold=True, spc=120,
+                              line=100000)], idx=idx, anchor="t"),
+               placeholder(sid + 1, "%s Name" % role, "body", x, y + top + 283464, w, 338328,
+                           [S(name, sz=T_LEAD, color=heading(), bold=True, font="mj",
+                              line=100000)], idx=idx + 1, anchor="t"),
+               placeholder(sid + 2, "%s Credential" % role, "body", x, y + top + 649224, w,
+                           228600,
+                           [S("ประสบการณ์ · วุฒิบัตร", sz=T_DENSEBODY, color=INK2,
+                              line=100000)], idx=idx + 2, anchor="t")]
+        sid += 3
+        idx += 3
+        return out
+
+    s += who(lead_x + TEAM_PAD, BODY_Y, left_w, "Lead", "ชื่อหัวหน้าโครงการ", 137160)
+    duty_x = lead_x + TEAM_PAD + left_w + GUT
+    s.append(placeholder(sid, "Lead Duties", "body", duty_x, BODY_Y + 137160,
+                         lead_x + lead_w - TEAM_PAD - duty_x, TEAM_LEAD_H - 2 * 137160,
+                         dense_specs(["หน้าที่หลัก", "หน้าที่หลัก"]), idx=idx, anchor="t"))
+    sid += 1
+    idx += 1
+    # the tree: a stem off the lead, one bar, a drop onto each card
+    mid = MX + CW // 2
+    c0, c3 = MX + QUARTER // 2, MX + 3 * (QUARTER + GUT) + QUARTER // 2
+    s += [shape(sid, "Stem", mid - TEAM_LINE // 2, BODY_Y + TEAM_LEAD_H, TEAM_LINE,
+                TEAM_BUS_Y - BODY_Y - TEAM_LEAD_H, solid(A)),
+          shape(sid + 1, "Bar", c0 - TEAM_LINE // 2, TEAM_BUS_Y, c3 - c0 + TEAM_LINE,
+                TEAM_LINE, solid(A))]
+    sid += 2
+    for i in range(4):
+        x = MX + i * (QUARTER + GUT)
+        s += [shape(sid, "Drop %d" % (i + 1), x + QUARTER // 2 - TEAM_LINE // 2, TEAM_BUS_Y,
+                    TEAM_LINE, TEAM_Y - TEAM_BUS_Y, solid(A)),
+              shape(sid + 1, "Card %d" % (i + 1), x, TEAM_Y, QUARTER, TEAM_H, solid(PAPER2))]
+        sid += 2
+        s += who(x + TEAM_PAD, TEAM_Y, QUARTER - 2 * TEAM_PAD, "Card %d" % (i + 1),
+                 "ชื่อผู้รับผิดชอบ", TEAM_PAD)
+        dy = TEAM_PAD + 1005840               # 1.10in under the card's top
+        s.append(placeholder(sid, "Card %d Duties" % (i + 1), "body", x + TEAM_PAD,
+                             TEAM_Y + dy, QUARTER - 2 * TEAM_PAD, TEAM_H - dy - TEAM_PAD,
+                             dense_specs(["หน้าที่หลัก", "หน้าที่หลัก"]), idx=idx, anchor="t"))
+        sid += 1
+        idx += 1
+    s.append(placeholder(sid, "Note", "body", MX, NOTE_Y, CW, NOTE_H,
+                         [S("จำนวนคนรวม · ประวัติเต็มอยู่ภาคผนวก", sz=T_DENSECELL, color=INK2,
+                            line=130000)], idx=1))
+    s += _takeaway(sid + 1, 2)
+    s += chrome(dark=False, mark_rid=rid_mark_color)
+    return _wrap("25 Project Team", "obj", s, bgfill=solid(PAPER))

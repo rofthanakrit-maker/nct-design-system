@@ -1563,3 +1563,58 @@
 }
 .nct-ba__rows b { font-variant-numeric: tabular-nums; }
 .nct-ba__plot { position: absolute; left: 307.2px; top: 38.4px; overflow: visible; }
+
+/* ---------------------------------------------------------------- 25 */
+/* the .potx: the lead over the middle two quarter columns, 1.15in tall; a 1pt
+   accent stem, the bar at 1.325in, drops onto cards at 1.50in that end 5.65in.
+   Inside a card: role, name at +0.31in, credential at +0.71in, duties at 1.10in */
+.nct-team__lead,
+.nct-team__card {
+  display: grid;
+  grid-template-rows: 29.76px 38.4px 37.44px auto;
+  align-content: start;
+  background: var(--nct-paper-2);
+}
+.nct-team__lead {
+  position: absolute;
+  left: 276.8px;
+  top: 0;
+  width: 534.4px;
+  height: 110.4px;
+  grid-template-columns: 230.4px 1fr;
+  grid-template-rows: 29.76px 38.4px auto;
+  column-gap: var(--nct-gut);
+  padding: 14.4px 19.2px 0;
+}
+.nct-team__lead .nct-team__duties { grid-column: 2; grid-row: 1 / -1; }
+.nct-team__lead::after,
+.nct-team__card::before {
+  content: "";
+  position: absolute;
+  left: calc(50% - 0.67px);
+  width: 1.33px;
+  height: 16.8px;
+  background: var(--nct-accent);
+}
+.nct-team__lead::after { top: 100%; }
+.nct-team__card::before { top: -16.8px; }
+.nct-team__bar { position: absolute; top: 127.2px; height: 1.33px; background: var(--nct-accent); }
+.nct-team { position: absolute; left: 0; right: 0; top: 144px; display: grid; column-gap: var(--nct-gut); }
+.nct-team__card { position: relative; height: 220.8px; padding: 19.2px 19.2px 0; }
+.nct-team__role {
+  margin: 0;
+  font-size: var(--nct-fs-label);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.3;
+  color: var(--nct-ink-2);
+}
+.nct-team__name {
+  margin: 0;
+  font-family: var(--nct-font-display);
+  font-weight: 700;
+  font-size: var(--nct-fs-lead);
+  line-height: 1.15;
+  color: var(--nct-heading);
+}
+.nct-team__cred { margin: 0; font-size: var(--nct-fs-densebody); line-height: 1.3; color: var(--nct-ink-2); }

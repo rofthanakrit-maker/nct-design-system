@@ -36,11 +36,11 @@ Repo-specific gotchas. Read before re-syncing.
   and a design agent under the artifact CSP has no other route to them.
 - **`preview/` is generated, not hand-made.** `python scripts/render_previews.py`
   renders both demo decks through PowerPoint COM (Windows only, read-only, never
-  saves back) and writes `layout-01..24.png`, `corp-layout-01..24.png` and the two contact sheets. It went
+  saves back) and writes `layout-01..25.png`, `corp-layout-01..25.png` and the two contact sheets. It went
   stale across a whole release when it was a manual pass; run it after any change
   that moves geometry.
 - **No Storybook.** Preview cards are authored from `web/demo/demo.tsx`, which
-  renders all 24 layouts with real proposal copy, in both brand modes. It is the reference usage example.
+  renders all 25 layouts with real proposal copy, in both brand modes. It is the reference usage example.
 - The PowerPoint side (`scripts/build.py` → `.potx`) shares `scripts/tokens.py` with
   the web package but nothing else. A token change must be rebuilt on both sides.
 - **The visual loop is `web/demo/`.** `npm run demo` bundles `demo.tsx` to the
@@ -326,4 +326,24 @@ Repo-specific gotchas. Read before re-syncing.
   01-19 only). Base was the remote file fetched this run; the patched copy was
   uploaded from `ds-bundle/.project-patch/readme.md`. `styles.css` and `README.md`
   stayed out of the upload, as before.
+- **Known render warns:** none.
+
+## Re-sync, 2026-10-01 (L25 Project Team)
+
+- **Scope: 1 added + 1 `.d.ts`.** `SlideTeam` is new (cells `FourRoles`,
+  `ThreeRoles`, both graded good on the first capture); `BulletList` uploads
+  without re-grading because only its doc comment moved (dense body is now legal
+  on 25 too). 37 carried forward on the anchor.
+- **The local `ds-bundle/_ds_sync.json` from the last upload IS the remote anchor**
+  when nothing else synced in between - the remote file matched it field for
+  field, so it was copied to `.design-sync/.cache/remote-sync.json` instead of
+  re-typing the `get_file` output. Check `bundleSha12` / `scriptsSha` match first.
+- **`ds-bundle/.project-patch/` does not survive a build** - every driver run wipes
+  `ds-bundle/`. The project's `readme.md` was rebuilt from the 2026-10-01 base
+  (`readme.remote.md` + `readme_patch.py`, whose asserts double as a check that
+  the remote still matches) and then patched for L25: count 25, `SlideTeam` in the
+  component list, a "team slide names who is committed" rule, dense type legal on
+  the project-team layout. Next time fetch `readme.md` fresh and patch that.
+- **`TeamMember` extracts as a bare name** in `SlideTeam.d.ts` (the 2-4 tuple
+  survives); its body is in `prop-types.md` ("Project team 25").
 - **Known render warns:** none.

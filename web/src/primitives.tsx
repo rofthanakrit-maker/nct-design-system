@@ -43,7 +43,7 @@ export type BulletItem = string | { text: ReactNode; level?: 1 | 2 | 3 };
 
 export interface BulletListProps {
   items: BulletItem[];
-  /** 12pt dense body — legal on layouts 11–14 and 16 only. */
+  /** 12pt dense body — legal on layouts 11–14, 16 and 25 only. */
   dense?: boolean;
   /** Switches bullet colour and text to the on-dark palette. */
   onDark?: boolean;

@@ -148,6 +148,7 @@ export {
   SlideComposition,
   SlideKpiTrend,
   SlideBeforeAfter,
+  SlideTeam,
 } from "./layouts";
 export { Chart } from "./chart";
 export type { ChartProps, ChartSeries, ChartSeriesList } from "./chart";
@@ -195,6 +196,9 @@ export type {
   SlideBeforeAfterProps,
   BeforeAfterRow,
   BeforeAfterRows,
+  SlideTeamProps,
+  TeamMember,
+  TeamMembers,
 } from "./layouts";
 
 /* Stock imagery, inlined as data URIs so it survives a CSP that blocks external

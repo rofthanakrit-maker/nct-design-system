@@ -12,7 +12,7 @@ import {
   type DataTableProps,
 } from "./primitives";
 
-/* The 19 layouts of NCT-Slide-Template.potx, one component each. Names, slots
+/* The 25 layouts of NCT-Slide-Template.potx, one component each. Names, slots
    and geometry mirror the .potx so a design made here can be rebuilt in
    PowerPoint by picking the layout of the same number. */
 
@@ -1576,6 +1576,77 @@ export function SlideBeforeAfter({
         </table></div>
         <p className="nct-dia-legend">{source}</p>
         <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
+      </div>
+    </Slide>
+  );
+}
+
+/* ---------------------------------------------------------------- 25 */
+export interface TeamMember {
+  /** The role, with a head count when it is more than one ("นักพัฒนาระบบ × 3"). */
+  role: ReactNode;
+  /** The person named for it; for a role of several, the one who leads it. */
+  name: ReactNode;
+  /** The credential the TOR asks for, one line ("PMP · ประสบการณ์ 15 ปี"). */
+  credential?: ReactNode;
+  /** Two or three duties. */
+  duties?: BulletItem[];
+}
+
+/** Two to four roles under the lead. More roles: merge them, or put the full roster in the appendix. */
+export type TeamMembers =
+  | [TeamMember, TeamMember]
+  | [TeamMember, TeamMember, TeamMember]
+  | [TeamMember, TeamMember, TeamMember, TeamMember];
+
+export interface SlideTeamProps extends Base {
+  /** A conclusion, not "Project Team": what the team means for the client. */
+  title: ReactNode;
+  lead: TeamMember;
+  team: TeamMembers;
+  /** Head count and where the CVs are ("ทีมรวม 7 คน · ประวัติเต็มอยู่ภาคผนวก ข"). */
+  note?: ReactNode;
+  takeawayLabel?: string;
+  takeaway?: ReactNode;
+}
+
+function TeamCard({ m, lead }: { m: TeamMember; lead?: boolean }) {
+  return (
+    <div className={lead ? "nct-team__lead" : "nct-team__card"}>
+      <p className="nct-team__role">{m.role}</p>
+      <p className="nct-team__name">{m.name}</p>
+      <p className="nct-team__cred">{m.credential}</p>
+      {m.duties && <BulletList items={m.duties} dense className="nct-team__duties" />}
+    </div>
+  );
+}
+
+/**
+ * 25 · Project Team. The lead over two to four roles, two tiers only: a
+ * proposal names who it commits, not the client's org chart. The lead spans
+ * the middle of the quarter grid, so its stem drops onto the centre of the bar.
+ */
+export function SlideTeam({
+  title,
+  lead,
+  team,
+  note,
+  takeawayLabel = "สรุป",
+  takeaway,
+  ...chrome
+}: SlideTeamProps) {
+  const half = (space.cw - (team.length - 1) * space.gut) / team.length / 2;
+  return (
+    <Slide {...chrome}>
+      <SlideTitle>{title}</SlideTitle>
+      <div className="nct-body">
+        <TeamCard m={lead} lead />
+        <div className="nct-team__bar" style={{ left: half, right: half }} />
+        <div className="nct-team" style={{ gridTemplateColumns: `repeat(${team.length}, 1fr)` }}>
+          {team.map((m, i) => <TeamCard key={i} m={m} />)}
+        </div>
+        {note && <p className="nct-dia-legend">{note}</p>}
+        {takeaway && <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>}
       </div>
     </Slide>
   );

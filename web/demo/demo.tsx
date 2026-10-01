@@ -34,6 +34,7 @@ import {
   SlideSection,
   SlideSplitPanel,
   SlideTable,
+  SlideTeam,
   SlideThreeCards,
   SlideTwoColumn,
   photoFacade,
@@ -533,6 +534,24 @@ function CorpDeck() {
           ]}
         />
       </SlideEvidence>
+      {/* 25 · who does the work: the lead over four roles, credentials as the TOR asks */}
+      <SlideTeam
+        title="ทีม 7 คน ทำเองตั้งแต่ออกแบบจนถึงอบรม"
+        lead={{ role: "ผู้จัดการโครงการ", name: "กานดา ศรีสุข", credential: "PMP · ประสบการณ์ 15 ปี",
+                duties: ["คุมแผนและการส่งมอบทั้ง 3 งวด", "ประสานกับคณะกรรมการตรวจรับ"] }}
+        team={[
+          { role: "นักวิเคราะห์ธุรกิจ", name: "ปวีณา ทองดี", credential: "CPA · ประสบการณ์ 10 ปี",
+            duties: ["เก็บความต้องการงานบัญชี", "ออกแบบผังบัญชีและกฎตรวจ"] },
+          { role: "นักพัฒนาระบบ × 3", name: "ธนพล มีสุข", credential: "AWS · ประสบการณ์ 8 ปี",
+            duties: ["ตัวเชื่อม ERP", "คิวเอกสารและตัวตรวจกฎ"] },
+          { role: "วิศวกรระบบ", name: "อนุชา แก้วใส", credential: "MCSA · ประสบการณ์ 7 ปี",
+            duties: ["ติดตั้ง PRD และ QA", "สำรองข้อมูลและกู้คืน"] },
+          { role: "ทดสอบและอบรม", name: "นภา รุ่งเรือง", credential: "ISTQB · ประสบการณ์ 5 ปี",
+            duties: ["ทดสอบรับรองก่อนขึ้นระบบ", "อบรมผู้ใช้ 2 หลักสูตร"] },
+        ]}
+        note="ทีมรวม 7 คน · ประวัติและวุฒิบัตรเต็มอยู่ภาคผนวก ข"
+        takeaway="ทุกตำแหน่งมีคุณวุฒิครบตาม TOR ข้อ 5.3 ไม่มีงานส่วนไหนจ้างช่วง"
+      />
     </Deck>
   );
 }

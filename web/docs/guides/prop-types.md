@@ -154,6 +154,19 @@ interface BeforeAfterRow { label: ReactNode; before: number; after: number }
 `delta.text` always names its comparison ("15% จาก ม.ค."); `good` colours only
 the glyph. `SlideBeforeAfter` sorts its rows by the size of the change itself.
 
+## Project team 25 — `TeamMember`
+
+`SlideTeam` takes one `lead` and two to four `team` members, all this shape:
+
+```ts
+interface TeamMember {
+  role: ReactNode;          // "นักพัฒนาระบบ × 3" - head count when more than one
+  name: ReactNode;          // for a role of several, the one who leads it
+  credential?: ReactNode;   // one line: "PMP · ประสบการณ์ 15 ปี"
+  duties?: BulletItem[];    // two or three
+}
+```
+
 ## Icons — `LucideIcon`
 
 `Icon`'s `icon` prop takes the glyph **component**, not a name:
