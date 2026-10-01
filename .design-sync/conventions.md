@@ -13,7 +13,7 @@ No provider, no theme object. Two things only:
    (every `--nct-*` variable) and `slides.css`. Without it slides render unstyled
    at the wrong size — there is no inline-style fallback.
 2. Put content inside a layout component. `Slide` is the raw 1280×720 canvas
-   (13.333in × 7.5in at 96dpi); the 22 layouts wrap it. Reach for bare `Slide`
+   (13.333in × 7.5in at 96dpi); the 23 layouts wrap it. Reach for bare `Slide`
    only when no layout fits.
 
 Slides scale themselves to their container's width by default (`fit`, measured
@@ -21,14 +21,14 @@ before paint). `fit="contain"` fits width *and* height and centres the canvas �
 use it for a presenter or any box whose height is fixed; the default crops the
 foot of the slide there. Pass `fit={false}` for a fixed 1280×720 board.
 
-## The 22 layouts
+## The 23 layouts
 
 `SlideCover` 01 · `SlideSection` 02 · `SlideContent` 03 · `SlideTwoColumn` 04 ·
 `SlideThreeCards` 05 · `SlideKeyFigures` 06 · `SlideQuote` 07 · `SlideFullImage` 08 ·
 `SlideTable` 09 · `SlideClosing` 10 · `SlideSplitPanel` 11 · `SlideFourCards` 12 ·
 `SlideProcessFlow` 13 · `SlideDiagram` 14 · `SlideAgenda` 15 · `SlideDenseTable` 16 ·
 `SlidePhaseCard` 17 · `SlideEvidence` 18 · `SlideChart` 19 ·
-`SlideCoverGradient` 20 · `SlidePlan` 21 · `SlideComposition` 22
+`SlideCoverGradient` 20 · `SlidePlan` 21 · `SlideComposition` 22 · `SlideKpiTrend` 23
 
 Compose with `Deck`. Building blocks: `BulletList`, `DataTable`, `TakeawayBand`,
 `DiagramBox`, `DiagramLink`, `DiagramGroup`, `NctLogo`, `NctMark`, `Icon`.
@@ -169,6 +169,14 @@ does not keep.
   `mode="amount"` when the totals differ and that difference is the story;
   `recommended` on the package the takeaway argues for. `source` says "ปัดเศษ"
   whenever the rounded shares do not sum to 100.
+- **Headline numbers with a trend are `SlideKpiTrend`; without one, `SlideKeyFigures`.**
+  Three tiles, or four; `trend` plots one of them (`tile`, default the first),
+  whose rule turns cat-1 — that rule is the only link between tile and chart, so
+  never plot a number that has no tile. Every `delta` names its comparison
+  ("จาก ม.ค.", "เทียบเป้า"); `good` colours only the ▲/▼ glyph ok or risk, the
+  words stay ink — a rise can be bad. `target` is a limit or goal on the trend,
+  named at its end. `spark` is optional history beside the delta, mute with the
+  latest point in cat-1.
 - **Values are selective.** The chart labels the highlighted bar (or the largest),
   the line ends when they sit apart, and the last stack total. It never prints a
   number on every mark; the axis, the hidden table and each mark's hover title

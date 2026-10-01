@@ -14,7 +14,7 @@ status token, กติกาการทำเด็คทั้งหมด
 
 > ลำดับการแก้ยังเหมือนเดิม: `design.md` → `scripts/tokens.py` → `python scripts/build.py`
 > **สถานะ (2026-09-11)** — §2 ลง `design.md § v4` และ `tokens.py` แล้ว · §2.2 เจ้าของระบบอนุมัติแล้ว ·
-> L19 · L21 · L22 build แล้วทั้ง `.potx` และ React (L21 · L22 เมื่อ 2026-10-01) · **L23–L24 ยังเป็น spec** ·
+> L19 · L21–L23 build แล้วทั้ง `.potx` และ React (L21–L23 เมื่อ 2026-10-01) · **L24 ยังเป็น spec** ·
 > web emit `--nct-cat-*` กับ `--nct-seq-300` (L21 อ่าน) ส่วน seq ตัวอื่น / `--nct-div-warm-l`
 > จะ emit วันที่มี layout อ่านมัน
 >
@@ -321,6 +321,11 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
   (`OK` 6.9:1 · `RISK` 6.5:1 บนขาว) ตัวข้อความยังเป็น `INK`
 - ส่วนต่างต้องบอกว่าเทียบกับอะไรทุกครั้ง ("จาก Q2", "เทียบเป้า")
 - ถ้าไม่มีแนวโน้มให้เล่า ใช้ L06
+- **ทำแล้ว (2026-10-01)** — `.potx` มี 3 tile และ tile ที่ 1 คือตัวที่กราฟพล็อตเสมอ (เส้นบน `CAT_1` 0.050
+  อยู่ใน layout ย้ายไม่ได้) · 4 tile กับ sparkline มีเฉพาะเว็บ · กราฟเดโมเป็น line ฝัง workbook
+  แกนเริ่ม 0 ขั้น 1/2/5 เหมือน `Chart` ฝั่งเว็บ ทำเครื่องหมายและป้ายค่าเฉพาะจุดสุดท้าย ·
+  เส้นเป้าเป็น series ค่าคงที่ `CAT_MUTE` 0.75 pt ชื่อ series อยู่เหนือจุดปลาย (เว็บ: `target` ของ `Chart`
+  แบบ line ลากจากจุดแรกถึงจุดสุดท้ายเหมือน PowerPoint) · `sp_text` รับ run ที่มีสีได้แล้ว ใช้กับ ▲▼ ใน demo
 
 ### 24 Before → After
 
@@ -363,12 +368,13 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 
 <SlideComposition total="4.8 ล้านบาท" totalLabel="…" segments={['พัฒนา', 'ไลเซนส์', 'คลาวด์', 'อื่น ๆ']} other
   bars={[{ label: 'งบโครงการ', values: [2.4, 1.2, 0.7, 0.5] }]} unit="ล้านบาท" source="…" takeaway="…" />  // bars 1–3
+<SlideKpiTrend tiles={[{ label, value, delta: { text: '15% จาก ม.ค.', direction: 'up', good: false } }, t2, t3]}
+  trend={{ categories, values, target: { value: 1200, label: 'กำลังคีย์ 1,200 ใบ' } }} source="…" takeaway="…" />
 <SlidePlan periods={['ด.1', …]} highlight={5} assumption="…" takeaway="…"
   rows={[{ label: 'เตรียมระบบ', start: 0, end: 1, duration: '4 สัปดาห์' },
          { label: '…', start: 1, end: 2.5, milestone: { at: 2.5, label: 'ตรวจรับงวด 1' } }, …]} />  // ≤8 × ≤12
 
 // ยังเป็นสเปก
-<SlideKpiTrend tiles={[t1, t2, t3]} trend={{ tile: 0, points: […], target: 95 }} … />
 <SlideBeforeAfter better="lower" unit="วัน" rows={[{ label, before, after }, …]} … />   // 3–7
 ```
 
@@ -380,7 +386,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 
 ## 6. ลำดับการลงมือ
 
-สถานะ 2026-10-01: ข้อ 1–5 ทำแล้ว · ข้อ 6–8 ทำแล้วเฉพาะ L19 · L21 · L22
+สถานะ 2026-10-01: ข้อ 1–5 ทำแล้ว · ข้อ 6–8 ทำแล้วเฉพาะ L19 · L21–L23
 
 1. **ตัดสินใจ §2.2** แล้วลง `design.md § v4`
 2. `tokens.py` — เปลี่ยนค่า `CAT_1..4` · เพิ่ม `CAT_MUTE` `SEQ_100..400` `DIV_WARM_L`
@@ -405,7 +411,7 @@ node <dataviz>/scripts/validate_palette.js "#90B4E4,#6994CF,#2A5EA0,#23436D,#163
 
 | | v3 | v4 |
 |---|---|---|
-| layout | 18 | **19 · 21 · 22** (+ สเปก 23–24) |
+| layout | 18 | **19 · 21–23** (+ สเปก 24) |
 | colour token | 26 | **31** (+ `CAT_MUTE` · `SEQ_100..400` · `DIV_WARM_L` − `TEAL_L` ที่ไม่มีใครอ่านแล้ว) · `CAT_1..4` เปลี่ยนค่า |
 | สีหมวด | น้ำเงิน 4 เฉด ห่างกัน 1.31:1 | 4 hue · ผ่าน validator (CVD 15.0 · normal 21.4) |
 | theme accent | 4 น้ำเงิน + เทา + `PAPER2` | ชุด categorical ที่ตรวจแล้ว |

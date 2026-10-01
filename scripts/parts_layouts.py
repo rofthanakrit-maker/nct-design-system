@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""The 22 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3
+"""The 23 NCT slide layouts (10 core + 6 dense/proposal variants + 2 corp, v3
 + 1 chart, v4 + the gradient cover, moved off 01 when the corp cover became
-the default one + the plan timeline and the composition bars, v4)."""
+the default one + the plan timeline, the composition bars and KPI + trend, v4)."""
 import parts_master as PM
 from tokens import *
 from ooxml import *
@@ -993,3 +993,49 @@ def l22_composition(rid_mark_color):
     s += _takeaway(sid + 1, 6)
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("22 Composition", "chart", s, bgfill=solid(PAPER))
+
+
+# ---------------------------------------------------------------- 23 KPI + Trend (v4)
+KPI_TILES = 3
+KPI_LABEL_Y = 1810512                     # 1.98in
+KPI_VALUE_Y, KPI_VALUE_H = 2084832, 640080    # 2.28in, 0.70in
+KPI_DELTA_Y = 2743200                     # 3.00in
+KPI_TREND_Y, KPI_TREND_H = 3291840, 1874520   # 3.60in, 2.05in - ends 5.65in
+
+
+def l23_kpi(rid_mark_color):
+    """Three headline numbers and the trend of the first.
+
+    Tiles have no ground - a rule on top divides them, and the plotted tile's
+    rule is CAT_1 and 0.05in, which is what ties it to the line below. So the
+    tile the chart plots is always tile 1. The delta's glyph (▲ / ▼) takes OK or
+    RISK by whether the move is good, the words stay INK, and it always says
+    what it is compared with. Four tiles and the sparkline are web-only; with no
+    trend worth telling, this is L06.
+    """
+    s = [_title(10), _rule(11)]
+    sid, idx = 12, PH_FREE
+    for i in range(KPI_TILES):
+        x = MX + i * (THIRD + GUT)
+        s += [shape(sid, "Tile %d Rule" % (i + 1), x, BODY_Y, THIRD,
+                    45720 if i == 0 else 12700, solid(CAT_1 if i == 0 else RULE)),
+              placeholder(sid + 1, "Tile %d Label" % (i + 1), "body", x, KPI_LABEL_Y, THIRD,
+                          NOTE_H,
+                          [S("ตัวเลขนี้วัดอะไร", sz=T_LABEL, color=INK2, bold=True, spc=120,
+                             line=130000)], idx=idx, anchor="t"),
+              placeholder(sid + 2, "Tile %d Value" % (i + 1), "body", x, KPI_VALUE_Y, THIRD,
+                          KPI_VALUE_H,
+                          [S("0", sz=T_TILE, color=heading(), bold=True, font="mj",
+                             line=100000)], idx=idx + 1, anchor="b"),
+              placeholder(sid + 3, "Tile %d Delta" % (i + 1), "body", x, KPI_DELTA_Y, THIRD // 2,
+                          NOTE_H,
+                          [S("▲ 0% จาก …", sz=T_LABEL, color=INK, line=100000)],
+                          idx=idx + 2, anchor="ctr")]
+        sid += 4
+        idx += 3
+    s += [chart_placeholder(sid, "Chart Placeholder", MX, KPI_TREND_Y, CW, KPI_TREND_H, 1),
+          placeholder(sid + 1, "Source", "body", MX, NOTE_Y, CW, NOTE_H,
+                      [S("ที่มาของข้อมูล", sz=T_DENSECELL, color=INK2, line=130000)], idx=2)]
+    s += _takeaway(sid + 2, 3)
+    s += chrome(dark=False, mark_rid=rid_mark_color)
+    return _wrap("23 KPI + Trend", "chart", s, bgfill=solid(PAPER))

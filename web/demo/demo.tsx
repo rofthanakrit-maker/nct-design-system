@@ -25,6 +25,7 @@ import {
   SlideFourCards,
   SlideFullImage,
   SlideKeyFigures,
+  SlideKpiTrend,
   SlidePhaseCard,
   SlidePlan,
   SlideProcessFlow,
@@ -134,6 +135,24 @@ function WebDeck() {
         ]}
         source="ระบบบัญชีของลูกค้า · ม.ค.–มิ.ย. 2569"
         takeaway="เวลาปิดงบแปรตามปริมาณเอกสาร การลดงานคีย์ซ้ำจึงลดเวลาปิดงบได้จริง"
+      />
+      {/* 23 · the trend behind it: the month documents peak is the month the close runs longest */}
+      <SlideKpiTrend
+        title="เอกสารเกินกำลังคีย์ 1,200 ใบครั้งแรกเดือน พ.ค."
+        tiles={[
+          { label: "เอกสารเข้า มิ.ย.", value: "1,150 ใบ", delta: { text: "15% จาก ม.ค.", direction: "up", good: false } },
+          { label: "เวลาคีย์ต่อใบ", value: "4 นาที", delta: { text: "0.5 นาที จากปีก่อน", direction: "down", good: true } },
+          { label: "ชั่วโมงคีย์ต่อเดือน", value: "77 ชม.", delta: { text: "10 ชม. จาก ม.ค.", direction: "up", good: false } },
+        ]}
+        trend={{
+          name: "เอกสารเข้า",
+          categories: ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย."],
+          values: [1000, 1100, 1000, 1200, 1350, 1150],
+          unit: "ใบต่อเดือน",
+          target: { value: 1200, label: "กำลังคีย์ 1,200 ใบ" },
+        }}
+        source="ระบบบัญชีของลูกค้า · ม.ค.–มิ.ย. 2569"
+        takeaway="เดือนที่เกินกำลังคีย์คือเดือนที่ปิดงบนานสุด ต้องลดงานคีย์ ไม่ใช่เพิ่มคน"
       />
       <SlideTwoColumn
         title="ก่อนและหลังใช้บริการ"

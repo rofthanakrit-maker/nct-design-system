@@ -43,7 +43,8 @@ def layouts():
             + [(lambda: PL.l20_cover_gradient("rId2", "rId3"),
                 ["logo-white.png", "mark-white.png"]),
                (lambda: PL.l21_plan("rId2"), ["mark-color.png"]),
-               (lambda: PL.l22_composition("rId2"), ["mark-color.png"])])
+               (lambda: PL.l22_composition("rId2"), ["mark-color.png"]),
+               (lambda: PL.l23_kpi("rId2"), ["mark-color.png"])])
 
 
 _LAYOUTS_02_09 = [
@@ -288,7 +289,11 @@ def content_types(n_slides, is_template, n_charts=0):
 
 # ------------------------------------------------------------------ slides
 def sp_text(sid, name, phtype, idx, paras_text, **kw):
-    """slide-level placeholder: no geometry, no rPr -> everything inherits the layout"""
+    """slide-level placeholder: no geometry, no rPr -> everything inherits the layout.
+
+    A paragraph is a string, (string, level), or a list of (text, colour) runs -
+    the one place a slide overrides its layout's colour: L23's delta glyph, OK
+    or RISK, ahead of words that stay INK."""
     ph_t = ' type="%s"' % phtype if phtype else ''
     ph_i = ' idx="%d"' % idx if idx is not None else ''
     ps = []
@@ -297,8 +302,10 @@ def sp_text(sid, name, phtype, idx, paras_text, **kw):
         if isinstance(t, tuple):
             t, l = t
             lvl = ' lvl="%d"' % l
-        esc = t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        ps.append('<a:p><a:pPr%s/><a:r><a:rPr lang="th-TH" dirty="0"/><a:t>%s</a:t></a:r></a:p>' % (lvl, esc))
+        runs = t if isinstance(t, list) else [(t, None)]
+        ps.append('<a:p><a:pPr%s/>%s</a:p>' % (lvl, "".join(
+            '<a:r><a:rPr lang="th-TH" dirty="0">%s</a:rPr><a:t>%s</a:t></a:r>'
+            % (solid(c) if c else "", _esc(r)) for r, c in runs)))
     return ('<p:sp><p:nvSpPr><p:cNvPr id="%d" name="%s"/>'
             '<p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr>'
             '<p:nvPr><p:ph%s%s/></p:nvPr></p:nvSpPr><p:spPr/>'
@@ -631,6 +638,93 @@ def composition_chart(segments, bars, mode="share", other=False):
                      vmax, grid=False, edge='<a:ln w="19050">%s</a:ln>' % solid(PAPER))
 
 
+def line_chart(name, categories, values, target=None):
+    """v4 L23: one trend line, CAT_1 1.5pt, on its own embedded workbook.
+
+    Only the last point is marked (10px, PAPER ring) and labelled; every other
+    value lives in the sheet and the screen-reader table, never on the line.
+    `target` is (label, value): a flat CAT_MUTE hairline whose name rides its
+    right end ("กำลังคีย์ 1,200 ใบ"). The axis starts at 0 on a 1/2/5 step, the
+    same rule as the web Chart, and points sit mid-band (crossBetween) like the
+    web's do.
+    """
+    n = len(categories)
+    table = [["", name] + ([target[0]] if target else [])] + [
+        [c, v] + ([target[1]] if target else []) for c, v in zip(categories, values)]
+    step = nice_step(max(values + ([target[1]] if target else [])))
+    top = step * math.ceil(max(values + ([target[1]] if target else [])) / step)
+
+    def ref(col, kind):
+        pts = "".join('<c:pt idx="%d"><c:v>%s</c:v></c:pt>'
+                      % (i, _esc(row[col]) if kind == "str" else "%g" % row[col])
+                      for i, row in enumerate(table[1:]))
+        rng = "Sheet1!$%s$2:$%s$%d" % ("ABC"[col], "ABC"[col], n + 1)
+        if kind == "str":
+            return ('<c:strRef><c:f>%s</c:f><c:strCache><c:ptCount val="%d"/>%s'
+                    '</c:strCache></c:strRef>' % (rng, n, pts))
+        return ('<c:numRef><c:f>%s</c:f><c:numCache><c:formatCode>General</c:formatCode>'
+                '<c:ptCount val="%d"/>%s</c:numCache></c:numRef>' % (rng, n, pts))
+
+    def end_label(txpr, pos, val, ser, at=n - 1):
+        return ('<c:dLbls><c:dLbl><c:idx val="%d"/><c:numFmt formatCode="#,##0" sourceLinked="0"/>'
+                '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln>'
+                '</c:spPr>%s<c:dLblPos val="%s"/><c:showLegendKey val="0"/><c:showVal val="%d"/>'
+                '<c:showCatName val="0"/><c:showSerName val="%d"/><c:showPercent val="0"/>'
+                '<c:showBubbleSize val="0"/></c:dLbl><c:showLegendKey val="0"/><c:showVal val="0"/>'
+                '<c:showCatName val="0"/><c:showSerName val="0"/><c:showPercent val="0"/>'
+                '<c:showBubbleSize val="0"/></c:dLbls>' % (at, txpr, pos, val, ser))
+
+    def ser(i, ln, extra, labels):
+        return ('<c:ser><c:idx val="%d"/><c:order val="%d"/><c:tx><c:strRef>'
+                '<c:f>Sheet1!$%s$1</c:f><c:strCache><c:ptCount val="1"/><c:pt idx="0">'
+                '<c:v>%s</c:v></c:pt></c:strCache></c:strRef></c:tx>'
+                '<c:spPr>%s</c:spPr><c:marker><c:symbol val="none"/></c:marker>%s%s'
+                '<c:cat>%s</c:cat><c:val>%s</c:val><c:smooth val="0"/></c:ser>'
+                % (i, i, "BC"[i], _esc(table[0][i + 1]), ln, extra, labels,
+                   ref(0, "str"), ref(i + 1, "num")))
+
+    end = ('<c:dPt><c:idx val="%d"/><c:marker><c:symbol val="circle"/><c:size val="7"/>'
+           '<c:spPr>%s<a:ln w="19050">%s</a:ln></c:spPr></c:marker><c:bubble3D val="0"/></c:dPt>'
+           % (n - 1, solid(CAT_1), solid(PAPER)))
+    sers = ser(0, '<a:ln w="19050" cap="rnd">%s<a:round/></a:ln>' % solid(CAT_1), end,
+               end_label(_chart_txpr(T_BODY3, INK, bold=True), "r", 1, 0))
+    if target:
+        # over the target's end, unless the line ends within about one label line
+        # of it (0.27 of the axis, the web Chart's 28.8px of plot) - then its start
+        near = abs(values[-1] - target[1]) / top < 0.27
+        sers += ser(1, '<a:ln w="9525">%s</a:ln>' % solid(CAT_MUTE), "",
+                    end_label(_chart_txpr(T_LABEL, INK2), "t", 0, 1, at=0 if near else n - 1))
+    chart = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
+             '<c:chartSpace %s xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" '
+             'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+             '<c:roundedCorners val="0"/><c:chart><c:autoTitleDeleted val="1"/>'
+             '<c:plotArea><c:layout/><c:lineChart><c:grouping val="standard"/>'
+             '<c:varyColors val="0"/>%s<c:marker val="1"/>'
+             '<c:axId val="23001"/><c:axId val="23002"/></c:lineChart>'
+             '<c:catAx><c:axId val="23001"/><c:scaling><c:orientation val="minMax"/></c:scaling>'
+             '<c:delete val="0"/><c:axPos val="b"/><c:numFmt formatCode="General" sourceLinked="0"/>'
+             '<c:majorTickMark val="none"/><c:minorTickMark val="none"/><c:tickLblPos val="nextTo"/>'
+             '<c:spPr><a:ln w="9525">%s</a:ln></c:spPr>%s<c:crossAx val="23002"/>'
+             '<c:crosses val="autoZero"/><c:auto val="1"/><c:lblAlgn val="ctr"/>'
+             '<c:lblOffset val="100"/><c:noMultiLvlLbl val="0"/></c:catAx>'
+             '<c:valAx><c:axId val="23002"/><c:scaling><c:orientation val="minMax"/>'
+             '<c:max val="%g"/><c:min val="0"/></c:scaling><c:delete val="0"/><c:axPos val="l"/>'
+             '<c:majorGridlines><c:spPr><a:ln w="9525">%s</a:ln></c:spPr></c:majorGridlines>'
+             '<c:numFmt formatCode="#,##0" sourceLinked="0"/>'
+             '<c:majorTickMark val="none"/><c:minorTickMark val="none"/><c:tickLblPos val="nextTo"/>'
+             '<c:spPr><a:ln><a:noFill/></a:ln></c:spPr>%s<c:crossAx val="23001"/>'
+             '<c:crosses val="autoZero"/><c:crossBetween val="between"/>'
+             '<c:majorUnit val="%g"/></c:valAx>'
+             '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr></c:plotArea>'
+             '<c:plotVisOnly val="1"/><c:dispBlanksAs val="gap"/></c:chart>'
+             '<c:spPr><a:noFill/><a:ln><a:noFill/></a:ln></c:spPr>'
+             '<c:externalData r:id="rId1"><c:autoUpdate val="0"/></c:externalData>'
+             '</c:chartSpace>'
+             % (NS_C, sers, solid(CAT_MUTE), _chart_txpr(T_LABEL, INK2), top, solid(RULE),
+                _chart_txpr(T_LABEL, INK2), step))
+    return chart, xlsx(table)
+
+
 def milestones(sid, marks):
     """The diamonds on a plan: (row, at, label), `at` in periods. CAT_2 with a
     PAPER ring so it reads apart from the bar end it sits on; the label 10pt INK2
@@ -731,6 +825,32 @@ def demo_slides():
                            ["เวลาปิดงบแปรตามปริมาณเอกสาร การลดงานคีย์ซ้ำจึงลดเวลาปิดงบได้จริง"])],
               [column_chart("เวลาปิดงบ", ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย."],
                             [6, 7, 6, 8, 9, 7], 4)]))
+    # --------------------------------------- 4c · why it is getting worse (L23)
+    # the trend behind L19: the month the documents peak is the month the close
+    # runs longest. Tile 1 is the plotted one; each delta says what it is
+    # measured against, its glyph coloured by whether the move is good.
+    up, down = "▲ ", "▼ "
+    tiles = [("เอกสารเข้า มิ.ย.", "1,150 ใบ", [(up, RISK), ("15% จาก ม.ค.", None)]),
+             ("เวลาคีย์ต่อใบ", "4 นาที", [(down, OK), ("0.5 นาที จากปีก่อน", None)]),
+             ("ชั่วโมงคีย์ต่อเดือน", "77 ชม.", [(up, RISK), ("10 ชม. จาก ม.ค.", None)])]
+    sh23 = [sp_text(2, "Title", "title", None,
+                    ["เอกสารเกินกำลังคีย์ 1,200 ใบครั้งแรกเดือน พ.ค."])]
+    sid = 3
+    for i, (lab, val, delta) in enumerate(tiles):
+        idx = PL.PH_FREE + 3 * i
+        sh23 += [sp_text(sid, "TL%d" % i, "body", idx, [lab]),
+                 sp_text(sid + 1, "TV%d" % i, "body", idx + 1, [val]),
+                 sp_text(sid + 2, "TD%d" % i, "body", idx + 2, [delta])]
+        sid += 3
+    sh23 += [chart_frame(sid, "Trend", 1, MX, PL.KPI_TREND_Y, CW, PL.KPI_TREND_H, "rId2"),
+             sp_text(sid + 1, "Src", "body", 2,
+                     ["ระบบบัญชีของลูกค้า · ม.ค.–มิ.ย. 2569 · หน่วย: ใบต่อเดือน"]),
+             sp_text(sid + 2, "TkL", "body", 3, ["สรุป"]),
+             sp_text(sid + 3, "TkC", "body", 4,
+                     ["เดือนที่เกินกำลังคีย์คือเดือนที่ปิดงบนานสุด ต้องลดงานคีย์ ไม่ใช่เพิ่มคน"])]
+    S.append((23, sh23, [line_chart("เอกสารเข้า", ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย."],
+                                    [1000, 1100, 1000, 1200, 1350, 1150],
+                                    target=("กำลังคีย์ 1,200 ใบ", 1200))]))
     # ---------------------------------------------------------------- 5 · before/after (L04)
     S.append((4, [sp_text(2, "Title", "title", None, ["ก่อนและหลังใช้บริการ"]),
                   sp_text(3, "LH", "body", 3, ["ก่อน"]),

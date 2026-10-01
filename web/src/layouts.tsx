@@ -1360,3 +1360,107 @@ export function SlideComposition({
     </Slide>
   );
 }
+
+/* ---------------------------------------------------------------- 23 */
+export interface KpiTile {
+  /** What the number measures ("เอกสารเข้า มิ.ย."). */
+  label: ReactNode;
+  value: ReactNode;
+  /**
+   * The move, and what it is measured against — always ("15% จาก ม.ค.").
+   * `good` colours the glyph ok or risk; the words stay ink.
+   */
+  delta?: { text: ReactNode; direction: "up" | "down"; good: boolean };
+  /** A few recent points, drawn mute beside the delta with the latest in cat-1. */
+  spark?: number[];
+}
+
+/** Three tiles on the third grid or four on the quarter grid. */
+export type KpiTiles = [KpiTile, KpiTile, KpiTile] | [KpiTile, KpiTile, KpiTile, KpiTile];
+
+export interface SlideKpiTrendProps extends Base {
+  title: ReactNode;
+  tiles: KpiTiles;
+  /** The trend of one tile: its rule turns cat-1 and thick, which is what ties them. */
+  trend: {
+    tile?: number;
+    /** Series name for the hidden table; defaults to the tile's label when that is a string. */
+    name?: string;
+    categories: string[];
+    values: number[];
+    unit?: string;
+    /** A target or limit, drawn as a mute hairline named at its end. */
+    target?: { value: number; label: string };
+  };
+  /** Required: where the numbers came from. */
+  source: ReactNode;
+  takeawayLabel?: string;
+  takeaway: ReactNode;
+}
+
+const KPI_TREND_H = 196.8;   // 2.05in - ends 5.65in, above the note
+
+function Spark({ points, width }: { points: number[]; width: number }) {
+  const h = 28.8, pad = 4;
+  const lo = Math.min(...points), hi = Math.max(...points);
+  const x = (i: number) => pad + (i / Math.max(1, points.length - 1)) * (width - 2 * pad);
+  const y = (v: number) => h - pad - ((v - lo) / (hi - lo || 1)) * (h - 2 * pad);
+  const last = points.length - 1;
+  return (
+    <svg className="nct-kpi__spark" width={width} height={h} aria-hidden="true">
+      <polyline points={points.map((v, i) => `${x(i)},${y(v)}`).join(" ")} fill="none"
+                stroke="var(--nct-cat-mute)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+      <circle cx={x(last)} cy={y(points[last])} r={3} fill="var(--nct-cat-1)" />
+    </svg>
+  );
+}
+
+/**
+ * 23 · KPI + Trend. Three or four headline numbers and the trend of one of them.
+ * Tiles have no ground: a rule on top divides them. Every delta says what it is
+ * compared with. With no trend worth telling, this is SlideKeyFigures (06).
+ */
+export function SlideKpiTrend({
+  title,
+  tiles,
+  trend,
+  source,
+  takeawayLabel = "สรุป",
+  takeaway,
+  ...chrome
+}: SlideKpiTrendProps) {
+  const plotted = trend.tile ?? 0;
+  const tileW = (space.cw - (tiles.length - 1) * space.gut) / tiles.length;
+  const label = tiles[plotted].label;
+  return (
+    <Slide {...chrome}>
+      <SlideTitle>{title}</SlideTitle>
+      <div className="nct-body">
+        <div className="nct-kpi" style={{ gridTemplateColumns: `repeat(${tiles.length}, 1fr)` }}>
+          {tiles.map((t, i) => (
+            <div key={i} className="nct-kpi__tile" data-plotted={i === plotted || undefined}>
+              <p className="nct-figure__label nct-kpi__label">{t.label}</p>
+              <p className="nct-kpi__value">{t.value}</p>
+              <div className="nct-kpi__foot">
+                {t.delta && (
+                  <span className="nct-kpi__delta">
+                    <i style={{ color: t.delta.good ? "var(--nct-ok)" : "var(--nct-risk)" }}>
+                      {t.delta.direction === "up" ? "▲" : "▼"}
+                    </i>{" "}
+                    {t.delta.text}
+                  </span>
+                )}
+                {t.spark && <Spark points={t.spark} width={tileW / 2} />}
+              </div>
+            </div>
+          ))}
+        </div>
+        <Chart kind="line" categories={trend.categories} unit={trend.unit} target={trend.target}
+               series={[{ name: trend.name ?? (typeof label === "string" ? label : ""), values: trend.values }]}
+               width={space.cw} height={KPI_TREND_H} />
+        <p className="nct-dia-legend">{source}</p>
+        <TakeawayBand label={takeawayLabel} foot>{takeaway}</TakeawayBand>
+      </div>
+    </Slide>
+  );
+}

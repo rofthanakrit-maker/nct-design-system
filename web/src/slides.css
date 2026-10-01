@@ -1505,3 +1505,40 @@
   color: var(--nct-ink);
   font-variant-numeric: tabular-nums;
 }
+
+/* ---------------------------------------------------------------- 23 */
+/* the .potx rows: label at 0.13in into the body, value to 1.15in, delta row,
+   trend from 1.75in. No card ground - a rule on top divides the tiles, and the
+   plotted tile's rule is cat-1 and 0.05in thick */
+.nct-kpi { display: grid; column-gap: var(--nct-gut); height: 168px; }
+.nct-kpi__tile {
+  position: relative;
+  display: grid;
+  grid-template-rows: 28.8px 69.12px 28.8px;
+  align-content: start;
+  padding-top: 12.48px;
+}
+.nct-kpi__tile::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1.34px;
+  background: var(--nct-rule);
+}
+.nct-kpi__tile[data-plotted]::before { height: 4.8px; background: var(--nct-cat-1); }
+.nct-kpi__label { margin: 0; }
+.nct-kpi__value {
+  margin: 0;
+  align-self: end;
+  font-family: var(--nct-font-display);
+  font-weight: 700;
+  font-size: var(--nct-fs-tile);
+  line-height: 1;
+  color: var(--nct-heading);
+}
+.nct-kpi__foot { display: grid; grid-template-columns: 1fr 1fr; align-items: center; }
+.nct-kpi__delta { font-size: var(--nct-fs-label); color: var(--nct-ink); }
+.nct-kpi__delta i { font-style: normal; }
+.nct-kpi__spark { display: block; }

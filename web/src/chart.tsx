@@ -47,6 +47,8 @@ export type ChartProps = ChartBase &
         series: ChartSeriesList;
         /** Series index to emphasise: it takes cat-1, the others go mute. */
         highlight?: number;
+        /** A target or limit: a mute hairline across the run, named at its end ("เป้า 95%"). */
+        target?: { value: number; label: string };
       }
     | {
         /** Part-to-whole over periods. Series stack from the baseline in slot order. */
@@ -114,7 +116,8 @@ export function Chart(props: ChartProps & { width: number; height: number }) {
   );
   // ponytail: every scale starts at 0, lines included - honest by default; a
   // trend living at 95-99% wants an indexed chart, not a clipped axis
-  const ticks = niceTicks(Math.max(...totals));
+  const target = props.kind === "line" ? props.target : undefined;
+  const ticks = niceTicks(Math.max(...totals, target?.value ?? 0));
   const top = ticks[ticks.length - 1];
 
   const horizontal = props.kind === "bar";
@@ -194,6 +197,22 @@ export function Chart(props: ChartProps & { width: number; height: number }) {
     // not overlapping; converging ends fall back to the legend
     const sorted = [...ends].sort((a, b) => a - b);
     const clear = sorted.every((y, i) => i === 0 || y - sorted[i - 1] >= 28.8);
+    // first point to last, as PowerPoint draws a flat series. Its name sits over
+    // its end - unless a line ends within one label line of it, where the two
+    // labels would collide; then over its start (build.line_chart does the same)
+    if (target) {
+      const ty = vy(target.value);
+      const atEnd = ends.every((y) => Math.abs(y - ty) >= 28.8);
+      marks.push(
+        <g key="target">
+          <line x1={px(0)} x2={px(n - 1)} y1={ty} y2={ty} stroke={MUTE} strokeWidth={1} />
+          <text className="nct-chart__tick" x={atEnd ? px(n - 1) : px(0)} y={ty - 9.6}
+                textAnchor={atEnd ? "middle" : "start"}>
+            {target.label}
+          </text>
+        </g>,
+      );
+    }
     list.forEach((s, i) => {
       const color = seriesColor(i);
       marks.push(
