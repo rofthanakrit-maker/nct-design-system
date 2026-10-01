@@ -36,11 +36,11 @@ Repo-specific gotchas. Read before re-syncing.
   and a design agent under the artifact CSP has no other route to them.
 - **`preview/` is generated, not hand-made.** `python scripts/render_previews.py`
   renders both demo decks through PowerPoint COM (Windows only, read-only, never
-  saves back) and writes `layout-01..25.png`, `corp-layout-01..25.png` and the two contact sheets. It went
+  saves back) and writes `layout-01..26.png`, `corp-layout-01..26.png` and the two contact sheets. It went
   stale across a whole release when it was a manual pass; run it after any change
   that moves geometry.
 - **No Storybook.** Preview cards are authored from `web/demo/demo.tsx`, which
-  renders all 25 layouts with real proposal copy, in both brand modes. It is the reference usage example.
+  renders all 26 layouts with real proposal copy, in both brand modes. It is the reference usage example.
 - The PowerPoint side (`scripts/build.py` → `.potx`) shares `scripts/tokens.py` with
   the web package but nothing else. A token change must be rebuilt on both sides.
 - **The visual loop is `web/demo/`.** `npm run demo` bundles `demo.tsx` to the
@@ -346,4 +346,21 @@ Repo-specific gotchas. Read before re-syncing.
   the project-team layout. Next time fetch `readme.md` fresh and patch that.
 - **`TeamMember` extracts as a bare name** in `SlideTeam.d.ts` (the 2-4 tuple
   survives); its body is in `prop-types.md` ("Project team 25").
+- **Known render warns:** none.
+
+## Re-sync, 2026-10-01 (L26 Client References)
+
+- **Scope: 1 added.** `SlideClients` (cells `TwelveNames`, `EightMixed`) was
+  graded good in a local driver run right after the layout was built and
+  carried forward here; `BulletList` re-uploads for its doc comment again. 38
+  carried forward. Render check 40/40, no warns.
+- **`SlideClients.clients` extracts as `unknown`** (4 / 8 / 12 tuple of
+  `ClientItem`). Its body is in `prop-types.md` ("Client references 26") and the
+  component doc says so, so the `.prompt.md` carries it too.
+- **`EightMixed` uses inline SVG data-URI wordmarks** as stand-in logos for
+  fictional companies - the only way to exercise the `logo` path without a real
+  client's mark. Never swap in a real company's logo there.
+- **Project `readme.md`** rebuilt from the same base + the L25 patch, then the
+  L26 patch (count 26, `SlideClients` in the list, a reference-wall rule, dense
+  type legal on client references). Uploaded from `ds-bundle/.project-patch/`.
 - **Known render warns:** none.
