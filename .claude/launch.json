@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["scripts/serve.py", "5173"],
       "port": 5173
+    },
+    {
+      "name": "nct-slides-demo-alt",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["scripts/serve.py", "5174"],
+      "port": 5174
     }
   ]
 }
