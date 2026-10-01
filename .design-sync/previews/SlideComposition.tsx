@@ -24,7 +24,7 @@ export const Budget = () => (
     breakdown is only the legend, and the recommended package carries the cap. */
 export const Packages = () => (
   <SlideComposition
-    title="Business ปีแรก 0.81 ล้านบาท เกือบครึ่งเป็นค่าบริการรายเดือน"
+    title="Business ปีแรก 0.81 ล้านบาท ครึ่งหนึ่งคือค่าบริการ"
     total="0.81 ล้านบาท"
     totalLabel="ค่าใช้จ่ายปีแรก แพ็กเกจ Business"
     intro="ไม่รวมภาษีมูลค่าเพิ่ม · ค่าบริการคิด 12 เดือนตามตารางแพ็กเกจ"

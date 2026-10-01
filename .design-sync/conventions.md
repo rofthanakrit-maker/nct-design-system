@@ -162,6 +162,8 @@ does not keep.
   `milestone` is a sign-off or deliverable, not a task. `assumption` (what period
   one counts from) and `takeaway` are required. No text in bars, no dependency
   arrows — order of work is `SlideProcessFlow` / `SlideDiagram`.
+- **`SlideTwoColumn` column names go in `leftKicker` / `rightKicker`.** "ก่อน" /
+  "หลัง" or "ข้อดี" / "ข้อจำกัด" typed as the first bullet reads as one more point.
 - **Part-to-whole is `SlideComposition`.** One bar is a budget by category and
   its breakdown carries the values; two or three bars compare packages, the
   breakdown becomes the legend and each bar carries its total. Four segments at

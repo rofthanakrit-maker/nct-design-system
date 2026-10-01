@@ -36,11 +36,11 @@ Repo-specific gotchas. Read before re-syncing.
   and a design agent under the artifact CSP has no other route to them.
 - **`preview/` is generated, not hand-made.** `python scripts/render_previews.py`
   renders both demo decks through PowerPoint COM (Windows only, read-only, never
-  saves back) and writes `layout-01..20.png`, `corp-layout-01..20.png` and the two contact sheets. It went
+  saves back) and writes `layout-01..24.png`, `corp-layout-01..24.png` and the two contact sheets. It went
   stale across a whole release when it was a manual pass; run it after any change
   that moves geometry.
 - **No Storybook.** Preview cards are authored from `web/demo/demo.tsx`, which
-  renders all 20 layouts with real proposal copy, in both brand modes. It is the reference usage example.
+  renders all 24 layouts with real proposal copy, in both brand modes. It is the reference usage example.
 - The PowerPoint side (`scripts/build.py` → `.potx`) shares `scripts/tokens.py` with
   the web package but nothing else. A token change must be rebuilt on both sides.
 - **The visual loop is `web/demo/`.** `npm run demo` bundles `demo.tsx` to the
@@ -303,4 +303,27 @@ Repo-specific gotchas. Read before re-syncing.
   `readme.md`. Re-read the remote file before patching again; it is the base.
 - **The project's static `slides/01-cover.html` and `slides/10-closing.html` were
   not touched** and do not show the web split. `readme.md` now says so.
+- **Known render warns:** none.
+
+## Re-sync, 2026-10-01 (L04 kickers, the v4 data layouts 21-24)
+
+- **Scope: 1 changed + 4 added.** `SlideTwoColumn` (new `leftKicker` /
+  `rightKicker`) and `SlidePlan` / `SlideComposition` / `SlideKpiTrend` /
+  `SlideBeforeAfter`. 33 carried forward on the anchor. `Chart` and `SlideChart`
+  upload without re-grading - only their `.d.ts` moved (`Chart`'s line form gained
+  `target`). Grades 10/10 good after one fix: the `Packages` cell's title wrapped
+  under the corp lockup and was shortened.
+- **`cfg.dtsPropsFor.Chart` now carries `target`.** It is still a hand copy of
+  `chart.tsx` - diff it again whenever that file changes.
+- **Long tuple unions extract as `unknown`.** `SlidePlan.rows` (1-8) and
+  `SlideBeforeAfter.rows` (3-7) join `SlideAgenda.items`; shorter unions
+  (`SlideComposition.bars`, `SlideKpiTrend.tiles`) keep their shape but name
+  `CompositionBar` / `KpiTile` bare. All four bodies are in
+  `web/docs/guides/prop-types.md` ("Data layouts 21-24"), which ships as a
+  guideline. A new layout with a tuple prop needs the same entry.
+- **The project's `readme.md` was patched again** (layout count 24, the four data
+  layouts in the component list and the chart rule, L04 kickers, `slides/` covers
+  01-19 only). Base was the remote file fetched this run; the patched copy was
+  uploaded from `ds-bundle/.project-patch/readme.md`. `styles.css` and `README.md`
+  stayed out of the upload, as before.
 - **Known render warns:** none.

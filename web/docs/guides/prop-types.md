@@ -100,7 +100,8 @@ interface ChartSeries {
 type ChartProps =
   { categories: string[]; unit?: string; format?: (n: number) => string } & (
     | { kind: "column" | "bar"; series: ChartSeries; highlight?: number }
-    | { kind: "line"; series: ChartSeries[]; highlight?: number }
+    | { kind: "line"; series: ChartSeries[]; highlight?: number;
+        target?: { value: number; label: string } }
     | { kind: "stacked"; series: ChartSeries[] }
   );
 ```
@@ -112,6 +113,46 @@ to four series.
 `Chart` used bare also needs `width` and `height` in px — the SVG has no
 intrinsic size and collapses to nothing without them. Layout 19 draws it at
 806×365. `SlideChart` sets both for you.
+
+## Data layouts 21–24 — `PlanRow`, `CompositionBar`, `KpiTile`, `BeforeAfterRow`
+
+The per-component `.d.ts` shows `rows` on `SlidePlan` and `SlideBeforeAfter` as
+`unknown` (a long tuple union does not survive extraction). These are the shapes.
+
+```ts
+/** SlidePlan rows: one to eight. Units are periods from 0 - 0 opens periods[0],
+    2.5 is halfway through the third. The row number is its position and must
+    match the phase number on SlidePhaseCard. */
+interface PlanRow {
+  label: ReactNode;
+  start: number;
+  end: number;
+  duration?: ReactNode;                          // "8 สัปดาห์"
+  milestone?: { at: number; label?: string };    // a sign-off, not a task
+}
+
+/** SlideComposition bars: one to three. `values` follow `segments` order. */
+interface CompositionBar {
+  label: ReactNode;
+  values: number[];
+  total?: ReactNode;       // shown at the bar end when there are 2-3 bars
+  recommended?: boolean;   // accent label + cap, as L09's column
+}
+
+/** SlideKpiTrend tiles: three or four. */
+interface KpiTile {
+  label: ReactNode;
+  value: ReactNode;
+  delta?: { text: ReactNode; direction: "up" | "down"; good: boolean };
+  spark?: number[];
+}
+
+/** SlideBeforeAfter rows: three to seven, all in one unit. */
+interface BeforeAfterRow { label: ReactNode; before: number; after: number }
+```
+
+`delta.text` always names its comparison ("15% จาก ม.ค."); `good` colours only
+the glyph. `SlideBeforeAfter` sorts its rows by the size of the change itself.
 
 ## Icons — `LucideIcon`
 
