@@ -124,9 +124,11 @@ accent1–2 เป็น `CAT_1` / `CAT_2` ตั้งแต่ v4 (เดิ�
 | Body L2 | Noto Sans Thai | 16 pt | Regular | `INK` |
 | Body L3 / caption | Noto Sans Thai | 14 pt | Regular | `INK2` |
 | Quote mark | Kanit | 120 pt | Bold | `TEAL` 25% |
-| Stat label / eyebrow | Noto Sans Thai | 12 pt | Bold, `spc 120` | `INK2` |
+| Stat label / eyebrow | Noto Sans Thai | 12 pt | Bold | `INK2` |
 | Footer / page no. | Noto Sans Thai | 10 pt | Regular | `INK2` |
 
+- **ห้ามใส่ letter-spacing (`spc`) กับข้อความไทย** — tracking ทำให้สระและวรรณยุกต์ลอยห่างจากพยัญชนะ
+  ("ส รุ ป") label ใช้ Bold + `INK2`/accent เป็นเสียงของมันอยู่แล้ว `ooxml._rpr` ไม่รับ `spc` อีก
 - **Kanit = เสียงหัวเรื่อง, Noto Sans Thai = เสียงเนื้อหา** ห้ามสลับ นี่คือสิ่งที่แก้ปัญหา
   "flat typographic voice" ที่ `design.md` บันทึกไว้เป็น anti-pattern ของเว็บต้นทาง
 - Line height: หัวเรื่อง 106–108%, body 124%, quote 132%

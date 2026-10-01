@@ -131,7 +131,7 @@ v1 เขียนไว้ว่า "ถ้าจำเป็นต้องม
 | Card number | Kanit | 24 pt | Bold | สีหมวด | L12 |
 | Dense heading | Kanit | 16 pt | Bold | `NAVY` | L11 – L14 |
 | Dense body | Noto Sans Thai | 12 pt | Regular | `INK` | L11 – L14 |
-| Table header | Noto Sans Thai | 11 pt | Bold, `spc 60` | `PAPER` | L16 |
+| Table header | Noto Sans Thai | 11 pt | Bold | `PAPER` | L16 |
 | Dense cell | Noto Sans Thai | 10 pt | Regular | `INK` | L16 |
 | Quote mark | Kanit | 120 pt | Bold | `TEAL_L` | L07 (เอกสารเดิมตกไป) |
 
@@ -178,7 +178,7 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 | Field kicker PH | 7.068 | 2.100 | 4.965 | 0.400 | 18 pt Kanit Bold `NAVY` |
 | Field body PH | 7.068 | 2.600 | 4.965 | 3.200 | 12 pt dense `INK` |
 | Takeaway band | 1.000 | 6.150 | 11.333 | 0.450 | fill `PAPER2` |
-| Band label PH | 1.200 | 6.220 | 2.000 | 0.310 | 12 pt Bold `spc 120` `TEAL` |
+| Band label PH | 1.200 | 6.220 | 2.000 | 0.310 | 12 pt Bold `TEAL` |
 | Band copy PH | 3.300 | 6.220 | 8.833 | 0.310 | 14 pt `INK` |
 
 - ข้อความบนพาเนลเข้มเป็น `PAPER` เท่านั้น ข้อความรองใช้ alpha ไม่ใช่เทา — กฎ §3 ของ v1
@@ -200,7 +200,7 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 | Card body PH | +0.350 | 3.550 | 1.983 | 1.700 | 12 pt dense `INK` |
 | ~~Card callout PH~~ | — | — | — | — | ยังไม่ได้ทำใน `parts_layouts.py` — การ์ดมี number / heading / body อย่างละหนึ่ง (idx `PH_FREE + i×3 .. +2`, `PH_FREE = 20` — เดิมเป็น `i×3+1..3` ซึ่งชนกับ idx 10/11/12 ที่ `chrome()` จองไว้ ดู v3 §7) |
 | Band | 1.000 | 6.000 | 11.333 | 0.600 | fill `NAVY` |
-| Band label PH | 1.250 | 6.130 | 2.200 | 0.340 | 12 pt Bold `spc 120` · `PAPER` 70% |
+| Band label PH | 1.250 | 6.130 | 2.200 | 0.340 | 12 pt Bold · `PAPER` 70% |
 | Band copy PH | 3.550 | 6.120 | 8.583 | 0.360 | 14 pt `PAPER` |
 
 - การ์ดสูงคงที่ 3.80in ข้อความยาวเกินให้ตัดคำ อย่ายืดการ์ด — กฎเดียวกับ L05
@@ -221,7 +221,7 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 | Step body PH | +0.250 | 3.700 | 1.607 | 0.700 | 12 pt dense `INK` |
 | Connector × 4 | 3.155 / 5.462 / 7.769 / 10.076 | 3.400 | 0.150 | 0.200 | chevron `TEAL` |
 | Result band | 1.000 | 4.800 | 11.333 | 0.750 | fill `PAPER2` |
-| Result label PH | 1.250 | 4.930 | 2.200 | 0.340 | 12 pt Bold `spc 120` `TEAL` |
+| Result label PH | 1.250 | 4.930 | 2.200 | 0.340 | 12 pt Bold `TEAL` |
 | Result copy PH | 3.550 | 4.920 | 8.583 | 0.480 | 14 pt `INK` |
 | Control note PH | 1.000 | 5.850 | 11.333 | 0.700 | 12 pt dense `INK2` |
 
@@ -243,7 +243,7 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 > ลบออกแล้วตามสเปกข้อนี้ — ถ้าอยากได้เส้นไกด์ ให้เปิด `View > Guides` ใน PowerPoint แทน
 | Legend PH | 1.000 | 5.750 | 11.333 | 0.300 | 12 pt dense `INK2` |
 | Takeaway band | 1.000 | 6.150 | 11.333 | 0.450 | fill `PAPER2` |
-| Band label PH | 1.200 | 6.220 | 2.000 | 0.310 | 12 pt Bold `spc 120` `TEAL` |
+| Band label PH | 1.200 | 6.220 | 2.000 | 0.310 | 12 pt Bold `TEAL` |
 | Band copy PH | 3.200 | 6.220 | 8.933 | 0.310 | 14 pt `INK` |
 
 **ชุดชิ้นส่วนมาตรฐาน — ทุกผังในเด็คต้องใช้ชุดนี้**
@@ -257,7 +257,7 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 |---|---|
 | กล่องระบบเดิม | สูง 0.800in · กว้างขั้นต่ำ 1.800in · **มุมตรง** · fill `NAVY` · ไม่มีเส้น · label 12 pt `PAPER` |
 | กล่องส่วนที่เพิ่ม | fill `PAPER` · เส้น = สีหมวด 1 pt · tab สีหมวด 0.225 × 0.050in เยื้องเข้า 0.125in มุมซ้ายบน · label 12 pt `INK` |
-| โซนกลุ่ม | fill `PAPER2` · **ไม่มีเส้น** · padding 0.500in บน-ล่างเท่ากัน 0.300in ซ้าย-ขวา · label 12 pt Bold `spc 120` `TEAL` มุมซ้ายบน |
+| โซนกลุ่ม | fill `PAPER2` · **ไม่มีเส้น** · padding 0.500in บน-ล่างเท่ากัน 0.300in ซ้าย-ขวา · label 12 pt Bold `TEAL` มุมซ้ายบน |
 | เส้นเชื่อม | `TEAL` 1.25 pt · หัวลูกศรสามเหลี่ยมตัน · **หักมุมฉากเท่านั้น** ห้ามเฉียงหรือโค้ง |
 | ป้ายบนเส้น | 10 pt `INK2` ลอยเหนือเส้น **ไม่มีพื้น** |
 
@@ -296,7 +296,7 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 | Category Key PH | 1.000 | 5.750 | 5.667 | 0.300 | 10 pt `INK2` — key ของสีหมวด (ชิดซ้าย) |
 | Footnote PH | 6.667 | 5.750 | 5.667 | 0.300 | 10 pt `INK2` — ที่มาข้อมูล (ชิดขวา) |
 | Takeaway band | 1.000 | 6.150 | 11.333 | 0.450 | fill `PAPER2` |
-| Band label PH | 1.200 | 6.220 | 2.000 | 0.310 | 12 pt Bold `spc 120` `TEAL` |
+| Band label PH | 1.200 | 6.220 | 2.000 | 0.310 | 12 pt Bold `TEAL` |
 | Band copy PH | 3.200 | 6.220 | 8.933 | 0.310 | 14 pt `INK` |
 
 > แถบสรุปกินพื้นที่ตาราง 0.4in — L16 จึงรับ 8–9 แถว ไม่ใช่ 8–10 เหมือนร่างเดิม
@@ -306,7 +306,7 @@ placeholder ใหม่ — **ข้อหลังนี้พลาดแล�
 
 | ส่วน | สเปก |
 |---|---|
-| แถวหัว | fill `NAVY` · สูง 0.380in · 11 pt Bold `spc 60` `PAPER` |
+| แถวหัว | fill `NAVY` · สูง 0.380in · 11 pt Bold `PAPER` |
 | แถวเนื้อ | สลับ `PAPER` / `PAPER2` · สูง 0.385in · 10 pt `INK` |
 | เส้นตาราง | `RULE` 0.5 pt แนวนอนเท่านั้น — **ไม่มีเส้นแนวตั้ง** ใช้ช่องไฟแทน |
 | คอลัมน์แรก | **เส้นใต้สีหมวดที่ก้นเซลล์ 0.0275in** · เลข 10 pt `INK` บนกระดาษ — ไม่ถมสีทั้งเซลล์ และไม่ใช่แถบข้าง (§3.3) |

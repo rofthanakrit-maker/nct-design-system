@@ -86,7 +86,7 @@ def _takeaway(sid, idx, label="สรุป", prompt="ประเด็นส�
     return [shape(sid, "Takeaway Band", MX, TAKE_Y, CW, TAKE_H, solid(PAPER2)),
             placeholder(sid + 1, "Takeaway Label", "body", MX + 182880, ly,
                         1828800, 289560,
-                        [S(label, sz=T_LABEL, color=accent(), bold=True, spc=120,
+                        [S(label, sz=T_LABEL, color=accent(), bold=True,
                            line=100000)], idx=idx, anchor="ctr"),
             placeholder(sid + 2, "Takeaway Copy", "body", MX + 2011680, ly,
                         CW - 2011680 - 182880, 289560,
@@ -106,7 +106,7 @@ def _takeaway_optional(sid, idx):
     """
     lw = 2011680
     return [placeholder(sid, "Takeaway Label", "body", MX, TAKE_Y, lw, TAKE_H,
-                        [S("สรุป", sz=T_LABEL, color=accent(), bold=True, spc=120,
+                        [S("สรุป", sz=T_LABEL, color=accent(), bold=True,
                            line=100000)], idx=idx, anchor="ctr", fill=solid(PAPER2),
                         ins=(182880, 0, 91440, 0)),
             placeholder(sid + 1, "Takeaway Copy", "body", MX + lw, TAKE_Y, CW - lw, TAKE_H,
@@ -187,7 +187,13 @@ def l01_cover(rid_logo_color, rid_mark_color):
     a second copy in the corner would be the same mark twice.
 
     The rule and the decorative column read accent(), house teal in both brands.
+
+    The title and subtitle are centred between the scatter column and its mirror,
+    not across CW: at CW a one-line title runs to 12.3in, and the column starts at
+    10.1in, so the last glyphs of any long title sat on the squares. The box
+    keeps three lines of height, so a title that wraps still fits.
     """
+    tx, tw = COVER_SCAT_W, SW - 2 * COVER_SCAT_W   # 3.25in in, 6.83in wide
     logo_h = int(COVER_LOGO_W * LOGO_AR)
     wm = 7315200                                  # 8.00in - the watermark, twice
     s = [pic(10, "Watermark A", rid_mark_color, 1371600, -2103120, wm,
@@ -200,12 +206,12 @@ def l01_cover(rid_logo_color, rid_mark_color):
               COVER_LOGO_Y, COVER_LOGO_W, logo_h),
           shape(sid + 1, "Accent Rule", (SW - COVER_RULE_W) // 2, COVER_RULE_Y,
                 COVER_RULE_W, COVER_RULE_H, solid(accent())),
-          placeholder(sid + 2, "Title Placeholder", "ctrTitle", MX, COVER_TITLE_Y,
-                      CW, COVER_TITLE_H,
+          placeholder(sid + 2, "Title Placeholder", "ctrTitle", tx, COVER_TITLE_Y,
+                      tw, COVER_TITLE_H,
                       [S("PROPOSAL", sz=T_DISPLAY, color=INK, bold=True, font="mj",
                          algn="ctr", line=115000)], anchor="ctr"),
-          placeholder(sid + 3, "Subtitle", "subTitle", MX,
-                      COVER_TITLE_Y + COVER_TITLE_H + 137160, CW, 457200,
+          placeholder(sid + 3, "Subtitle", "subTitle", tx,
+                      COVER_TITLE_Y + COVER_TITLE_H + 137160, tw, 457200,
                       [S("คำโปรย / ชื่อลูกค้า", sz=T_LEAD, color=INK2, algn="ctr",
                          line=130000)], idx=1, anchor="t"),
           # the cover's own foot: the source's "Updated date" line, left, and the
@@ -312,7 +318,7 @@ def l06_stats(rid_mark_color):
         s.append(placeholder(sid, "Figure %d Label" % (i + 1), "body",
                              x, ST_Y + 1280160, THIRD, 731520,
                              [S("คำอธิบายตัวเลข", sz=T_LABEL, color=INK2, bold=True,
-                                spc=120, line=130000)], idx=i * 2 + 2, anchor="t")); sid += 1
+                                line=130000)], idx=i * 2 + 2, anchor="t")); sid += 1
     s.append(placeholder(sid, "Footnote", "body", MX, 4754880, CW, 640080,
                          [S("ที่มาของข้อมูล / หมายเหตุ", sz=T_BODY3, color=INK2,
                             line=130000)], idx=7))
@@ -334,7 +340,7 @@ def l07_quote(rid_mark_color):
          _rule(13, y=4389120),
          placeholder(14, "Attribution", "body", MX, 4663440, 6858000, 731520,
                      [S("ชื่อผู้พูด — ตำแหน่ง, องค์กร", sz=T_BODY3, color=INK2,
-                        spc=60, line=130000)], idx=2)]
+                        line=130000)], idx=2)]
     s += chrome(dark=False, mark_rid=rid_mark_color)
     return _wrap("07 Pull Quote", "obj", s, bgfill=solid(PAPER2))
 
@@ -398,8 +404,15 @@ def l10_closing(rid_mark_white, rid_photo):
     has the hairline struck through "เว็บไซต์ · nctthai.com". Written as the CSS
     value and converted, the same three lines take 0.78in and clear the rule by
     0.17in, with no box moved: the bug was the unit, not the geometry.
+
+    The deadline box was 0.50in, one line of 20pt Kanit. A real deadline wraps
+    ("ต้องการคำตอบภายใน 30 กันยายน 2569 เพื่อเริ่มรอบแรกในไตรมาสนี้"), and centred in
+    0.50in its second line landed on "โทร". It is 0.80in now - two lines - and
+    the title, rule, label and steps all rise 0.30in to pay for it, so the steps
+    keep their 1.30in and the contact block does not move.
     """
     ASK_X, ASK_W = MX, 5486400
+    up = 274320                                   # 0.30in - the deadline's second line
     s = [_diamond(10, -1371600, SH - 2743200, 3657600, 9),
          pic(11, "Section Photo", rid_photo, SEC_PHOTO_X, 0, SEC_PHOTO_W, SH),
          shape(16, "Photo Fade", SEC_PHOTO_X, 0, SEC_PHOTO_W, SH, fade_x(NAVY)),
@@ -408,14 +421,14 @@ def l10_closing(rid_mark_white, rid_photo):
          # flat, not a fade: the column is teal-side top to bottom, so a scrim
          # that fades out leaves whichever end it fades toward failing
          shape(20, "Ask Veil", 0, 0, SEC_PHOTO_X, SH, solid(DEEP, 55)),
-         placeholder(12, "Title Placeholder", "title", MX, 1554480, SEC_TEXT_W, 1188720,
+         placeholder(12, "Title Placeholder", "title", MX, 1554480 - up, SEC_TEXT_W, 1188720,
                      [S("ขอบคุณครับ", sz=T_SECTION, color=PAPER, bold=True,
                         font="mj", line=108000)], anchor="b"),
-         _rule(13, y=2926080, color=PAPER, alpha=ON_DARK_3),
-         placeholder(14, "Next Steps Label", "body", ASK_X, 3200400, 2743200, 228600,
+         _rule(13, y=2926080 - up, color=PAPER, alpha=ON_DARK_3),
+         placeholder(14, "Next Steps Label", "body", ASK_X, 3200400 - up, 2743200, 228600,
                      [S("ขั้นตอนถัดไป", sz=T_LABEL, color=PAPER, alpha=ON_DARK_2, bold=True,
-                        spc=120, line=100000)], idx=1, anchor="ctr"),
-         placeholder(15, "Next Steps", "body", ASK_X, 3474720, ASK_W, 1188720,
+                        line=100000)], idx=1, anchor="ctr"),
+         placeholder(15, "Next Steps", "body", ASK_X, 3474720 - up, ASK_W, 1188720,
                      [S("สิ่งที่ต้องเกิดขึ้นต่อ พร้อมผู้รับผิดชอบ", sz=T_BODY2, color=PAPER,
                         alpha=ON_DARK_1, bullet=True, bullet_auto=True,
                         bullet_color=PAPER, indent=320040, marL=320040,
@@ -423,7 +436,7 @@ def l10_closing(rid_mark_white, rid_photo):
          # 20pt Kanit at full PAPER, over 16pt at 92%: this is the one sentence
          # naming what NCT wants and by when, and it was the quietest line in the
          # block - 14pt TEAL_UP under the steps it is supposed to close
-         placeholder(18, "Decision By", "body", ASK_X, 4709160, ASK_W, 457200,
+         placeholder(18, "Decision By", "body", ASK_X, 4709160 - up, ASK_W, 731520,
                      [S("ต้องการคำตอบภายในวันที่ ...", sz=T_LEAD, color=PAPER,
                         bold=True, font="mj", line=115000)], idx=3, anchor="ctr"),
          placeholder(19, "Contact", "body", ASK_X, 5303520, ASK_W, 731520,
@@ -457,7 +470,7 @@ def l10_closing_card(rid_mark_white, rid_logo_color, rid_photo):
     logo_h = int(logo_w * LOGO_AR)
     dec_h = 1005840                               # 1.10in
     dec_y = CARD_Y + CARD_H - dec_h               # its foot is the card's foot
-    label = txbody([para("ติดต่อ", sz=T_LABEL, color=accent(), bold=True, spc=120,
+    label = txbody([para("ติดต่อ", sz=T_LABEL, color=accent(), bold=True,
                          line=100000)], anchor="ctr")
     s = [_diamond(10, -1371600, SH - 2743200, 3657600, 9),
          placeholder(11, "Title Placeholder", "title", MX, 1737360, CLOSE_TW, 1005840,
@@ -466,7 +479,7 @@ def l10_closing_card(rid_mark_white, rid_logo_color, rid_photo):
          _rule(12, y=2926080, color=accent_up()),
          placeholder(13, "Next Steps Label", "body", MX, lab_y, 2743200, 228600,
                      [S("ขั้นตอนถัดไป", sz=T_LABEL, color=accent_up(), bold=True,
-                        spc=120, line=100000)], idx=1, anchor="ctr"),
+                        line=100000)], idx=1, anchor="ctr"),
          placeholder(14, "Next Steps", "body", MX, lab_y + 320040, CLOSE_TW,
                      dec_y - lab_y - 320040 - 137160,
                      [S("สิ่งที่ต้องเกิดขึ้นต่อ พร้อมผู้รับผิดชอบ", sz=T_BODY2, color=PAPER,
@@ -515,7 +528,7 @@ def l11_split(rid_mark_color):
          shape(18, "Takeaway Band", MX, PY + PH + 137160, CW, 411480, solid(PAPER2)),
          placeholder(19, "Takeaway Label", "body", MX + 182880, PY + PH + 137160 + 60960,
                      1828800, 289560,
-                     [S("สรุป", sz=T_LABEL, color=accent(), bold=True, spc=120,
+                     [S("สรุป", sz=T_LABEL, color=accent(), bold=True,
                         line=100000)], idx=5, anchor="ctr"),
          placeholder(20, "Takeaway Copy", "body", MX + 2011680, PY + PH + 137160 + 60960,
                      CW - 2011680 - 182880, 289560,
@@ -554,7 +567,7 @@ def l12_cards_band(rid_mark_color):
     sid += 1
     s.append(placeholder(sid, "Band Label", "body", MX + 228600,
                          CARD_Y + CARD_H + 137160 + 91440, 2011680, 365760,
-                         [S("สรุป", sz=T_LABEL, color=accent_up(), bold=True, spc=120,
+                         [S("สรุป", sz=T_LABEL, color=accent_up(), bold=True,
                             line=100000)], idx=PH_FREE + 12, anchor="ctr")); sid += 1
     s.append(placeholder(sid, "Band Copy", "body", MX + 2240280,
                          CARD_Y + CARD_H + 137160 + 91440, CW - 2240280 - 228600, 365760,
@@ -598,7 +611,7 @@ def l13_process(rid_mark_color):
                    solid(PAPER2))); sid += 1
     s.append(placeholder(sid, "Result Label", "body", MX + 228600,
                          STEP_Y + STEP_H + 137160 + 91440, 2011680, 365760,
-                         [S("ผลลัพธ์", sz=T_LABEL, color=accent(), bold=True, spc=120,
+                         [S("ผลลัพธ์", sz=T_LABEL, color=accent(), bold=True,
                             line=100000)], idx=PH_FREE + 15, anchor="ctr")); sid += 1
     s.append(placeholder(sid, "Result Copy", "body", MX + 2240280,
                          STEP_Y + STEP_H + 137160 + 91440, CW - 2240280 - 228600, 365760,
@@ -790,7 +803,7 @@ def l18_evidence(rid_mark_color):
          shape(15, "Takeaway Band", MX, band_y, CW, TAKE_H, solid(dark())),
          placeholder(16, "Takeaway Label", "body", MX + 182880,
                      band_y + (TAKE_H - 289560) // 2, 1828800, 289560,
-                     [S("สรุป", sz=T_LABEL, color=accent_up(), bold=True, spc=120,
+                     [S("สรุป", sz=T_LABEL, color=accent_up(), bold=True,
                         line=100000)], idx=3, anchor="ctr"),
          placeholder(17, "Takeaway Copy", "body", MX + 2011680,
                      band_y + (TAKE_H - 289560) // 2, CW - 2011680 - 182880, 289560,
@@ -841,7 +854,7 @@ def l19_chart(rid_mark_color):
                      [S("00%", sz=T_STAT, color=heading(), bold=True, font="mj",
                         line=100000)], idx=2, anchor="b"),
          placeholder(14, "Figure Label", "body", RAIL_X, BODY_Y + FIG_H, THIRD, 457200,
-                     [S("ตัวเลขนี้วัดอะไร", sz=T_LABEL, color=INK2, bold=True, spc=120,
+                     [S("ตัวเลขนี้วัดอะไร", sz=T_LABEL, color=INK2, bold=True,
                         line=130000)], idx=3, anchor="t"),
          placeholder(15, "Insight", "body", RAIL_X, INS_Y, THIRD,
                      BODY_Y + CHART_H - INS_Y,
@@ -972,7 +985,7 @@ def l22_composition(rid_mark_color):
                      [S("0.0 ล้านบาท", sz=T_TILE, color=heading(), bold=True, font="mj",
                         line=100000)], idx=2, anchor="b"),
          placeholder(13, "Total Label", "body", MX, BODY_Y + 731520, HALF, NOTE_H,
-                     [S("ยอดรวมนี้คืออะไร", sz=T_LABEL, color=INK2, bold=True, spc=120,
+                     [S("ยอดรวมนี้คืออะไร", sz=T_LABEL, color=INK2, bold=True,
                         line=130000)], idx=3, anchor="t"),
          placeholder(14, "Intro", "body", MX + HALF + GUT, BODY_Y, HALF, 1005840,
                      [S("เงื่อนไขของตัวเลข: รวม VAT หรือไม่ ระยะสัญญา", sz=T_BODY3, color=INK2,
@@ -1046,7 +1059,7 @@ def l23_kpi(rid_mark_color):
                     45720 if i == 0 else 12700, solid(CAT_1 if i == 0 else RULE)),
               placeholder(sid + 1, "Tile %d Label" % (i + 1), "body", x, KPI_LABEL_Y, THIRD,
                           NOTE_H,
-                          [S("ตัวเลขนี้วัดอะไร", sz=T_LABEL, color=INK2, bold=True, spc=120,
+                          [S("ตัวเลขนี้วัดอะไร", sz=T_LABEL, color=INK2, bold=True,
                              line=130000)], idx=idx, anchor="t"),
               placeholder(sid + 2, "Tile %d Value" % (i + 1), "body", x, KPI_VALUE_Y, THIRD,
                           KPI_VALUE_H,
@@ -1142,7 +1155,7 @@ def l25_team(rid_mark_color):
     def who(x, y, w, role, name, top):
         nonlocal sid, idx
         out = [placeholder(sid, "%s Role" % role, "body", x, y + top, w, NOTE_H,
-                           [S("บทบาท", sz=T_LABEL, color=INK2, bold=True, spc=120,
+                           [S("บทบาท", sz=T_LABEL, color=INK2, bold=True,
                               line=100000)], idx=idx, anchor="t"),
                placeholder(sid + 1, "%s Name" % role, "body", x, y + top + 283464, w, 338328,
                            [S(name, sz=T_LEAD, color=heading(), bold=True, font="mj",

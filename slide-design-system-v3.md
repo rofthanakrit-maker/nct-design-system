@@ -209,7 +209,7 @@ furniture** ตัวอื่นเปลี่ยนแค่ chrome กับ
 | Kicker PH | 1.200 | 1.850 | 3.100 | 0.450 | 14 pt Kanit Bold `PAPER` กลาง (idx 1) |
 | Claim PH (`tbl`) | 1.000 | 2.450 | 11.333 | 1.600 | ตาราง 10 pt (idx 2) |
 | Takeaway Band | 1.000 | 4.200 | 11.333 | 0.450 | fill `NAVY` |
-| Band label PH | 1.200 | 4.267 | 2.000 | 0.317 | 12 pt Bold `spc 120` accent-up (idx 3) |
+| Band label PH | 1.200 | 4.267 | 2.000 | 0.317 | 12 pt Bold accent-up (idx 3) |
 | Band copy PH | 3.200 | 4.267 | 8.933 | 0.317 | 14 pt `PAPER` (idx 4) |
 | Caption PH × 3 | 1.000 / 4.844 / 8.689 | 4.800 | 3.644 | 0.250 | 12 pt dense `INK2` (idx 20 / 22 / 24) |
 | Frame × 3 | เท่ากัน | 5.112 | 3.644 | 1.488 | `noFill` · ln 1pt `RULE` |

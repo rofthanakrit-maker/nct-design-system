@@ -57,18 +57,22 @@ def fade_x(hexv=NAVY):
 
 
 # ---------------------------------------------------------------- text
-def _rpr(tag, sz, color, bold=False, font="mn", spc=0, italic=False, alpha=None):
+def _rpr(tag, sz, color, bold=False, font="mn", italic=False, alpha=None):
+    """No `spc` (tracking), on purpose. Every run is th-TH, and tracking pulls a
+    Thai syllable apart - "สรุป" set at spc=120 reads as four loose glyphs, with
+    the vowel stranded between them. A label is bold and INK2/accent; that is
+    its voice, not the spacing. The parameter is gone, not defaulted to 0, so a
+    stray spc= fails the build instead of quietly coming back."""
     b = ' b="1"' if bold else ''
     i = ' i="1"' if italic else ''
-    s = ' spc="%d"' % spc if spc else ''
-    return ('<a:%s lang="th-TH" sz="%d"%s%s%s dirty="0">%s'
+    return ('<a:%s lang="th-TH" sz="%d"%s%s dirty="0">%s'
             '<a:latin typeface="+%s-lt"/><a:ea typeface="+%s-ea"/>'
             '<a:cs typeface="+%s-cs"/></a:%s>'
-            % (tag, sz, b, i, s, solid(color, alpha), font, font, font, tag))
+            % (tag, sz, b, i, solid(color, alpha), font, font, font, tag))
 
 
-def rpr(sz, color, bold=False, font="mn", spc=0, italic=False, alpha=None):
-    return _rpr("defRPr", sz, color, bold, font, spc, italic, alpha)
+def rpr(sz, color, bold=False, font="mn", italic=False, alpha=None):
+    return _rpr("defRPr", sz, color, bold, font, italic, alpha)
 
 
 def _ppr_inner(line=100000, space_before=0, space_after=0, bullet=False, bullet_color=None,
@@ -101,7 +105,7 @@ def _ppr_attrs(algn="l", indent=0, marL=None):
     return a
 
 
-def lvl_ppr(n, sz=T_BODY, color=INK, bold=False, font="mn", algn="l", spc=0, italic=False,
+def lvl_ppr(n, sz=T_BODY, color=INK, bold=False, font="mn", algn="l", italic=False,
             alpha=None, line=100000, bullet=False, bullet_color=None, bullet_char=None,
             bullet_auto=False,
             indent=0, marL=None, space_before=0, space_after=0):
@@ -109,7 +113,7 @@ def lvl_ppr(n, sz=T_BODY, color=INK, bold=False, font="mn", algn="l", spc=0, ita
             % (n, _ppr_attrs(algn, indent, marL),
                _ppr_inner(line, space_before, space_after, bullet, bullet_color,
                           bullet_char, bullet_auto),
-               rpr(sz, color, bold, font, spc, italic, alpha), n))
+               rpr(sz, color, bold, font, italic, alpha), n))
 
 
 def lst_style(specs):
@@ -124,7 +128,7 @@ def lst_style(specs):
         for i, kw in enumerate(specs))
 
 
-def para(text, sz=T_BODY, color=INK, bold=False, font="mn", algn="l", spc=0, italic=False,
+def para(text, sz=T_BODY, color=INK, bold=False, font="mn", algn="l", italic=False,
          alpha=None, line=100000, bullet=False, bullet_color=None, bullet_char=None,
          bullet_auto=False,
          indent=0, marL=None, space_before=0, space_after=0, lvl=0, runs=None):
@@ -134,13 +138,13 @@ def para(text, sz=T_BODY, color=INK, bold=False, font="mn", algn="l", spc=0, ita
     back to the paragraph's own sz/color/font."""
     lv = ' lvl="%d"' % lvl if lvl else ''
     if runs:
-        base = dict(sz=sz, color=color, bold=bold, font=font, spc=spc,
+        base = dict(sz=sz, color=color, bold=bold, font=font,
                     italic=italic, alpha=alpha)
         run = "".join('<a:r>%s<a:t>%s</a:t></a:r>'
                       % (_rpr("rPr", **dict(base, **kw)), t) for t, kw in runs)
     else:
         run = ('<a:r>%s<a:t>%s</a:t></a:r>'
-               % (_rpr("rPr", sz, color, bold, font, spc, italic, alpha), text)) if text \
+               % (_rpr("rPr", sz, color, bold, font, italic, alpha), text)) if text \
             else '<a:endParaRPr lang="th-TH" sz="%d"/>' % sz
     return ('<a:p><a:pPr%s%s>%s</a:pPr>%s</a:p>'
             % (_ppr_attrs(algn, indent, marL), lv,

@@ -225,7 +225,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 | Accent Rule | ตาม brand | | | | |
 | Chart PH (`chart`) | 1.000 | 1.850 | 7.489 | 3.800 | ดูโครงข้างใน ↓ |
 | Figure PH | 8.688 | 1.850 | 3.644 | 1.100 | 72 pt Kanit Bold — ตัวเลขเดียวที่อยากให้จำ |
-| Figure label PH | 8.688 | 2.950 | 3.644 | 0.500 | 12 pt Bold `spc 120` `INK2` · ≤ 2 บรรทัด |
+| Figure label PH | 8.688 | 2.950 | 3.644 | 0.500 | 12 pt Bold `INK2` · ≤ 2 บรรทัด |
 | Insight PH | 8.688 | 3.600 | 3.644 | 2.050 | 16 pt `INK` · bullet ≤ 3 |
 | Source PH | 1.000 | 5.750 | 11.333 | 0.300 | 10 pt `INK2` |
 | Takeaway band + label + copy | | 6.150 | | | เหมือน L16 ทุกค่า |
@@ -286,7 +286,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 |---|---|---|---|---|---|
 | Title PH · Accent Rule | | | | | เหมือน L19 |
 | Total PH | 1.000 | 1.850 | 5.565 | 0.800 | Tile value 40 pt ("4.8 ล้านบาท") |
-| Total label PH | 1.000 | 2.650 | 5.565 | 0.300 | 12 pt Bold `spc 120` `INK2` |
+| Total label PH | 1.000 | 2.650 | 5.565 | 0.300 | 12 pt Bold `INK2` |
 | Intro PH | 6.768 | 1.850 | 5.565 | 1.100 | 14 pt `INK2` — เงื่อนไข (รวม VAT, ระยะสัญญา) |
 | Bar label PH × 3 | 1.000 | 3.200 + 0.500n | 1.800 | 0.500 | 14 pt Bold `INK` (ชื่อแพ็กเกจ) |
 | Bars (`chart`) | 2.950 | 3.200 | 9.383 | ≤ 1.500 | แท่งหนา 0.250in · ช่อง `PAPER` 2px ระหว่างส่วน |
@@ -316,7 +316,7 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 |---|---|---|---|---|---|
 | Title PH · Accent Rule | | | | | เหมือน L19 |
 | Tile rule × 3/4 | ตาม grid | 1.850 | THIRD / QUARTER | 0.014 | `RULE` · **tile ที่กราฟข้างล่างพล็อตใช้ `CAT_1` สูง 0.050** |
-| Tile label PH | +0 | 1.980 | เต็ม tile | 0.300 | 12 pt Bold `spc 120` `INK2` |
+| Tile label PH | +0 | 1.980 | เต็ม tile | 0.300 | 12 pt Bold `INK2` |
 | Tile value PH | +0 | 2.280 | เต็ม tile | 0.700 | Tile value 40 pt |
 | Tile delta PH | +0 | 3.000 | ครึ่ง tile | 0.300 | 12 pt `INK` นำด้วย ▲/▼ สี `OK` หรือ `RISK` ตามว่าดีหรือแย่ + "จาก Q2" |
 | Sparkline (เว็บ) | +ครึ่ง | 3.000 | ครึ่ง tile | 0.300 | `CAT_MUTE` 1.5 pt · จุดล่าสุด `CAT_1` 6px |
@@ -444,7 +444,7 @@ proposal บอกว่าเราส่งใครมาทำ ไม่ไ�
 | Lead duties PH | ขวาของ name +0.200 | +0.150 | ที่เหลือ | 0.850 | dense bullet 12 pt |
 | Stem · Bar · Drop × 4 | กลางการ์ด | 3.000 → 3.175 → 3.350 | | | `accent` 1 pt · bar จากกลางการ์ดแรกถึงกลางการ์ดสุดท้าย |
 | Role card × 4 | QUARTER | 3.350 | 2.683 | 2.300 | `PAPER2` ไม่มีมุมมน (เหมือน L12) · padding 0.200 |
-| Role PH | +0.200 | +0.200 | เต็ม | 0.300 | 12 pt Bold `spc 120` `INK2` · จำนวนคนต่อท้าย ("นักพัฒนาระบบ × 3") |
+| Role PH | +0.200 | +0.200 | เต็ม | 0.300 | 12 pt Bold `INK2` · จำนวนคนต่อท้าย ("นักพัฒนาระบบ × 3") |
 | Name PH | +0.200 | +0.510 | เต็ม | 0.370 | 20 pt Kanit Bold สี heading |
 | Credential PH | +0.200 | +0.910 | เต็ม | 0.250 | 12 pt `INK2` บรรทัดเดียว ("PMP · ประสบการณ์ 15 ปี") |
 | Duties PH | +0.200 | +1.300 | เต็ม | 0.800 | dense bullet 12 pt · 2–3 ข้อ |

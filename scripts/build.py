@@ -174,7 +174,7 @@ ROW_HEAD = 347472        # 0.380in
 ROW_BODY = 352044        # 0.385in
 
 
-def _cell(text, sz, color, bold=False, algn="l", fill=None, spc=0, bar=None):
+def _cell(text, sz, color, bold=False, algn="l", fill=None, bar=None):
     """`bar` underlines the cell with a category colour.
 
     Not a fill: white on CAT_2 / CAT_3 is 3.76:1 and INK on them 3.36:1, so a filled
@@ -196,13 +196,13 @@ def _cell(text, sz, color, bold=False, algn="l", fill=None, spc=0, bar=None):
           '<a:prstDash val="solid"/></a:lnB>' % (34925 if bar else 12700, edge)) \
         if edge else ''
     f = ('<a:solidFill><a:srgbClr val="%s"/></a:solidFill>' % fill) if fill else ''
-    s = ' spc="%d"' % spc if spc else ''
     b = ' b="1"' if bold else ''
     esc = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-    run = ('<a:r><a:rPr lang="th-TH" sz="%d"%s%s dirty="0">'
+    # no spc: the header row is Thai - see ooxml._rpr
+    run = ('<a:r><a:rPr lang="th-TH" sz="%d"%s dirty="0">'
            '<a:solidFill><a:srgbClr val="%s"/></a:solidFill>'
            '<a:latin typeface="+mn-lt"/><a:cs typeface="+mn-cs"/></a:rPr>'
-           '<a:t>%s</a:t></a:r>' % (sz, b, s, color, esc)) if esc else \
+           '<a:t>%s</a:t></a:r>' % (sz, b, color, esc)) if esc else \
         '<a:endParaRPr lang="th-TH" sz="%d"/>' % sz
     return ('<a:tc><a:txBody><a:bodyPr/><a:lstStyle/>'
             '<a:p><a:pPr algn="%s" marL="0" indent="0"><a:buNone/></a:pPr>%s</a:p></a:txBody>'
@@ -364,7 +364,7 @@ def _diagram_kit(sid):
     out.append(shape(sid + 1, "Group Label", zx + DIA_PAD_X, BY - DIA_PAD_Y + 160020,
                      3200400, 228600, nofill(),
                      body=txbody([para("ส่วนที่เพิ่มใหม่", sz=T_DENSEBODY, color=TEAL,
-                                       bold=True, spc=120, line=100000)], anchor="ctr")))
+                                       bold=True, line=100000)], anchor="ctr")))
     sid += 2
     labels = [("ระบบ ERP ปัจจุบัน", None), ("คิวเอกสารกลาง", CAT_1),
               ("ตัวตรวจกฎธุรกิจ", CAT_2), ("ระบบบัญชี", None)]
@@ -998,7 +998,7 @@ def demo_slides():
     ]
     # slots are assigned in order, never skipped - the order is what was validated
     catmap = {"AP": 0, "AR": 1, "GL": 2}
-    rows16 = [(ROW_HEAD, [_cell(t, T_TBLHEAD, PAPER, bold=True, spc=60,
+    rows16 = [(ROW_HEAD, [_cell(t, T_TBLHEAD, PAPER, bold=True,
                                 algn="ctr" if i in (0, 2, 3, 4, 5) else "l")
                           for i, t in enumerate(head16)])]
     for n, (proc, cat, qty, (st, stc, stt), rnd) in enumerate(body16, 1):
@@ -1133,7 +1133,7 @@ def demo_slides():
     # one, so the zebra step stays inside the column and the rows still track:
     # the same thing .nct-table td[data-rec] does with two color-mix rules.
     REC_1, REC_2 = mix(A9, PAPER, 8), mix(A9, PAPER2, 8)
-    rows9 = [(ROW_HEAD, [_cell(t, T_TBLHEAD, PAPER, bold=True, spc=60,
+    rows9 = [(ROW_HEAD, [_cell(t, T_TBLHEAD, PAPER, bold=True,
                                algn="l" if i == 0 else "ctr",
                                fill=A9 if i == REC else None)
                          for i, t in enumerate(head9)])]
@@ -1241,7 +1241,7 @@ def demo_slides():
                "4 ชั่วโมง", "จัดครั้งเดียว ที่สำนักงานหรือออนไลน์"),
               ("2. การดูแลสำหรับผู้ดูแลระบบ", "เข้าใจการบำรุงรักษาและแก้ปัญหาเบื้องต้น",
                "4 ชั่วโมง", "จัดครั้งเดียว ที่สำนักงานหรือออนไลน์")]
-    rows18 = [(ROW_HEAD, [_cell(t, T_TBLHEAD, PAPER, bold=True, spc=60,
+    rows18 = [(ROW_HEAD, [_cell(t, T_TBLHEAD, PAPER, bold=True,
                                 algn="ctr" if i == 2 else "l")
                           for i, t in enumerate(head18)])]
     for course, aim, hrs, cond in body18:
