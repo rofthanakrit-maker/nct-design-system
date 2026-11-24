@@ -36,11 +36,12 @@ A = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
 P = "{http://schemas.openxmlformats.org/presentationml/2006/main}"
 
 # A Thai line box is not the point size. spcPct scales the FONT's line height,
-# and NotoSansThai-Regular.ttf declares ascent+descent+gap = 1.511 em - read out
-# of the shipped file, not estimated - so 14pt at spcPct 135% reserves 28.6pt,
+# and the body font Kanit-Regular.ttf declares usWinAscent+usWinDescent = 1.58 em
+# (typo/hhea say 1.495; the looser one is taken so the check errs strict) - read out
+# of the shipped file, not estimated - so 14pt at spcPct 135% reserves 29.9pt,
 # not 18.9pt. That factor is why two layouts shipped with text under the footer
 # rule while every box was legally on the right side of it.
-TH_LINE = 1.511
+TH_LINE = 1.58
 EMU_PT = 12700
 # The reserved line boxes must end above the rule. Not a margin on top of that:
 # the last line's descent is inside its box, so ink stops about 0.25em higher.

@@ -3,7 +3,7 @@ from tokens import *
 from ooxml import *
 
 MAJOR = "Kanit"            # headings  (installed, all weights)
-MINOR = "Noto Sans Thai"   # body
+MINOR = "Kanit"            # body - same family as headings
 
 def _font_block(tag, latin, cs):
     return (f'<a:{tag}><a:latin typeface="{latin}" pitchFamily="2" charset="0"/>'

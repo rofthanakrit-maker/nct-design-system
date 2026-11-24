@@ -130,9 +130,9 @@ v1 เขียนไว้ว่า "ถ้าจำเป็นต้องม
 | Step number | Kanit | 24 pt | Bold | `PAPER` บน chip | L13 |
 | Card number | Kanit | 24 pt | Bold | สีหมวด | L12 |
 | Dense heading | Kanit | 16 pt | Bold | `NAVY` | L11 – L14 |
-| Dense body | Noto Sans Thai | 12 pt | Regular | `INK` | L11 – L14 |
-| Table header | Noto Sans Thai | 11 pt | Bold | `PAPER` | L16 |
-| Dense cell | Noto Sans Thai | 10 pt | Regular | `INK` | L16 |
+| Dense body | Kanit | 12 pt | Regular | `INK` | L11 – L14 |
+| Table header | Kanit | 11 pt | Bold | `PAPER` | L16 |
+| Dense cell | Kanit | 10 pt | Regular | `INK` | L16 |
 | Quote mark | Kanit | 120 pt | Bold | `TEAL_L` | L07 (เอกสารเดิมตกไป) |
 
 **กติกาโหมด dense**
@@ -140,7 +140,7 @@ v1 เขียนไว้ว่า "ถ้าจำเป็นต้องม
   ไม่ใช่ย่อตัวอักษร
 - ใช้ได้เฉพาะ L11–L14 และ L16 เท่านั้น — **L03 / L04 / L05 ยังคง 18/16/14 pt เหมือนเดิม**
   ห้ามเอา dense ไปใช้กับสไลด์ bullet ปกติ ไม่งั้นทั้งเด็คจะไหลลงไปหมด
-- Kanit ยังเป็นเสียงหัวเรื่อง Noto Sans Thai ยังเป็นเสียงเนื้อหา กฎ v1 ไม่เปลี่ยน
+- Kanit ยังเป็นเสียงหัวเรื่อง Noto Sans Thai ยังเป็นเสียงเนื้อหา กฎ v1 ไม่เปลี่ยน (ภายหลัง 2026-11-24 เปลี่ยนเนื้อหาเป็น Kanit ทั้งหมด ดู `slide-design-system.md`)
   งานจริงใช้ Kanit ทั้งเด็ค ซึ่งคืออาการ flat voice ที่ระบบตั้งใจแก้พอดี
 - ไม่ใช้ตัวเอียง กฎเดิม
 

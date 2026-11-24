@@ -119,9 +119,9 @@
   --nct-fs-densecell: 13.33px;  /* 10pt - dense: table cell (L16) - 10pt floor */
   --nct-fs-tile:      53.33px;  /* 40pt - v4: total / KPI figure on a data slide (L22 / L23) */
 
-  /* ---- families: Kanit is the heading voice, Noto the body voice ---- */
+  /* ---- families: Kanit for headings and body; Noto Sans Thai is fallback only ---- */
   --nct-font-display: 'Kanit', 'Noto Sans Thai', system-ui, sans-serif;
-  --nct-font-body: 'Noto Sans Thai', 'Kanit', system-ui, sans-serif;
+  --nct-font-body: 'Kanit', 'Noto Sans Thai', system-ui, sans-serif;
 
   /* ---- gradients: L01 opens navy->teal-b, L10 closes teal-b->navy ---- */
   /* stops are var()s, not repeated literals: the same four colours

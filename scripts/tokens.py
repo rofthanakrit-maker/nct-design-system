@@ -218,8 +218,10 @@ CLOSE_TW = CARD_X - MX - 457200       # 6.833in - the ask column
 
 # ---- leading: the one number that does NOT mean the same thing on both surfaces ----
 # CSS line-height is a multiple of the FONT SIZE. OOXML spcPct is a multiple of
-# the FONT'S LINE BOX, and NotoSansThai-Regular.ttf declares that box at 1.511 em
-# (ascent+descent+gap, read out of the shipped file) to carry Thai vowel and tone
+# the FONT'S LINE BOX. Body is Kanit: Kanit-Regular.ttf declares 1.495 em (typo/hhea)
+# but 1.58 em (usWinAscent+usWinDescent); 1.58 is used because the looser box
+# is the safe side of the footer-overrun failure below. (Noto was 1.511 in all three)
+# - read out of the shipped files - the box is tall to carry Thai vowel and tone
 # stacks. So `line-height: 1.45` and `spcPct 145%` are not the same leading -
 # the .potx one is 1.5x looser.
 #
@@ -231,7 +233,7 @@ CLOSE_TW = CARD_X - MX - 457200       # 6.833in - the ask column
 # Write leading as the CSS value and convert. The layouts not listed above were
 # left at their own measured values rather than re-flowed sight unseen; anything
 # that overruns is caught per slide by scripts/check_template.py.
-TH_LINE_BOX = 1.511
+TH_LINE_BOX = 1.58
 
 
 def lnspc(css_line_height):

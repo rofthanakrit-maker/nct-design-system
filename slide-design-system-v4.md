@@ -174,11 +174,11 @@ SmartArt ที่ผู้ใช้ insert เอง (SmartArt จะเปล�
 | Role | Font | Size | สี | หมายเหตุ |
 |---|---|---|---|---|
 | Tile value | Kanit Bold | 40 pt | สีตัวเลขเด่นตาม L06 ของ brand | L23 · L22 · ตัวเลขกว้างตามปกติ (ไม่ใช้ tabular) |
-| Axis tick | Noto Sans Thai | 12 pt | `INK2` | `tabular-nums` · มีคอมมาหลักพัน · หน่วยใส่ในชื่อแกน ไม่ใส่ทุก tick |
-| Direct label | Noto Sans Thai Bold | 14 pt | `INK` | ค่าที่ปลายแท่ง / ปลายเส้น |
-| Legend / row label | Noto Sans Thai | 12 / 14 pt | `INK` | |
-| Milestone label | Noto Sans Thai | 10 pt | `INK2` | L21 เท่านั้น |
-| Source note | Noto Sans Thai | 10 pt | `INK2` | แถว note เดียวกับ L16 |
+| Axis tick | Kanit | 12 pt | `INK2` | `tabular-nums` · มีคอมมาหลักพัน · หน่วยใส่ในชื่อแกน ไม่ใส่ทุก tick |
+| Direct label | Kanit Bold | 14 pt | `INK` | ค่าที่ปลายแท่ง / ปลายเส้น |
+| Legend / row label | Kanit | 12 / 14 pt | `INK` | |
+| Milestone label | Kanit | 10 pt | `INK2` | L21 เท่านั้น |
+| Source note | Kanit | 10 pt | `INK2` | แถว note เดียวกับ L16 |
 
 **กติกาป้ายและ legend**
 - **ตัวอักษรไม่ใช้สีของ series** ค่า ป้าย legend ใช้ `INK` / `INK2` เท่านั้น สีบอกตัวตนผ่าน swatch หรือเส้นสั้นที่อยู่ข้าง ๆ

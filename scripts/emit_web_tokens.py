@@ -142,9 +142,9 @@ def css():
         out.append("  --nct-fs-%-10s %gpx;  /* %gpt - %s */"
                    % (name + ":", round(hpt / 100 * PX_IN / 72, 2), hpt / 100, note))
     out.append("")
-    out.append("  /* ---- families: Kanit is the heading voice, Noto the body voice ---- */")
+    out.append("  /* ---- families: Kanit for headings and body; Noto Sans Thai is fallback only ---- */")
     out.append("  --nct-font-display: 'Kanit', 'Noto Sans Thai', system-ui, sans-serif;")
-    out.append("  --nct-font-body: 'Noto Sans Thai', 'Kanit', system-ui, sans-serif;")
+    out.append("  --nct-font-body: 'Kanit', 'Noto Sans Thai', system-ui, sans-serif;")
     out.append("")
     out.append("  /* ---- gradients: L01 opens navy->teal-b, L10 closes teal-b->navy ---- */")
     out.append("  /* stops are var()s, not repeated literals: the same four colours")

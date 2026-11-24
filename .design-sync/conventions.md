@@ -98,7 +98,7 @@ your own layout glue, use the CSS variables:
 | Status (data cells only) | `--nct-ok` `--nct-ok-tint` `--nct-warn` `--nct-warn-tint` `--nct-risk` `--nct-risk-tint` |
 | Category / chart series (max 4, in order) | `--nct-cat-1` … `--nct-cat-4` · `--nct-cat-mute` ("Other" / de-emphasis — marks only, never text, and every muted mark carries its value: 2.5:1 is under the 3:1 a data mark needs) · `--nct-seq-300` (the bars beside `SlidePlan`'s highlighted one — legal only because every row is labelled) |
 | Type | `--nct-fs-display` `--nct-fs-section` `--nct-fs-h1` `--nct-fs-stat` `--nct-fs-quote` `--nct-fs-lead` `--nct-fs-body` `--nct-fs-body-2` `--nct-fs-body-3` `--nct-fs-label` `--nct-fs-foot` `--nct-fs-densehead` `--nct-fs-densebody` `--nct-fs-tblhead` `--nct-fs-densecell` `--nct-fs-secnum` `--nct-fs-quotemark` |
-| Family | `--nct-font-display` (Kanit, headings) `--nct-font-body` (Noto Sans Thai, copy) |
+| Family | `--nct-font-display` (Kanit, headings) `--nct-font-body` (Kanit, copy — Noto Sans Thai fallback only) |
 | Grid | `--nct-mx` `--nct-cw` `--nct-gut` `--nct-fifth` `--nct-third` `--nct-evidence-h` `--nct-phase-tab-h` |
 
 Tokens are also importable as values: `import { color, space, fontSize, canvas } from '@nct/slides'`.
@@ -113,8 +113,8 @@ does not keep.
 
 ## Rules that are not preferences
 
-- **Kanit is the heading voice, Noto Sans Thai the body voice.** Never swap them,
-  never add a third family. Never italic — Thai italics are synthesised obliques.
+- **Kanit is the only voice — headings and body.** Noto Sans Thai stays as a fallback,
+  never add another family. Never italic — Thai italics are synthesised obliques.
 - **`--nct-fs-densecell` (10pt) is the floor.** Content that will not fit is a
   second slide, never smaller type. The dense sizes are legal on layouts 11–14,
   16, 17 and 18 only, plus the 10pt source note on 19; 03/04/05 stay at 18/16/14pt. `SlideDenseTable` holds 8–9
